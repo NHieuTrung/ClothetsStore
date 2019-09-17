@@ -1,0 +1,55 @@
+Xây dựng website cho cửa hàng quần áo online
+Công nghệ sử dụng:
+-Backend: ASP.Net Core 
+-Frontend: ReactJS
+-Database: SQL Server 2017
+Team's Project is built on microservice architecture platform
+
+Cấu trúc doanh nghiệp
++Admin 
++ Nhân viên kiểm hàng, nhập kho
++ Nhân viên bán hàng, xuất kho
+
+Qui trình
+
+Các chức năng chính:
+ 1. Chức năng quản lý:
+	Customer:
+		+Quản lý tài khoản:
+			+ Đăng nhập, đăng ký
+			+ Kích hoạt tài khoản qua email
+			+ Sửa thông tin tài khoản
+			+ Xử lý quên mật khẩu
+		+Quản lý giỏ hàng:
+			+ Thêm, xóa, sửa số lượng sản phẩm
+		+Quản lý đơn hàng:
+			+ Theo dõi đơn hàng
+			+ Hủy đơn hàng
+	Admin:
+		+Quản lý tài khoản:
+			+ Đăng nhập
+			+ Thêm, sửa, khóa tài khoản
+			+ Tìm kiếm, lọc tài khoản
+		+Quản lý đơn hàng:
+			+ Xử lý đơn hàng và gửi mail
+			+ Xem, tìm kiếm, lọc đơn hàng
+		+Quản lý sản phẩm:
+			+ Thêm, sửa, khóa sản phẩm
+			+ Cập nhật số lượng sản phẩm
+		+Quản lý comment
+ 2. Chức năng mua hàng:
+	+ Tìm kiếm, lọc theo tên, giá, loại
+	+ Hiển thị sản phẩm, số lượng sản phẩm
+	+ Giỏ hàng: 
+		- Thêm, xóa, cập nhật số lượng sản phẩm 
+	+ Xác nhận thông tin giao hàng
+	+ Tính phí vận chuyển
+	+ Xác nhận thông tin đơn hàng
+	+ Thanh toán
+	+ Gửi mail cho khách hàng.
+	+ Hủy đơn hàng trong trạng thái chờ xử lý
+	+ Theo dõi đơn hàng
+ 3. Chức năng thống kê:
+	+ Thống kê doanh thu theo khỏang thời gian(Ngày, Tháng, Năm)
+	+ Thống kê sản phẩm bán chạy
+	+ Thống kê tồn kho
