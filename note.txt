@@ -16,22 +16,40 @@ Các chức năng chính:
  1. Chức năng quản lý:
 	Customer:
 		+Quản lý tài khoản:
-			+ Đăng nhập, đăng ký
-			+ Kích hoạt tài khoản qua email
-			+ Sửa thông tin tài khoản
-			+ Xử lý quên mật khẩu
+			+ Đăng nhập, đăng ký:
+				Đăng ký:
+					_Để mua hàng kháng hàng cần đăng ký tài khoản với thông tin: tên, số điện thoại, email, địa chỉ, mật khẩu đăng nhập(sẽ được mã hóa SHA256 để lưu vào hệ thống)
+					_Sau khi đăng ký khách hàng sẽ nhận được email để kích hoạt tài khoản với nội dung là một URL kích hoạt tài khoản
+					_Khi nhấp vào URL kích hoạt tài khoản khách hàng sẽ được chuyển đến trang đăng nhập để mua hàng.
+				Đăng nhập:
+					_Để đăng nhập khách hàng cần dùng email làm tên đăng nhập và mật khẩu như khi đăng ký tài khoản.
+			+ Sửa thông tin tài khoản:
+					_Sau khi đăng nhập thành công khách hàng có thể sửa thông tin tài khoản bao gồm: Giới tính, Địa chỉ, Ngày sinh, Email
+			+ Xử lý quên mật khẩu:
+					_Trong trường hợp khách hàng quên mật khẩu khách hàng có thể nhấn vào liên kết ("Quên mật khẩu?") khi đó khách hàng chỉ cần điền thông tin email. Sau đó hệ thống sẽ gửi URL khôi phục mật khẩu để khách hàng chọn mật khẩu mới.
 		+Quản lý giỏ hàng:
-			+ Thêm, xóa, sửa số lượng sản phẩm
+			+ Thêm, xóa, sửa số lượng sản phẩm:
+					_Để thêm sản phẩm vào giỏ hàng khách hàng có thể thêm bằng cách nhấn vào nút thêm sản phẩm trên trang danh sách sản phẩm hoặc trang chi tiết sản phẩm.
+					_Để xóa, sửa số lượng sản phẩm vừa thêm vào giỏ hàng khách hàng cần truy cập vào biểu tượng giỏ hàng để truy cập vào trang chi tiếp giỏ hàng để sửa số lượng hoặc xóa số lượng sản phẩm.
 		+Quản lý đơn hàng:
-			+ Theo dõi đơn hàng
+			+ Theo dõi đơn hàng:
+					_Với đơn hàng khách hàng đã tạo trên hệ thống. Khách hàng có thể theo dõi hành trình các đơn hàng bằng cách nhấn vào liên kết đơn hàng trên menu bar.
 			+ Hủy đơn hàng
+					_Với những đơn hàng chưa được khởi tạo mà chưa được cửa hàng xác nhận giao hàng. Khách có thể hủy bằng cách click vào button "Hủy đơn hàng". Với đơn hàng đã được cửa hàng xác nhận button này sẽ được dismiss.
 	Admin:
-		+Quản lý tài khoản:
-			+ Đăng nhập
-			+ Thêm, sửa, khóa tài khoản
-			+ Tìm kiếm, lọc tài khoản
-		+Quản lý đơn hàng:
-			+ Xử lý đơn hàng và gửi mail
+		+Quản lý tài khoản(Admin):
+			+ Đăng nhập:
+					_Admin của cửa hàng có thể đăng nhập vào trang Quản lý hệ thống bằng tài khoản Admin do hệ thống cấp.
+			+ Thêm, sửa, khóa tài khoản:
+					_Admin có thể thêm tài khoản cho: Nhân viên nhập kho, Nhân viên xuất kho qua trang quản lý tài khoản.
+			+ Tìm kiếm:
+					_Admin có thể tìm kiếm tài khoản bằng tên nhân viên, số điện thoại.
+		+Quản lý đơn hàng(Admin, Nhân viên xuất kho):
+			+ Xử lý đơn hàng và gửi mail:
+					_Nhân viên có thể xác nhận những đơn hàng trong trạng thái "Chờ xử lý" sau khi kiểm tra hàng còn trong kho để sẵn sàng giao hàng. Đồng thời hệ thống sẽ tự động gửi email thông báo cho khách hàng đơn hàng đã được xác nhận.
+					_Những đơn hàng được nhân viên xác nhận và đóng gói sẽ được chuyển qua trạng thái "Chờ lấy hàng" để đợi người giao hàng tới lấy.
+					_Khi người giao hàng tới lấy hàng nhân viên sẽ xác nhận trên hệ thống để đơn hàng chuyển về trạng thái "Đang giao hàng"
+					_Mỗi khi người giao hang giao thành công 
 			+ Xem, tìm kiếm, lọc đơn hàng
 		+Quản lý sản phẩm:
 			+ Thêm, sửa, khóa sản phẩm
