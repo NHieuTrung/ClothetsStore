@@ -18,11 +18,11 @@ Các chức năng chính:
 		+Quản lý tài khoản:
 			+ Đăng nhập, đăng ký:
 				Đăng ký:
-					_Để mua hàng kháng hàng cần đăng ký tài khoản với thông tin: tên, số điện thoại, email, địa chỉ, mật khẩu đăng nhập(sẽ được mã hóa SHA256 để lưu vào hệ thống)
+					_Để mua hàng kháng hàng cần đăng ký tài khoản tại trang chủ với thông tin: tên, số điện thoại, email, địa chỉ, mật khẩu đăng nhập (sẽ được mã hóa SHA256 để lưu vào hệ thống)
 					_Sau khi đăng ký khách hàng sẽ nhận được email để kích hoạt tài khoản với nội dung là một URL kích hoạt tài khoản
 					_Khi nhấp vào URL kích hoạt tài khoản khách hàng sẽ được chuyển đến trang đăng nhập để mua hàng.
 				Đăng nhập:
-					_Để đăng nhập khách hàng cần dùng email làm tên đăng nhập và mật khẩu như khi đăng ký tài khoản.
+					_Để đăng nhập khách hàng cần nhấn vào nút đăng nhập tại menu bar trang chủ. Thông tin đăng nhập gồm email làm tên đăng nhập và mật khẩu như khi đăng ký tài khoản.
 			+ Sửa thông tin tài khoản:
 					_Sau khi đăng nhập thành công khách hàng có thể sửa thông tin tài khoản bao gồm: Giới tính, Địa chỉ, Ngày sinh, Email
 			+ Xử lý quên mật khẩu:
@@ -49,11 +49,14 @@ Các chức năng chính:
 					_Nhân viên có thể xác nhận những đơn hàng trong trạng thái "Chờ xử lý" sau khi kiểm tra hàng còn trong kho để sẵn sàng giao hàng. Đồng thời hệ thống sẽ tự động gửi email thông báo cho khách hàng đơn hàng đã được xác nhận.
 					_Những đơn hàng được nhân viên xác nhận và đóng gói sẽ được chuyển qua trạng thái "Chờ lấy hàng" để đợi người giao hàng tới lấy.
 					_Khi người giao hàng tới lấy hàng nhân viên sẽ xác nhận trên hệ thống để đơn hàng chuyển về trạng thái "Đang giao hàng"
-					_Mỗi khi người giao hang giao thành công 
 			+ Xem, tìm kiếm, lọc đơn hàng
-		+Quản lý sản phẩm:
-			+ Thêm, sửa, khóa sản phẩm
-			+ Cập nhật số lượng sản phẩm
+					_Nhân viên có thể tìm kiếm đơn hàng theo tên, email của khách hàng. Hoặc lọc theo ngày, tháng, năm
+		+Quản lý sản phẩm(Admin, Nhân viên xuất kho):
+			+ Thêm, sửa, cập nhật số lượng , khóa sản phẩm:
+					_Để thêm sản phẩm mới, nhân viên phải kiểm tra sản phẩm có trong danh mục chưa. Nếu chưa thì nhân viên sẽ thêm dữ liệu sản phẩm mới bằng button "Thêm mới sản phẩm" rồi nhập dữ liệu về sản phẩm.
+					_Để sửa thông tin sản phẩm, nhân viên tìm sản phẩm cần sửa và nhấn vào button "Sửa sản phẩm" và thay đổi thông tin sản phẩm cần sửa trên form.
+					_Khi cần thêm sản phẩm vào kho nhân viên có thể nhấn vào button "Thêm số lượng" và nhập số lượng cần thêm.
+					_Với những sản phẩm cửa hàng muốn gỡ khỏi trang chủ, nhân viên có thể nhấn vào button "Khóa" để ẩn sản phẩm đó khỏi trang chủ.
 		+Quản lý comment
  2. Chức năng mua hàng:
 	+ Tìm kiếm, lọc theo tên, giá, loại
