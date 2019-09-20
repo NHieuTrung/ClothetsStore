@@ -1,0 +1,140 @@
+Xây dựng website cho cửa hàng quần áo online
+Công nghệ sử dụng:
+-Backend: ASP.Net Core 
+-Frontend: ReactJS
+-Database: SQL Server 2017
+Team's Project is built on microservice architecture platform
+
+Cấu trúc doanh nghiệp
++Admin 
++ Nhân viên kiểm hàng, nhập kho
++ Nhân viên bán hàng, xuất kho
+
+Qui trình
+
+Các chức năng chính:
+ 1. Chức năng quản lý:
+	Customer:
+		+Quản lý tài khoản:
+			+ Đăng nhập, đăng ký:
+				Đăng ký:
+					_Để mua hàng kháng hàng cần đăng ký tài khoản tại trang chủ với thông tin: tên, số điện thoại, email, địa chỉ, mật khẩu đăng nhập (sẽ được mã hóa để lưu vào hệ thống)
+					_Nếu khách hàng nhập không đầy đủ thông tin hoặc thông tin không đúng định dạng hệ thống sẽ báo lỗi yêu cầu khách hàng nhập đầy đủ và chính xác 
+					_Sau khi đăng ký khách hàng sẽ nhận được email để kích hoạt tài khoản với nội dung là một URL kích hoạt tài khoản
+					_Khi nhấp vào URL kích hoạt tài khoản khách hàng sẽ được chuyển đến trang chủ của website.
+				Đăng nhập:
+					_Để đăng nhập khách hàng cần nhấn vào nút đăng nhập tại menu bar trang chủ. Thông tin đăng nhập gồm email là tên đăng nhập và mật khẩu như khi đăng ký tài khoản.
+					-Khi nhấn nút đăng nhập hệ thống sẽ kiểm tra thông tin mà khách hàng nhập vào, nếu khớp với tài khoản được lưu trong cơ sở dữ liệu thì sẽ chuyển đến trang trước đó
+					-Ngược lại nếu khách hàng nhập không đầy đủ thông tin như yêu cầu hoặc thông tin mà khách hàng cung cấp không khớp trong cơ sở dữ liệu hệ thống sẽ hiển thị thông báo lỗi yêu cầu nguoif dùng nhập lại
+
+			+ Sửa thông tin tài khoản:
+				Khi khách hàng đã đăng nhập hệ thống sẽ hiển thị menu View profile(không biết dịch tiếng việt sài tiếng anh quen rồi kkkk)
+					_khách hàng nhấp vào View profile sau đó nhấn vào Thông tin tài khoản  
+					_Khách hàng có thể sửa thông tin tài khoản bao gồm: Giới tính, Địa chỉ, Ngày sinh, Email
+					_Khi khách hàng nhấn nút Lưu thông tin, hệ thống sẽ kiểm tra thông tin khách hàng nhập vào:
+						+Nếu thông tin đầy đủ và chính xác theo định dạng hệ thống sẽ lưu thông tin mới vào cơ sở dữ liệu và hiển thị thông báo thành công cho khách hàng
+						+Nếu thông tin không đầy đủ hoặc không đúng định dạng yêu cầu hệ thống sẽ hiện thị thông báo lỗi cho khách hàng
+			+ Xử lý quên mật khẩu:
+					_Trong trường hợp khách hàng quên mật khẩu khách hàng có thể nhấn vào liên kết ("Quên mật khẩu?") khi đó khách hàng chỉ cần điền địa chỉ email. 
+					_Sau đó hệ thống sẽ gửi đến địa chỉ URL khôi phục mật khẩu để khách hàng chọn mật khẩu mới.
+					_Khách hàng cần nhập mật khẩu mới và xác nhân mật khẩu
+					_Khi khách hàng nhấn nút Cập nhật hệ thống sẽ kiểm tra mật khẩu mà khách hàng nhập vào:
+						+Trường hợp nhập đúng định dạng của mật khẩu và xác nhận mật khẩu khớp với mật khẩu hệ thống sẽ mã hóa mật khẩu đó và lưu vào cơ sở dữ liệu
+						+Ngược lại hệ thống sẽ hiển thị lỗi yêu cầu khách hàng nhập lại
+		+Quản lý giỏ hàng:
+			+ Thêm, xóa, sửa số lượng sản phẩm trong giỏ hàng:
+					_Để thêm sản phẩm vào giỏ hàng khách hàng có thể thêm bằng cách nhấn vào nút thêm sản phẩm trên trang danh sách sản phẩm hoặc trang chi tiết sản phẩm.
+						+Khi khách hàng nhấn nút thêm sản phẩm vào giỏ hàng ở trang danh sách sản phẩm hệ thống sẽ kiểm tra xem sản phẩm mà khách hàng muốn thêm có còn hàng hay không:
+							.Nếu còn hàng hệ thống sẽ kiểm tra xem sản phẩm đó có ở trong giỏ hàng hay không:
+								Nếu sản phẩm đó có trong giỏ hàng hệ thống sẽ tăng số lượng sản phẩm đó trong giỏ hàng lên 1
+								Nếu sản phẩm đó chưa có trong giỏ hàng hệ thống sẽ thêm sản phẩm đó vào giỏ hàng với số lượng mặc định là 1
+							.Nếu sản phẩm đó đã hết hàng hệ thống sẽ hiển thị thông  báo cho khách hàng
+						+Khi khách hàng nhấn nút thêm sản phẩm vào giỏ hàng ở trang chi tiết sản phẩm hệ thống sẽ kiểm tra sản phẩm đó có trong giỏ hàng hay không 
+							Nếu sản phẩm đó có trong giỏ hàng hệ thống sẽ cập nhật số lượng sản phẩm đó bằng số lượng đang có trong giỏ hàng cộng với số lượng mà khách hàng thêm vào
+							Nếu sản phẩm đó chưa có trong giỏ hàng hệ thống sẽ thêm sản phẩm đó vào giỏ hàng với số lượng bằng với số lượng mà khách hàng chọn
+					_Để xóa sản phẩm trong giỏ hàng khách hàng cần truy cập vào biểu tượng giỏ hàng để xem chi tiếp giỏ hàng:
+						+Khi khách hàng nhấn nút Xóa ở cột cuối cùng của mỗi sản phẩm trong giỏ hàng hệ thống sẽ hiển thị thông báo xác nhận xem khách hàng có muốn xóa sản phẩm này ra khỏi giỏ hàng không:
+							.Nếu khách hàng nhấn OK hệ thống sẽ xóa sản phẩm tương ứng ra khỏi giỏ hàng
+					_Để sửa số lượng sản phẩm trong giỏ hàng khách hàng cần truy cập vào biểu tượng giỏ hàng để xem chi tiếp giỏ hàng:
+						+Để sửa số lượng khách hàng có thể nhấn dấu cộng hoặc dấu trừ để tăng hoặc giảm số lượng sản phẩm.
+						+Khi đó hệ thống sẽ cập nhật thông tin của giỏ hàng
+
+		+Quản lý đơn hàng:
+			Khi khách hàng đã đăng nhập hệ thống sẽ hiển thị menu View profile(không biết dịch tiếng việt sài tiếng anh quen rồi kkkk)
+			+ Theo dõi đơn hàng: 
+					_Khách hàng cần nhấn vào menu View profile sau đó ấn vào Xem đơn hàng
+					_Khi đó hệ thống sẽ hiện thị thông tin tất cả các đơn hàng mà khách hàng này đã đặt bao gồm: tên sản phẩm, số lượng, đơn giá, thành tiền, trạng thái đơn hàng, chức năng...
+			+ Hủy đơn hàng
+					_Với những đơn hàng chưa được cửa hàng xác nhận giao hàng khách có thể hủy bằng cách click vào button "Hủy đơn hàng".
+					_Khi đó hệ thống sẽ hiển thị thông tin xác nhận xem khách hàng có thật sự muốn hủy đơn hàng
+						+Nếu khách hàng ấn Ok hệ thống sẽ cập nhật lại trạng thái của đơn hàng này thành đã hủy 
+					_Với đơn hàng đã được cửa hàng xác nhận button này sẽ được vô hiệu hóa
+	Admin:
+		+Quản lý tài khoản(Admin):
+			+ Đăng nhập:
+					_Admin của cửa hàng có thể đăng nhập vào trang Quản lý hệ thống bằng tài khoản Admin do hệ thống cấp.
+					_Khi cần đăng nhập admin cần cung cấp username và password và nhấn nút Đăng nhập
+						+Lúc này hệ thống sẽ kiểm tra xem có tồn tại tài khoản admin này trong cơ sở dữ liệu hay không
+							.Nếu có hệ thông sẽ chuyển hướng đến trang chủ của trang quản lý
+							.Ngược lại hệ thống sẽ hiển thị thông báo lỗi
+			+ Thêm, sửa, khóa tài khoản:
+					Admin có thể thêm tài khoản cho: Nhân viên nhập kho, Nhân viên xuất kho qua trang quản lý tài khoản.
+						_Khi cần thêm tài khoản cho nhân viên admin cần ấn vào menu Thêm tài khoản. Lúc này hệ thống sẽ hiển thị các trường thông tin cần thiết của một nhân viên
+						_Admin cần điền đầy đủ thông tin và nhấn nút Lưu.
+						_Khi đó hệ thống sẽ kiểm tra thông tin mà admin cung cấp:
+							.Nếu thông tin đầy đủ và chính xác định dạng mà hệ thống yêu cầu hệ thống sẽ lưu thông tin đó vào cơ sở dữ liệu
+							.Ngược lại hệ thống sẽ hiện thông báo lỗi
+			+ Tìm kiếm thông tin tài khoản:
+					_Khi cần tìm kiếm tài khoản của một nhân viên admin cần điền thông tin tên hoặc số điện thoại hoặc CMND của nhân viên đó và nhấn nút Tìm
+					_Khi đó hệ thống sẽ tìm kiếm trong cơ sở dữ liệu dựa trên các thông tin mà admin nhập vào và hiển thị thông tin những nhân viên khớp với điều kiện
+					_Nếu admin không nhập gì cả hệ thống sẽ hiển thị thông tin tất cả tài khoản của nhân viên	
+
+		+Quản lý đơn hàng(Admin, Nhân viên xuất kho):
+			+ Xử lý đơn hàng và gửi mail:
+					_Nhân viên có thể xác nhận những đơn hàng trong trạng thái "Chờ xử lý" sau khi kiểm tra hàng còn trong kho để sẵn sàng giao hàng.
+					_Khi nhân viên đã xác nhận đơn hàng hệ thống sẽ cập nhật lại trạng thái của đơn hàng thành Đã xác nhận đồng thời hệ thống sẽ tự động gửi email thông báo cho khách hàng đơn hàng đã được xác nhận.
+					_Những đơn hàng được nhân viên xác nhận và đóng gói sẽ được chuyển qua trạng thái "Chờ lấy hàng" để đợi người giao hàng tới lấy.
+					_Khi người giao hàng tới lấy hàng nhân viên sẽ xác nhận trên hệ thống để đơn hàng chuyển về trạng thái "Đang giao hàng". Khi đó hệ thống sẽ cập nhật lại trạng thái đơn hàng sang Đang giao hàng và gửi mail cho khách hàng
+			+ Xem, tìm kiếm, lọc đơn hàng
+					_Khi nhân viên muốn xem thông tin đơn hàng cần nhấn vào menu quản lý đơn hàng sau đó hệ thống sẽ hiển thị tất cả đơn hàng
+					_Khi nhân viên muốn tìm kiếm đơn hàng cần nhập tên hoặc email khách hàng, hoặc trạng thái đơn hàng và chọn ngày tháng năm sau đó ấn nút tìm
+					_Lúc này hệ thống sẽ tìm trong cơ sở dữ liệu theo thông tin và ngày tháng năm mà nhân viên nhập sau đó hiển thị cho nhân viên
+					_Nếu không chọn ngày tháng năm hệ thống sẽ hiển thị tất cả những đơn hàng từ trước đến giờ mà hệ thống lưu trữ
+		+Quản lý sản phẩm(Admin, Nhân viên xuất kho):
+			+ Thêm, sửa, cập nhật số lượng , khóa sản phẩm:
+					_Để thêm sản phẩm, nhân viên phải kiểm tra sản phẩm có trong danh mục chưa (bằng chức năng tìm kiếm). 
+						+Nếu chưa có thì nhân viên sẽ nhấn button "Thêm mới sản phẩm"
+							.Lúc này hệ thống sẽ hiển thị form thêm mới sản phẩm
+							.Nhân viên cần nhập đầy đủ thông tin sản phẩm sau đó nhấn nút Lưu
+							.Khi đó hệ thống sẽ kiểm tra xem nhân viên có nhập đầy đủ thông tin không và thông tin có đúng định dạng mà hệ thống yêu cầu không
+								Nếu đầy đủ thông tin và đúng định dạng hệ thống sẽ lưu sản phẩm này vào trong cơ sở dữ liệu và hiển thị thông báo thành công cho người dùng
+								Ngược lại hệ thống sẽ hiển thị thông báo lỗi
+						+Nếu sản phẩm đã có, nhân viên chỉ cần nhập số lượng cần thêm và nhấn nút Lưu khi đó hệ thống sẽ cập nhật số lượng sản phẩm này bằng số lượng còn lại trong kho cộng với số lượng mà nhân viên nhập vào và hiển thị thông báo cập nhật thành công
+					_Để sửa thông tin sản phẩm cần trải qua các bước:
+						+Sử dụng chức năng tìm kiếm để tìm kiếm sản phẩm để tìm sản phẩm cần sửa
+						+Nhân viên nhấn vào nút Sửa ở cột cuối cùng của bảng Danh sách sản phẩm khi đó hệ thống sẽ hiển thị thông tin chi tiết của sản phẩm đó trên form
+						+Nhân viên nhập thông tin mới vào và nhấn nút Lưu. Lúc này hệ thống sẽ kiểm tra thông tin mà nhân viên nhập vào
+							.Nếu thông tin đầy đủ và đúng theo định dạng yêu cầu của hệ thống, hệ thống sẽ lưu thông tin mới cập nhật vào cơ sở dữ liệu sau đó hiển thị thông báo cho nhân viên và quay trở lại trang Danh sách sản phẩm
+							.Ngược lại hệ thống sẽ hiển thị thông báo lỗi cho nhân viên
+						
+					_Khóa sản phẩm:
+						+Với những sản phẩm cửa hàng muốn gỡ khỏi trang chủ, admin có thể nhấn vào button "Khóa" ở cột cuối cùng của sản phẩm tương ứng của bảng Danh sách sản phẩm
+						+Khi đó hệ thống sẽ hiển thị thông tin xác nhận xem có thật sự muốn khóa sản phẩm này không
+						+Nếu admin nhấn Ok thì hệ thống sẽ chuyển trạng thái sản phẩm tương ứng thành Khóa để ẩn sản phẩm đó khỏi trang chủ.
+		+Quản lý comment(optional)
+ 2. Chức năng mua hàng:
+	+ Tìm kiếm, lọc theo tên, giá, loại
+	+ Hiển thị sản phẩm, số lượng sản phẩm
+	+ Giỏ hàng: 
+		- Thêm, xóa, cập nhật số lượng sản phẩm 
+	+ Xác nhận thông tin giao hàng
+	+ Tính phí vận chuyển
+	+ Xác nhận thông tin đơn hàng
+	+ Thanh toán
+	+ Gửi mail cho khách hàng.
+	+ Hủy đơn hàng trong trạng thái chờ xử lý
+	+ Theo dõi đơn hàng
+ 3. Chức năng thống kê:
+	+ Thống kê doanh thu theo khỏang thời gian(Ngày, Tháng, Năm)
+	+ Thống kê sản phẩm bán chạy
+	+ Thống kê tồn kho
