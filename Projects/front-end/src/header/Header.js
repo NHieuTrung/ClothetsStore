@@ -71,7 +71,7 @@ function Header() {
 
                             {/* <!-- Cart --> */}
                             <li className="header-cart dropdown default-dropdown">
-                                <a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                                <a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">
                                     <div className="header-btns-icon">
                                         <i className="fa fa-shopping-cart"></i>
                                         <span className="qty">3</span>
@@ -85,7 +85,7 @@ function Header() {
                                         <div className="shopping-cart-list">
                                             <div className="product product-widget">
                                                 <div className="product-thumb">
-                                                    <img src="./img/thumb-product01.jpg" alt="" />
+                                                    <img src="/assets//img/thumb-product01.jpg" alt="" />
                                                 </div>
                                                 <div className="product-body">
                                                     <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
@@ -95,7 +95,7 @@ function Header() {
                                             </div>
                                             <div className="product product-widget">
                                                 <div className="product-thumb">
-                                                    <img src="./img/thumb-product01.jpg" alt="" />
+                                                    <img src="/assets//img/thumb-product01.jpg" alt="" />
                                                 </div>
                                                 <div className="product-body">
                                                     <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>

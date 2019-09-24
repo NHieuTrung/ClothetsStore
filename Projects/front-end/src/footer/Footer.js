@@ -13,7 +13,7 @@ function Footer() {
                             <div className="footer">
                                 {/* <!-- footer logo --> */}
                                 <div className="footer-logo">
-                                    <a className="logo" href="#">
+                                    <a className="logo" href="/#">
                                         <img src="./img/logo.png" alt="" />
                                     </a>
                                 </div>
@@ -23,11 +23,8 @@ function Footer() {
 
                                 {/* <!-- footer social --> */}
                                 <ul className="footer-social">
-                                    <li><a href="#"><i className="fa fa-facebook"></i></a></li>
-                                    <li><a href="#"><i className="fa fa-twitter"></i></a></li>
-                                    <li><a href="#"><i className="fa fa-instagram"></i></a></li>
-                                    <li><a href="#"><i className="fa fa-google-plus"></i></a></li>
-                                    <li><a href="#"><i className="fa fa-pinterest"></i></a></li>
+                                    <li><a href="/#"><i className="fa fa-facebook"></i></a></li>
+                                    <li><a href="/#"><i className="fa fa-instagram"></i></a></li>
                                 </ul>
                                 {/* <!-- /footer social --> */}
                             </div>
@@ -39,11 +36,11 @@ function Footer() {
                             <div className="footer">
                                 <h3 className="footer-header">My Account</h3>
                                 <ul className="list-links">
-                                    <li><a href="#">My Account</a></li>
-                                    <li><a href="#">My Wishlist</a></li>
-                                    <li><a href="#">Compare</a></li>
-                                    <li><a href="#">Checkout</a></li>
-                                    <li><a href="#">Login</a></li>
+                                    <li><a href="/#">My Account</a></li>
+                                    <li><a href="/#">My Wishlist</a></li>
+                                    <li><a href="/#">Compare</a></li>
+                                    <li><a href="/#">Checkout</a></li>
+                                    <li><a href="/#">Login</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -56,10 +53,10 @@ function Footer() {
                             <div className="footer">
                                 <h3 className="footer-header">Customer Service</h3>
                                 <ul className="list-links">
-                                    <li><a href="#">About Us</a></li>
-                                    <li><a href="#">Shiping & Return</a></li>
-                                    <li><a href="#">Shiping Guide</a></li>
-                                    <li><a href="#">FAQ</a></li>
+                                    <li><a href="/#">About Us</a></li>
+                                    <li><a href="/#">Shiping & Return</a></li>
+                                    <li><a href="/#">Shiping Guide</a></li>
+                                    <li><a href="/#">FAQ</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -88,7 +85,7 @@ function Footer() {
                             {/* <!-- footer copyright --> */}
                             <div className="footer-copyright">
                                 {/* <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> */}
-                                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i className="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                                Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i className="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" rel="noopener noreferrer">Colorlib</a>
                                 {/* <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --> */}
                             </div>
                             {/* <!-- /footer copyright --> */}
