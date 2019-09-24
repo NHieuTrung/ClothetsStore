@@ -12,25 +12,9 @@ function Header() {
                     </div>
                     <div className="pull-right">
                         <ul className="header-top-links">
-                            <li><a href="#">Store</a></li>
-                            <li><a href="#">Newsletter</a></li>
-                            <li><a href="#">FAQ</a></li>
-                            <li className="dropdown default-dropdown">
-                                <a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">ENG <i className="fa fa-caret-down"></i></a>
-                                <ul className="custom-menu">
-                                    <li><a href="#">English (ENG)</a></li>
-                                    <li><a href="#">Russian (Ru)</a></li>
-                                    <li><a href="#">French (FR)</a></li>
-                                    <li><a href="#">Spanish (Es)</a></li>
-                                </ul>
-                            </li>
-                            <li className="dropdown default-dropdown">
-                                <a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">USD <i className="fa fa-caret-down"></i></a>
-                                <ul className="custom-menu">
-                                    <li><a href="#">USD ($)</a></li>
-                                    <li><a href="#">EUR (€)</a></li>
-                                </ul>
-                            </li>
+                            <li><a href="/#">Store</a></li>
+                            <li><a href="/#">Newsletter</a></li>
+                            <li><a href="/#">FAQ</a></li>
                         </ul>
                     </div>
                 </div>
@@ -43,8 +27,7 @@ function Header() {
                     <div className="pull-left">
                         {/* <!-- Logo --> */}
                         <div className="header-logo">
-                            <a className="logo" href="#">
-                                {/* <img src="/public/assets/img/logo.png" alt="" /> */}
+                            <a className="logo" href="/#">
                                 <img src="/assets/img/logo.png" alt="" />
                             </a>
                         </div>
@@ -74,14 +57,14 @@ function Header() {
                                     </div>
                                     <strong className="text-uppercase">My Account <i className="fa fa-caret-down"></i></strong>
                                 </div>
-                                <a href="#" className="text-uppercase">Login</a> / <a href="#" className="text-uppercase">Join</a>
+                                <a href="/#" className="text-uppercase">Login</a> / <a href="/#" className="text-uppercase">Join</a>
                                 <ul className="custom-menu">
-                                    <li><a href="#"><i className="fa fa-user-o"></i> My Account</a></li>
-                                    <li><a href="#"><i className="fa fa-heart-o"></i> My Wishlist</a></li>
-                                    <li><a href="#"><i className="fa fa-exchange"></i> Compare</a></li>
-                                    <li><a href="#"><i className="fa fa-check"></i> Checkout</a></li>
-                                    <li><a href="#"><i className="fa fa-unlock-alt"></i> Login</a></li>
-                                    <li><a href="#"><i className="fa fa-user-plus"></i> Create An Account</a></li>
+                                    <li><a href="/#"><i className="fa fa-user-o"></i> My Account</a></li>
+                                    <li><a href="/#"><i className="fa fa-heart-o"></i> My Wishlist</a></li>
+                                    <li><a href="/#"><i className="fa fa-exchange"></i> Compare</a></li>
+                                    <li><a href="/#"><i className="fa fa-check"></i> Checkout</a></li>
+                                    <li><a href="/#"><i className="fa fa-unlock-alt"></i> Login</a></li>
+                                    <li><a href="/#"><i className="fa fa-user-plus"></i> Create An Account</a></li>
                                 </ul>
                             </li>
                             {/* <!-- /Account --> */}
@@ -106,7 +89,7 @@ function Header() {
                                                 </div>
                                                 <div className="product-body">
                                                     <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
-                                                    <h2 className="product-name"><a href="#">Product Name Goes Here</a></h2>
+                                                    <h2 className="product-name"><a href="/#">Product Name Goes Here</a></h2>
                                                 </div>
                                                 <button className="cancel-btn"><i className="fa fa-trash"></i></button>
                                             </div>
@@ -116,7 +99,7 @@ function Header() {
                                                 </div>
                                                 <div className="product-body">
                                                     <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
-                                                    <h2 className="product-name"><a href="#">Product Name Goes Here</a></h2>
+                                                    <h2 className="product-name"><a href="/#">Product Name Goes Here</a></h2>
                                                 </div>
                                                 <button className="cancel-btn"><i className="fa fa-trash"></i></button>
                                             </div>
