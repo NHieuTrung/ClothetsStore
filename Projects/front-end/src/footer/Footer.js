@@ -2,8 +2,8 @@ import React from 'react';
 
 function Footer() {
      return (
-        <div>
-            {/* <!-- FOOTER --> */}
+            // {/* <!-- FOOTER --> */}
+            <footer id="footer" className="section section-grey">
                 {/* <!-- container --> */}
                 <div className="container">
                     {/* <!-- row --> */}
@@ -95,7 +95,7 @@ function Footer() {
                 </div>
                 {/* <!-- /container --> */}
             {/* <!-- /FOOTER --> */}
-        </div>
+        </footer>
     );
 }
 
