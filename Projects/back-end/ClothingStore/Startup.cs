@@ -41,7 +41,14 @@ namespace ClothingStore
             }
 
             app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("areaRoute", "{area:exists}/api/{controller}/{action}/{id?}");
+
+                routes.MapRoute(
+                   name: "default",
+                   template: "{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }
