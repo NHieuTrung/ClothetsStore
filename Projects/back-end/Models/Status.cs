@@ -12,6 +12,7 @@ namespace Models
             Order = new HashSet<Order>();
             Product = new HashSet<Product>();
             ProductColor = new HashSet<ProductColor>();
+            ProductGender = new HashSet<ProductGender>();
             Size = new HashSet<Size>();
             TypeProduct = new HashSet<TypeProduct>();
         }
@@ -24,6 +25,7 @@ namespace Models
         public ICollection<Order> Order { get; set; }
         public ICollection<Product> Product { get; set; }
         public ICollection<ProductColor> ProductColor { get; set; }
+        public ICollection<ProductGender> ProductGender { get; set; }
         public ICollection<Size> Size { get; set; }
         public ICollection<TypeProduct> TypeProduct { get; set; }
     }
