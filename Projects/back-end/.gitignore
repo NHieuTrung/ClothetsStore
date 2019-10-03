@@ -1,7 +1,7 @@
 ###################
 # compiled source #
 ###################
-# /Models/ClothetsStoreContext.cs
+/Models/ClothetsStoreContext.cs
 *.com
 *.class
 *.dll
