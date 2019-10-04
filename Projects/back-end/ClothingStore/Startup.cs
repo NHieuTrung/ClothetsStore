@@ -25,6 +25,14 @@ namespace ClothingStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add Cors
+            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
+            {
+                builder.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader();
+            }));
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
@@ -40,6 +48,8 @@ namespace ClothingStore
                 app.UseHsts();
             }
 
+            // Enable Cors
+            app.UseCors("MyPolicy");
             app.UseHttpsRedirection();
             app.UseMvc(routes =>
             {

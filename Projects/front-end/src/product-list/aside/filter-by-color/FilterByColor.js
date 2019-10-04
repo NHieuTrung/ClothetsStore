@@ -1,6 +1,30 @@
 import React from 'react';
 
 class FilterByColor extends React.Component {
+    state = {
+        items: [],
+        error: null
+    }
+    
+    componentDidMount() {
+        fetch("https://localhost:44376/api/customer/color/getColors")
+            .then(res => res.json())
+            .then(
+                (res) => {
+                    this.setState({
+                        isLoaded: true,
+                        items: res
+                    });
+                },
+                (err) => {
+                    this.setState({
+                        isLoaded: true,
+                        error: err
+                    });
+                }
+            )
+    }
+
     render() {
         return (
             // {/* <!-- aside widget --> */}
