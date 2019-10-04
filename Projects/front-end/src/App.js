@@ -1,15 +1,20 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Index from './index/Index';
+import ProductList from './product-list/ProductList.js'
 
 function App() {
      return (
-        <div>
-            <Header></Header>
-            <Index></Index>
-            <Footer></Footer>
-        </div>
+        <Router>
+            <div>
+                <Header></Header>
+                <Route exact path="/" component={ Index } />
+                <Route path="/productlist" component={ ProductList } />
+                <Footer></Footer>
+            </div>
+        </Router>
     );
 }
 
