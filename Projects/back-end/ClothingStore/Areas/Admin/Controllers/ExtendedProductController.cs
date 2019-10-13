@@ -19,10 +19,10 @@ namespace ClothingStore.Areas.Admin.Controllers
         ProductService productService = new ProductService();
         ProductSizeService productSizeService = new ProductSizeService();
         [HttpGet("{id}")]
-        public async Task<ActionResult<ExtendedProductVM>> GetProductSize(Guid id)
+        public async Task<ActionResult<ExtendedProductVM>> GetExtendedProduct(Guid id)
         {
             var product = await productService.GetById(id);
-            var listColorSize = await productSizeService.GetByProduct()
+            var listProductSizeVM = await productSizeService.GetByProductId(id);
             ExtendedProductVM extendedProduct = new ExtendedProductVM
             {
                 Code = product.Code,
@@ -34,7 +34,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                 CreatedDate = product.CreatedDate,
                 BrandId = product.BrandId,
                 StatusId = product.StatusId,
-                ListColorSize = listColorSize,
+                ListProductSize = listProductSizeVM,
             };
 
             if (extendedProduct == null)
@@ -43,6 +43,36 @@ namespace ClothingStore.Areas.Admin.Controllers
             }
 
             return extendedProduct;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Gender>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
+        {
+            Guid productId;
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var currentDateTime = DateTime.Now;
+                    var account = new Account { Email = registerVM.Email, CreatedDate = currentDateTime };
+                    _context.Account.Add(account);
+                    _context.SaveChanges();
+                    accountId = account.Id;
+                    var userInfo = new UserInfo { Name = registerVM.Name, AccountId = account.Id, AvatarUrl = registerVM.ImageUrl, FacebookId = registerVM.Id, ModifyDate = currentDateTime, CreatedDate = currentDateTime };
+                    _context.UserInfo.Add(userInfo);
+                    userInfoId = userInfo.Id;
+                    _context.SaveChanges();
+                    // Commit transaction if all commands succeed, transaction will auto-rollback
+                    // when disposed if either commands fails
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+            }
+
+            return CreatedAtAction("GetGender", new { id = gender.Id }, gender);
         }
     }
 }

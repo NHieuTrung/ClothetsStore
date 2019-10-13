@@ -32,9 +32,10 @@ namespace Repositories
             return await ctx.Set<TEntity>().FindAsync(id);
         }
 
-        public virtual async Task<TEntity> GetByProductId(Guid productId)
+        public virtual async Task Create(TEntity item)
         {
-            return await ctx.Set<TEntity>().Where(m => m.ProductId == productId);
+            ctx.Set<TEntity>().Add(item);
+            await ctx.SaveChangesAsync();
         }
     }
 }
