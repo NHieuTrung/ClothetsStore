@@ -28,5 +28,19 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productService.GetById(id));
         }
+
+        [HttpGet]
+        [Route("getProductVMs")]
+        public async Task<IActionResult> GetProducts(int pageSize, int pageNumber, string orderBy)
+        {
+            return Ok(await productVMService.GetAll(pageSize, pageNumber, orderBy));
+        }
+
+        [HttpGet]
+        [Route("getNumberOfPages")]
+        public async Task<IActionResult> GetNumberOfPages(int pageSize)
+        {
+            return Ok(await productVMService.GetNumberOfPages(pageSize));
+        }
     }
 }

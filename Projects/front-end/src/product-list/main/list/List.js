@@ -3,17 +3,21 @@ import ListItem from './list-item/ListItem';
 
 class List extends React.Component {
     state = {
-        numberOfItem: 8
+        items: []
     };
 
     renderItem = () => {
-        let items = [];
+        const listItems = this.state.items.map((item, idx) =>
+            <ListItem key={idx} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></ListItem>
+        );
 
-        for(let i = 1; i <= this.state.numberOfItem; i++) {
-            items.push(<ListItem key={i} id={i}></ListItem>);
-        }
+        return listItems;
+    }
 
-        return items;
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            items: nextProps.items
+        });
     }
 
     render() {

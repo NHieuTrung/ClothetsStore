@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

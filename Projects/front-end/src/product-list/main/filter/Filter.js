@@ -1,6 +1,78 @@
 import React from 'react';
 
 class Filter extends React.Component {
+    state = {
+        numberOfPages: 0,
+        pageSize: 9,
+        orderBy: 'new',
+        currentPageNumber: 1
+    }
+
+    getNumberOfPages = () => {
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.props.pageSize}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                numberOfPages: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    renderListPages = () => {
+        const listPages = [];
+
+        for(let i = 0; i < this.state.numberOfPages; i++) {
+            listPages.push(
+                <li key={i} value={i + 1} className={i + 1 === this.props.currentPageNumber ? "active" : ''}>
+                    {i + 1 === this.props.currentPageNumber ? i + 1 : <a href=" #" onClick={this.liClick}>{i + 1}</a>}
+                </li>
+            );
+        }
+
+        return listPages;
+    }
+
+    changeSize = () => {
+        this.props.changeSize(this.refs.pageSize.value);
+        this.changePage(1);
+
+        this.setState({
+            pageSize: this.refs.pageSize.value
+        }, () => {
+            this.getNumberOfPages();
+        });
+    }
+
+    changePage = (page) => {
+        this.props.changePage(page);
+        this.setState({
+            currentPageNumber: page
+        });
+    }
+
+    changeOrder = () => {
+        // console.log(this.refs.order.value);
+        this.props.changeOrder(this.refs.order.value);
+        this.changePage(1);
+
+        this.setState({
+            orderBy: this.refs.order.value
+        }, () => {
+            this.getNumberOfPages();
+        });
+    }
+
+    liClick = (evt) => {
+        this.changePage(evt.target.innerText);
+    }
+
+    componentDidMount = () => {
+        this.getNumberOfPages()
+    }
+    
     render() {
         return (
             // {/* <!-- store top filter --> */}
@@ -11,30 +83,31 @@ class Filter extends React.Component {
                         <a href=" #" className="active"><i className="fa fa-bars"></i></a>
                     </div>
                     <div className="sort-filter">
-                        <span className="text-uppercase">Sort By: </span>
-                        <select className="input">
-                                <option value="0">Position</option>
-                                <option value="0">Price</option>
-                                <option value="0">Rating</option>
-                            </select>
+                        <span className="text-uppercase">Sắp xếp theo: </span>
+                        <select className="input" ref='order' onChange={this.changeOrder}>
+                            <option value="new">Mới nhất</option>
+                            <option value="high">Giá cao đến thấp</option>
+                            <option value="low">Giá thấp đến cao</option>
+                        </select>
                         <a href=" #" className="main-btn icon-btn"><i className="fa fa-arrow-down"></i></a>
                     </div>
                 </div>
                 <div className="pull-right">
                     <div className="page-filter">
                         <span className="text-uppercase">Show:</span>
-                        <select className="input">
-                                <option value="0">10</option>
-                                <option value="1">20</option>
-                                <option value="2">30</option>
+                        <select className="input" onChange={this.changeSize} ref='pageSize'>
+                                <option value="9">9</option>
+                                <option value="12">12</option>
+                                <option value="15">15</option>
                             </select>
                     </div>
                     <ul className="store-pages">
                         <li><span className="text-uppercase">Page:</span></li>
-                        <li className="active">1</li>
+                        {this.renderListPages()}
+                        {/* <li className="active">1</li>
                         <li><a href=" #">2</a></li>
                         <li><a href=" #">3</a></li>
-                        <li><a href=" #"><i className="fa fa-caret-right"></i></a></li>
+                        <li><a href=" #"><i className="fa fa-caret-right"></i></a></li> */}
                     </ul>
                 </div>
             </div>
