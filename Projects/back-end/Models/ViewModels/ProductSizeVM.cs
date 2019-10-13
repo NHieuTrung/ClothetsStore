@@ -4,10 +4,11 @@ using System.Text;
 
 namespace Models.ViewModels
 {
-    public class ColorSize
+    public class ProductSizeVM
     {
-        public Guid ColorId { get; set; }
         public Guid SizeId { get; set; }
+        public Guid ProductId { get; set; }
+        public Guid ColorId { get; set; }
         public int InventoryQuantity { get; set; }
     }
 }

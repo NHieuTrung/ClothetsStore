@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Models.ViewModels
 {
-    public class ExtendedProduct
+    public class ExtendedProductVM
     {
         public string Code { get; set; }
         public string Name { get; set; }

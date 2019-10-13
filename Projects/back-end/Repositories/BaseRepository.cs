@@ -31,5 +31,10 @@ namespace Repositories
         {
             return await ctx.Set<TEntity>().FindAsync(id);
         }
+
+        public virtual async Task<TEntity> GetByProductId(Guid productId)
+        {
+            return await ctx.Set<TEntity>().Where(m => m.ProductId == productId);
+        }
     }
 }

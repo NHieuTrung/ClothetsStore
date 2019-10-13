@@ -17,12 +17,13 @@ namespace ClothingStore.Areas.Admin.Controllers
     public class ExtendedProductController : ControllerBase
     {
         ProductService productService = new ProductService();
+        ProductSizeService productSizeService = new ProductSizeService();
         [HttpGet("{id}")]
-        public async Task<ActionResult<ExtendedProduct>> GetAccount(Guid id)
+        public async Task<ActionResult<ExtendedProductVM>> GetProductSize(Guid id)
         {
             var product = await productService.GetById(id);
-            var listColorSize = await _context.ProductSize.Where(m => m.ProductId == id).Select(m => new ColorSize { ColorId = m.ColorId, SizeId = m.SizeId, InventoryQuantity = m.InventoryQuantity }).ToListAsync();
-            ExtendedProduct extendedProduct = new ExtendedProduct
+            var listColorSize = await productSizeService.GetByProduct()
+            ExtendedProductVM extendedProduct = new ExtendedProductVM
             {
                 Code = product.Code,
                 Name = product.Name,
