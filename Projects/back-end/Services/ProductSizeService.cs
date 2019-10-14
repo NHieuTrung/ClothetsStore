@@ -1,4 +1,5 @@
-﻿using Models.ViewModels;
+﻿using Models;
+using Models.ViewModels;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Services
 {
-    public class ProductSizeService : BaseService<ProductSizeVM, ProductSizeRepository>
+    public class ProductSizeService : BaseService<ProductSize, ProductSizeRepository>
     {
         ProductSizeRepository productSizeRepository = new ProductSizeRepository();
 

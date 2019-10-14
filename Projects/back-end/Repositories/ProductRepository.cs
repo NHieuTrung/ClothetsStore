@@ -35,5 +35,11 @@ namespace Repositories
 
             return product;
         }
+
+        public override async Task Create( Product product)
+        {
+            ctx.Product.Add(product);
+            await ctx.SaveChangesAsync();
+        }
     }
 }

@@ -49,19 +49,30 @@ namespace ClothingStore.Areas.Admin.Controllers
         public async Task<ActionResult<Gender>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
         {
             Guid productId;
-            using (var transaction = _context.Database.BeginTransaction())
+            using (var transaction = ctx.Database.BeginTransaction())
             {
                 try
                 {
-                    var currentDateTime = DateTime.Now;
-                    var account = new Account { Email = registerVM.Email, CreatedDate = currentDateTime };
-                    _context.Account.Add(account);
-                    _context.SaveChanges();
-                    accountId = account.Id;
-                    var userInfo = new UserInfo { Name = registerVM.Name, AccountId = account.Id, AvatarUrl = registerVM.ImageUrl, FacebookId = registerVM.Id, ModifyDate = currentDateTime, CreatedDate = currentDateTime };
-                    _context.UserInfo.Add(userInfo);
-                    userInfoId = userInfo.Id;
-                    _context.SaveChanges();
+                    var currentDate = System.DateTime.Now;
+                    var product = new Product
+                    {
+                        Code = extendedProductVM.Code,
+                        Name = extendedProductVM.Name,
+                        TypeProductId = extendedProductVM.TypeProductId,
+                        Price = extendedProductVM.Price,
+                        Detail = extendedProductVM.Detail,
+                        Discount = extendedProductVM.Discount,
+                        CreatedDate = currentDate,
+                        BrandId = extendedProductVM.BrandId,
+                        StatusId = extendedProductVM.StatusId
+                    };
+                    await productService.Create(product);
+                    productId = product.ProductId;
+                    foreach (var item in extendedProductVM.ListProductSize)
+                    {
+                        var productSize = new ProductSize { ProductId = productId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity };
+                        await productSizeService.Create(productSize);
+                    }
                     // Commit transaction if all commands succeed, transaction will auto-rollback
                     // when disposed if either commands fails
                     transaction.Commit();

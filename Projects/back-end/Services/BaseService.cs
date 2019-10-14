@@ -21,5 +21,9 @@ namespace Services
         {
             return await repository.GetById(id);
         }
+        public virtual async Task Create(TEntity entity)
+        {
+            await repository.Create(entity);
+        }
     }
 }
