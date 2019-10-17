@@ -9,5 +9,6 @@ namespace Models.ViewModels
         public string Name { get; set; }
         public decimal Price { get; set; }
         public double? Discount { get; set; }
+        public string ImageUrl { get; set; }
     }
 }
