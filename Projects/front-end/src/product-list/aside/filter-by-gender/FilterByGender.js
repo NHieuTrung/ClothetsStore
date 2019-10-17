@@ -38,7 +38,7 @@ class FilterByGender extends React.Component {
         return (
             // {/* <!-- aside widget --> */}
             <div className="aside">
-                <h3 className="aside-title">Filter by Gender</h3>
+                <h3 className="aside-title">Giới tính</h3>
                 <ul className="list-links">
                     {/* <li className="active"><a href=" #">Men</a></li> */}
                     { this.renderItem() }

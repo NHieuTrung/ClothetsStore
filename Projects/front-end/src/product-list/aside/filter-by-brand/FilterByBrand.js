@@ -38,7 +38,7 @@ class FilterByBrand extends React.Component {
         return (
             // {/* <!-- aside widget --> */}
             <div className="aside">
-                <h3 className="aside-title">Filter by Brand</h3>
+                <h3 className="aside-title">Thương hiệu</h3>
                 <ul className="list-links">
                     { this.renderItem() }
                 </ul>

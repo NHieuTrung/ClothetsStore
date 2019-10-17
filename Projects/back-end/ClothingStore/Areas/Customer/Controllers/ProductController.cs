@@ -31,16 +31,16 @@ namespace ClothingStore.Areas.Customer.Controllers
 
         [HttpGet]
         [Route("getProductVMs")]
-        public async Task<IActionResult> GetProducts(int pageSize, int pageNumber, string orderBy)
+        public async Task<IActionResult> GetProducts(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId)
         {
-            return Ok(await productVMService.GetAll(pageSize, pageNumber, orderBy));
+            return Ok(await productVMService.GetAll(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId));
         }
 
         [HttpGet]
         [Route("getNumberOfPages")]
-        public async Task<IActionResult> GetNumberOfPages(int pageSize)
+        public async Task<IActionResult> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice)
         {
-            return Ok(await productVMService.GetNumberOfPages(pageSize));
+            return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice));
         }
     }
 }

@@ -7,7 +7,10 @@ class Main extends React.Component {
         pageSize: 9,
         pageNumber: 1,
         orderBy: 'new',
-        items: []
+        items: [],
+        filterByMinPrice: 0,
+        filterByMaxPrice: 0,
+        filterByColor: '00000000-0000-0000-0000-000000000000'
     }
 
     changeSize = (size) => {
@@ -41,7 +44,7 @@ class Main extends React.Component {
     }
 
     getProducts = () => {
-        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -56,7 +59,10 @@ class Main extends React.Component {
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             pageSize: nextProps.pageSize,
-            pageNumber: nextProps.pageNumber
+            pageNumber: nextProps.pageNumber,
+            filterByMinPrice: nextProps.minPrice,
+            filterByMaxPrice: nextProps.maxPrice,
+            filterByColor: nextProps.color
         }, () => {
             this.getProducts();
         });
@@ -66,7 +72,7 @@ class Main extends React.Component {
         return (
             // {/* <!-- MAIN --> */}
             <div id="main" className="col-md-9">
-                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy}></Filter>
+                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice}></Filter>
                 <List items={this.state.items}></List>
             </div>
             // {/* <!-- /MAIN --> */}

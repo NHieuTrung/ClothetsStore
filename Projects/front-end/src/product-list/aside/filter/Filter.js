@@ -1,12 +1,91 @@
 import React from 'react';
+import NumberFormat from 'react-number-format';
 
 class Filter extends React.Component {
+    state = {
+        filterByMinPrice: 0,
+        filterByMaxPrice: 0,
+        filterByColor: '00000000-0000-0000-0000-000000000000',
+        color: []
+    }
+
+    getColor = () => {
+        fetch(`https://localhost:44376/api/customer/color/getColorById?id=${this.state.filterByColor}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                color: res
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        })
+    }
+
+    resetPrice = () => {
+        this.props.filterByPrice(0, 0);
+
+        this.setState({
+            filterByMinPrice: 0,
+            filterByMaxPrice: 0
+        })
+    }
+
+    resetColor = () => {
+        this.props.filterByColor('00000000-0000-0000-0000-000000000000');
+
+        this.setState({
+            filterByColor: '00000000-0000-0000-0000-000000000000',
+            color: []
+        });
+    }
+
+    renderPrice = () => {
+        let price;
+
+        if(this.state.filterByMaxPrice !== 0) {
+            price = <ul className="filter-list">
+                        <li><span className="text-uppercase">Giá:</span></li>
+                        <li><a href=" #" onClick={this.resetPrice}>Từ: <NumberFormat value={this.state.filterByMinPrice} displayType={'text'} thousandSeparator={true}/></a></li>
+                        <li><a href=" #" onClick={this.resetPrice}>Đến: <NumberFormat value={this.state.filterByMaxPrice} displayType={'text'} thousandSeparator={true}/></a></li>
+                    </ul>
+        }
+
+        return price;
+    }
+
+    renderColor = () => {
+        let color;
+        
+        if(this.state.filterByColor !== '00000000-0000-0000-0000-000000000000') {
+            color = <ul className="filter-list">
+                        <li><span className="text-uppercase">Màu:</span></li>
+                        <li><a href=" #" onClick={this.resetColor} style={{ border: this.state.color.name === "Trắng" ? "1px solid black" : "", backgroundColor: `${this.state.color.colorValue}`, color: this.state.color.name === "Trắng" ? "#000" : "#FFF" }}>{this.state.color.name}</a></li>
+                    </ul>
+        }
+
+        return color;
+    }
+
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            filterByMinPrice: nextProps.minPrice,
+            filterByMaxPrice: nextProps.maxPrice,
+            filterByColor: nextProps.color
+        }, () => {
+            this.getColor();
+        });
+    }
+
     render() {
         return (
             // {/* <!-- aside widget --> */}
             <div className="aside">
-                <h3 className="aside-title">Shop by:</h3>
-                <ul className="filter-list">
+                <h3 className="aside-title">Bộ lọc</h3>
+
+                {this.renderPrice()}
+                {this.renderColor()}
+                {/* <ul className="filter-list">
                     <li><span className="text-uppercase">color:</span></li>
                     <li><a href=" #" style={{ backgroundColor: "#8A2454", color: "#FFF" }}>Camelot</a></li>
                     <li><a href=" #" style={{ backgroundColor: "#475984", color: "#FFF" }}>East Bay</a></li>
@@ -29,9 +108,9 @@ class Filter extends React.Component {
                 <ul className="filter-list">
                     <li><span className="text-uppercase">Gender:</span></li>
                     <li><a href=" #">Men</a></li>
-                </ul>
+                </ul> */}
 
-                <button className="primary-btn">Clear All</button>
+                <button className="primary-btn">Xoá tất cả</button>
             </div>
             // {/* <!-- /aside widget --> */}
         );

@@ -5,11 +5,13 @@ class Filter extends React.Component {
         numberOfPages: 0,
         pageSize: 9,
         orderBy: 'new',
-        currentPageNumber: 1
+        currentPageNumber: 1,
+        filterByMinPrice: 0,
+        filterByMaxPrice: 0
     }
 
     getNumberOfPages = () => {
-        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.props.pageSize}`)
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -54,7 +56,6 @@ class Filter extends React.Component {
     }
 
     changeOrder = () => {
-        // console.log(this.refs.order.value);
         this.props.changeOrder(this.refs.order.value);
         this.changePage(1);
 
@@ -67,6 +68,18 @@ class Filter extends React.Component {
 
     liClick = (evt) => {
         this.changePage(evt.target.innerText);
+    }
+
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            pageSize: nextProps.pageSize,
+            filterByMinPrice: nextProps.minPrice,
+            filterByMaxPrice: nextProps.maxPrice
+        }, () => {
+            this.getNumberOfPages();
+        }, () => {
+            this.changePage(1);
+        });
     }
 
     componentDidMount = () => {

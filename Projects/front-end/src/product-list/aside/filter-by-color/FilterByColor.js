@@ -3,7 +3,8 @@ import React from 'react';
 class FilterByColor extends React.Component {
     state = {
         items: [],
-        error: null
+        error: null,
+        filterByColor: '00000000-0000-0000-0000-000000000000'
     }
     
     componentDidMount() {
@@ -25,10 +26,18 @@ class FilterByColor extends React.Component {
             )
     }
 
+    filterByColor = (evt) => {
+        this.props.filterByColor(evt.target.id);
+
+        this.setState({
+            filterByColor: evt.target.id
+        })
+    }
+
     renderItem = () => {
         let items = this.state.items.map((item, idx) => 
             // eslint-disable-next-line jsx-a11y/anchor-has-content
-            <li key={ idx }><a href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }}></a></li>
+            <li key={ idx }><a id={item.colorId} href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }} onClick={this.filterByColor}></a></li>
         );
 
         return items;
@@ -38,7 +47,7 @@ class FilterByColor extends React.Component {
         return (
             // {/* <!-- aside widget --> */}
             <div className="aside">
-                <h3 className="aside-title">Filter By Color:</h3>
+                <h3 className="aside-title">Màu sắc</h3>
                 <ul className="color-option">
                     { this.renderItem() }
                     {/* <li><a href=" #" style={{ backgroundColor: "#475984" }}></a></li>
