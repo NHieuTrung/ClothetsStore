@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClothingStore.Areas.Admin.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +17,7 @@ namespace ClothingStore.Areas.Admin.Controllers
     {
         ProductService productService = new ProductService();
         ProductSizeService productSizeService = new ProductSizeService();
+        ExtendedProductService extendedProductService = new ExtendedProductService();
         [HttpGet("{id}")]
         public async Task<ActionResult<ExtendedProductVM>> GetExtendedProduct(Guid id)
         {
@@ -48,42 +48,18 @@ namespace ClothingStore.Areas.Admin.Controllers
         [HttpPost]
         public async Task<ActionResult<Gender>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
         {
-            Guid productId;
-            using (var transaction = ctx.Database.BeginTransaction())
+            try
             {
-                try
-                {
-                    var currentDate = System.DateTime.Now;
-                    var product = new Product
-                    {
-                        Code = extendedProductVM.Code,
-                        Name = extendedProductVM.Name,
-                        TypeProductId = extendedProductVM.TypeProductId,
-                        Price = extendedProductVM.Price,
-                        Detail = extendedProductVM.Detail,
-                        Discount = extendedProductVM.Discount,
-                        CreatedDate = currentDate,
-                        BrandId = extendedProductVM.BrandId,
-                        StatusId = extendedProductVM.StatusId
-                    };
-                    await productService.Create(product);
-                    productId = product.ProductId;
-                    foreach (var item in extendedProductVM.ListProductSize)
-                    {
-                        var productSize = new ProductSize { ProductId = productId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity };
-                        await productSizeService.Create(productSize);
-                    }
-                    // Commit transaction if all commands succeed, transaction will auto-rollback
-                    // when disposed if either commands fails
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    return BadRequest();
-                }
+                await extendedProductService.Create(extendedProductVM);
             }
-
-            return CreatedAtAction("GetGender", new { id = gender.Id }, gender);
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return CreatedAtAction("GetExtendedProduct", new
+            {
+                id = extendedProductVM.ListProductSize.Select(m => m.ProductId).FirstOrDefault()
+            }, extendedProductVM);
         }
     }
 }
