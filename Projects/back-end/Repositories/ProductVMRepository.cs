@@ -68,12 +68,22 @@ namespace Repositories
             return productVMs;
         }
 
-        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice)
+        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId)
         {
             maxPrice = maxPrice == 0 ? 100000000 : maxPrice;
+            int numberOfProducts = 0;
+            int numberOfPages = 0;
 
-            int numberOfProducts = await ctx.Product.Where(p => p.Price >= minPrice && p.Price <= maxPrice).CountAsync();
-            int numberOfPages = numberOfProducts % pageSize > 0 ? (numberOfProducts / pageSize) + 1 : numberOfProducts / pageSize;
+            if (colorId != Guid.Empty)
+            {
+                numberOfProducts = await ctx.ProductColor.Where(p => p.ColorId == colorId && p.Product.Price >= minPrice && p.Product.Price <= maxPrice).CountAsync();
+            }
+            else
+            {
+                numberOfProducts = await ctx.Product.Where(p => p.Price >= minPrice && p.Price <= maxPrice).CountAsync();
+            }
+
+            numberOfPages = numberOfProducts % pageSize > 0 ? (numberOfProducts / pageSize) + 1 : numberOfProducts / pageSize;
 
             return numberOfPages;
         }

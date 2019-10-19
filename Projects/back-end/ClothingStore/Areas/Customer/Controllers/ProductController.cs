@@ -38,9 +38,9 @@ namespace ClothingStore.Areas.Customer.Controllers
 
         [HttpGet]
         [Route("getNumberOfPages")]
-        public async Task<IActionResult> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice)
+        public async Task<IActionResult> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId)
         {
-            return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice));
+            return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId));
         }
     }
 }

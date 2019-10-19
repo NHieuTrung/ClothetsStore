@@ -16,9 +16,9 @@ namespace Services
             return await productVMRepository.GetAll(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId);
         }
 
-        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice)
+        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId)
         {
-            return await productVMRepository.GetNumberOfPages(pageSize, minPrice, maxPrice);
+            return await productVMRepository.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId);
         }
     }
 }
