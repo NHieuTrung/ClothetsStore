@@ -68,15 +68,6 @@ namespace Repositories
             int numberOfProducts = 0;
             int numberOfPages = 0;
 
-            //if (colorId != Guid.Empty)
-            //{
-            //    numberOfProducts = await ctx.ProductColor.Where(p => p.ColorId == colorId && p.Product.Price >= minPrice && p.Product.Price <= maxPrice).CountAsync();
-            //}
-            //else
-            //{
-            //    numberOfProducts = await ctx.Product.Where(p => p.Price >= minPrice && p.Price <= maxPrice).CountAsync();
-            //}
-
             numberOfProducts = await GetNumberOfProductsWithFilter(minPrice, maxPrice, colorId, sizeName);
             numberOfPages = numberOfProducts % pageSize > 0 ? (numberOfProducts / pageSize) + 1 : numberOfProducts / pageSize;
 
@@ -91,71 +82,89 @@ namespace Repositories
                                                                   .Include(p => p.ProductColor.Product)
                                                                   .ToListAsync();
 
+            //Filter by size
             if(sizeName != "" && sizeName != null)
             {
                 productSizes = productSizes.Where(p => p.Size.Name == sizeName).ToList();
             }
 
+            //Filter by color
             if(colorId != Guid.Empty)
             {
                 productSizes = productSizes.Where(p => p.ProductColor.ColorId == colorId).ToList();
             }
 
+            //Filter by Price
             productSizes = productSizes.Where(p => p.ProductColor.Product.Price >= minPrice && p.ProductColor.Product.Price <= maxPrice).ToList();
 
+            //Get distinct products (group by -> distinct)
+            List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
+                                                   .Distinct()
+                                                   .Select(p => p.Key)
+                                                   .ToList();
+
+            //Get all products
+            List<ProductColor> productList = new List<ProductColor>();
+            foreach (var productId in productIdList)
+            {
+                ProductColor productColor = await ctx.ProductColor.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+                productList.Add(productColor);
+            }
+
+            //Order by
             switch (orderBy)
             {
                 case "new":
-                    productVMs = productSizes.OrderByDescending(p => p.ProductColor.Product.CreatedDate)
-                                             .Skip(pageSize * (pageNumber - 1))
-                                             .Take(pageSize)
-                                             .Select(p => new ProductVM
-                                             {
-                                                 Name = p.ProductColor.Product.Name,
-                                                 Price = p.ProductColor.Product.Price,
-                                                 Discount = p.ProductColor.Product.Discount,
-                                                 ImageUrl = p.ProductColor.ImageUrl
-                                             })
-                                             .ToList();
+                    productVMs = productList.OrderByDescending(p => p.Product.CreatedDate)
+                                            .Skip(pageSize * (pageNumber - 1))
+                                            .Take(pageSize)
+                                            .Select(p => new ProductVM
+                                            {
+                                                Name = p.Product.Name,
+                                                Price = p.Product.Price,
+                                                Discount = p.Product.Discount,
+                                                ImageUrl = p.ImageUrl
+                                            })
+                                            .ToList();
                     break;
                 case "high":
-                    productVMs = productSizes.OrderByDescending(p => p.ProductColor.Product.Price)
-                                             .Skip(pageSize * (pageNumber - 1))
-                                             .Take(pageSize)
-                                             .Select(p => new ProductVM
-                                             {
-                                                 Name = p.ProductColor.Product.Name,
-                                                 Price = p.ProductColor.Product.Price,
-                                                 Discount = p.ProductColor.Product.Discount,
-                                                 ImageUrl = p.ProductColor.ImageUrl
-                                             })
-                                             .ToList();
+                    productVMs = productList.OrderByDescending(p => p.Product.Price)
+                                            .Skip(pageSize * (pageNumber - 1))
+                                            .Take(pageSize)
+                                            .Select(p => new ProductVM
+                                            {
+                                                Name = p.Product.Name,
+                                                Price = p.Product.Price,
+                                                Discount = p.Product.Discount,
+                                                ImageUrl = p.ImageUrl
+                                            })
+                                            .ToList();
                     break;
                 case "low":
-                    productVMs = productSizes.OrderBy(p => p.ProductColor.Product.Price)
-                                             .Skip(pageSize * (pageNumber - 1))
-                                             .Take(pageSize)
-                                             .Select(p => new ProductVM
-                                             {
-                                                 Name = p.ProductColor.Product.Name,
-                                                 Price = p.ProductColor.Product.Price,
-                                                 Discount = p.ProductColor.Product.Discount,
-                                                 ImageUrl = p.ProductColor.ImageUrl
-                                             })
-                                             .ToList();
+                    productVMs = productList.OrderBy(p => p.Product.Price)
+                                            .Skip(pageSize * (pageNumber - 1))
+                                            .Take(pageSize)
+                                            .Select(p => new ProductVM
+                                            {
+                                                Name = p.Product.Name,
+                                                Price = p.Product.Price,
+                                                Discount = p.Product.Discount,
+                                                ImageUrl = p.ImageUrl
+                                            })
+                                            .ToList();
                     break;
                 default:
-                    productVMs = productSizes.OrderByDescending(p => p.ProductColor.Product.CreatedDate)
-                                             .Skip(pageSize * (pageNumber - 1))
-                                             .Take(pageSize)
-                                             .Select(p => new ProductVM
-                                             {
-                                                 Name = p.ProductColor.Product.Name,
-                                                 Price = p.ProductColor.Product.Price,
-                                                 Discount = p.ProductColor.Product.Discount,
-                                                 ImageUrl = p.ProductColor.ImageUrl
-                                             })
-                                             .ToList();
+                    productVMs = productList.OrderByDescending(p => p.Product.CreatedDate)
+                                            .Skip(pageSize * (pageNumber - 1))
+                                            .Take(pageSize)
+                                            .Select(p => new ProductVM
+                                            {
+                                                Name = p.Product.Name,
+                                                Price = p.Product.Price,
+                                                Discount = p.Product.Discount,
+                                                ImageUrl = p.ImageUrl
+                                            })
+                                            .ToList();
                     break;
             }
 
@@ -169,19 +178,36 @@ namespace Repositories
                                                                   .Include(p => p.ProductColor.Product)
                                                                   .ToListAsync();
 
+            //Filter by size
             if (sizeName != "" && sizeName != null)
             {
                 productSizes = productSizes.Where(p => p.Size.Name == sizeName).ToList();
             }
 
+            //Filter by color
             if (colorId != Guid.Empty)
             {
                 productSizes = productSizes.Where(p => p.ProductColor.ColorId == colorId).ToList();
             }
 
+            //Filter by Price
             productSizes = productSizes.Where(p => p.ProductColor.Product.Price >= minPrice && p.ProductColor.Product.Price <= maxPrice).ToList();
 
-            return productSizes.Count;
+            //Get distinct products (group by -> distinct)
+            List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
+                                                   .Distinct()
+                                                   .Select(p => p.Key)
+                                                   .ToList();
+
+            //Get all products
+            List<ProductColor> productList = new List<ProductColor>();
+            foreach (var productId in productIdList)
+            {
+                ProductColor productColor = await ctx.ProductColor.Where(p => p.ProductId == productId).FirstOrDefaultAsync();
+                productList.Add(productColor);
+            }
+
+            return productList.Count;
         }
     }
 }
