@@ -8,11 +8,12 @@ class Filter extends React.Component {
         currentPageNumber: 1,
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
-        filterByColor: '00000000-0000-0000-0000-000000000000'
+        filterByColor: '00000000-0000-0000-0000-000000000000',
+        filterBySize: ''
     }
 
     getNumberOfPages = () => {
-        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}`)
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -76,7 +77,8 @@ class Filter extends React.Component {
             pageSize: nextProps.pageSize,
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
-            filterByColor: nextProps.color
+            filterByColor: nextProps.color,
+            filterBySize: nextProps.size
         }, () => {
             this.getNumberOfPages();
         }, () => {

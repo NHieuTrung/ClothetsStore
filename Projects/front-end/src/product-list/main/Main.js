@@ -10,7 +10,8 @@ class Main extends React.Component {
         items: [],
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
-        filterByColor: '00000000-0000-0000-0000-000000000000'
+        filterByColor: '00000000-0000-0000-0000-000000000000',
+        filterBySize: ''
     }
 
     changeSize = (size) => {
@@ -44,7 +45,7 @@ class Main extends React.Component {
     }
 
     getProducts = () => {
-        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -62,7 +63,8 @@ class Main extends React.Component {
             pageNumber: nextProps.pageNumber,
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
-            filterByColor: nextProps.color
+            filterByColor: nextProps.color,
+            filterBySize: nextProps.size
         }, () => {
             this.getProducts();
         });
@@ -72,7 +74,7 @@ class Main extends React.Component {
         return (
             // {/* <!-- MAIN --> */}
             <div id="main" className="col-md-9">
-                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor}></Filter>
+                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor} size={this.state.filterBySize}></Filter>
                 <List items={this.state.items}></List>
             </div>
             // {/* <!-- /MAIN --> */}

@@ -11,7 +11,8 @@ class ProductList extends React.Component {
         orderBy: 'new',
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
-        filterByColor: '00000000-0000-0000-0000-000000000000'
+        filterByColor: '00000000-0000-0000-0000-000000000000',
+        filterBySize: ''
     }
 
     getUrl = () => {
@@ -69,6 +70,12 @@ class ProductList extends React.Component {
         });
     }
 
+    filterBySize = (sizeName) => {
+        this.setState({
+            filterBySize: sizeName
+        });
+    }
+
     componentDidMount = () => {
         this.getUrl();
     }
@@ -86,8 +93,8 @@ class ProductList extends React.Component {
                     <div className="container">
                         {/* <!-- row --> */}
                         <div className="row">
-                            <Aside filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
-                            <Main color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
+                            <Aside filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
+                            <Main size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
                         </div>
                         {/* <!-- /row --> */}
                     </div>

@@ -6,7 +6,8 @@ class Filter extends React.Component {
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
         filterByColor: '00000000-0000-0000-0000-000000000000',
-        color: []
+        color: [],
+        filterBySize: ''
     }
 
     getColor = () => {
@@ -40,6 +41,14 @@ class Filter extends React.Component {
         });
     }
 
+    resetSize = () => {
+        this.props.filterBySize('');
+
+        this.setState({
+            filterBySize: ''
+        });
+    }
+
     renderPrice = () => {
         let price;
 
@@ -60,18 +69,32 @@ class Filter extends React.Component {
         if(this.state.filterByColor !== '00000000-0000-0000-0000-000000000000') {
             color = <ul className="filter-list">
                         <li><span className="text-uppercase">Màu:</span></li>
-                        <li><a href=" #" onClick={this.resetColor} style={{ border: this.state.color.name === "Trắng" ? "1px solid black" : "", backgroundColor: `${this.state.color.colorValue}`, color: this.state.color.name === "Trắng" ? "#000" : "#FFF" }}>{this.state.color.name}</a></li>
+                        <li><a href=" #" onClick={this.resetColor} style={{ border: "1px solid #F8694A", backgroundColor: `${this.state.color.colorValue}`, color: this.state.color.name === "Trắng" ? "#000" : "#FFF" }}>{this.state.color.name}</a></li>
                     </ul>
         }
 
         return color;
     }
 
+    renderSize = () => {
+        let size;
+
+        if(this.state.filterBySize !== '') {
+            size =  <ul className="filter-list">
+                        <li><span className="text-uppercase">Size:</span></li>
+                        <li><a href=" #" onClick={this.resetSize} style={{ border: "1px solid #F8694A"}}>{this.state.filterBySize}</a></li>
+                    </ul>
+        }
+
+        return size;
+    }
+
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
-            filterByColor: nextProps.color
+            filterByColor: nextProps.color,
+            filterBySize: nextProps.size
         }, () => {
             this.getColor();
         });
@@ -85,6 +108,7 @@ class Filter extends React.Component {
 
                 {this.renderPrice()}
                 {this.renderColor()}
+                {this.renderSize()}
                 {/* <ul className="filter-list">
                     <li><span className="text-uppercase">color:</span></li>
                     <li><a href=" #" style={{ backgroundColor: "#8A2454", color: "#FFF" }}>Camelot</a></li>
