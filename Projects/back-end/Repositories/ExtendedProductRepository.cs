@@ -45,6 +45,7 @@ namespace Repositories
                     Guid productId = product.ProductId;
                     foreach (var item in extendedProductVM.ListProductSize)
                     {
+                        var productColor = new ProductColor { ColorId = item.ColorId, ProductId = item.ProductId };
                         var productSize = new ProductSize { ProductId = productId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity };
                         ctx.ProductSize.Add(productSize);
                         await ctx.SaveChangesAsync();
