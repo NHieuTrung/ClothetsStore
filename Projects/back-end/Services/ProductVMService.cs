@@ -20,5 +20,9 @@ namespace Services
         {
             return await productVMRepository.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId, sizeName);
         }
+        public async Task<IList<ProductVM>> GetNew()
+        {
+            return await productVMRepository.GetNew();
+        }
     }
 }

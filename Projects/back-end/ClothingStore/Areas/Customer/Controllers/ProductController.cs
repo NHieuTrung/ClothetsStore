@@ -42,5 +42,12 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId, sizeName));
         }
+
+        [HttpGet]
+        [Route("getNew")]
+        public async Task<IActionResult> GetNew()
+        {
+            return Ok(await productVMService.GetNew());
+        }
     }
 }
