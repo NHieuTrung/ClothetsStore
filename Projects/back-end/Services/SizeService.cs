@@ -13,6 +13,11 @@ namespace Services
         public async Task<IList<string>> GetDistinctSizes()
         {
             return await sizeRepository.GetDistinctSizes();
+
+        }
+        public async Task<IList<Size>> GetSizes(Guid id)
+        {
+            return await sizeRepository.GetSize(id);
         }
     }
 }

@@ -41,5 +41,22 @@ namespace Repositories
 
             return size;
         }
+        public async Task<IList<Size>> GetSize(Guid id)
+        {
+            IList<Size> size = new List<Size>();
+
+            List<Guid> productSize = ctx.ProductSize.Where(p => p.ProductId == id)
+                                               .GroupBy(p => p.SizeId)
+                                               .Distinct()
+                                               .Select(s => s.Key)
+                                               .ToList();
+
+            foreach (Guid item in productSize)
+            {
+                size.Add(ctx.Size.Where(s => s.SizeId == item).FirstOrDefault());
+            }
+
+            return size;
+        }
     }
 }

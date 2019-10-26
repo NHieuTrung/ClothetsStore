@@ -3,19 +3,37 @@ import LatestProductItem from './latest-product-item/LatestProductItem';
 
 class LatestProduct extends React.Component {
     state = {
-        numberOfItem: 8
+        items:[]
     };
 
     renderItem = () => {
-        let items = [];
+        let listItems = null;
+        if(this.state.items.length !== 0) {
+            listItems = this.state.items.map((item, idx) =>
+            <LatestProductItem key={idx} itemId={item.productId} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></LatestProductItem>
+        )};
+    //     const listItems = this.state.items.map((item, idx) =>
+    //     <LatestProductItem key={idx} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></LatestProductItem>
+    // );
 
-        for(let i = 1; i <= this.state.numberOfItem; i++) {
-            items.push(<LatestProductItem key={i} id={i}></LatestProductItem>);
-        }
 
-        return items;
+        return listItems;
     }
-
+    getProduct=()=>{
+        fetch(`https://localhost:44376/api/customer/product/getNew`)
+        .then(res=>res.json())
+        .then(res=>{
+            this.setState({
+                items:res
+            })
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+    }
+    componentDidMount=()=>{
+        this.getProduct();
+    }
     render() {
         return (
             // <!-- section -->
