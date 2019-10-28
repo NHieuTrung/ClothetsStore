@@ -222,8 +222,8 @@ class ProductNavigation extends React.Component {
                         <div className="menu-nav">
                             <span className="menu-header">Menu <i className="fa fa-bars"></i></span>
                             <ul className="menu-list">
-                                <li><a href="/#">Home</a></li>
-                                <li><a href="/#">Shop</a></li>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li><a href="/productlist">Sản phẩm</a></li>
                                 <li className="dropdown mega-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Women <i className="fa fa-caret-down"></i></a>
                                     <div className="custom-menu">
                                         <div className="row">
@@ -364,14 +364,6 @@ class ProductNavigation extends React.Component {
                                     </div>
                                 </li>
                                 <li><a href="/#">Sales</a></li>
-                                <li className="dropdown default-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Pages <i className="fa fa-caret-down"></i></a>
-                                    <ul className="custom-menu">
-                                        <li><a href="index.html">Home</a></li>
-                                        <li><a href="products.html">Products</a></li>
-                                        <li><a href="product-page.html">Product Details</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                    </ul>
-                                </li>
                             </ul>
                         </div>
                         {/* <!-- menu nav --> */}

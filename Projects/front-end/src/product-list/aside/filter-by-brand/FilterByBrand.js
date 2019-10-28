@@ -3,7 +3,8 @@ import React from 'react';
 class FilterByBrand extends React.Component {
     state = {
         items: [],
-        error: null
+        error: null,
+        filterByBrand: '00000000-0000-0000-0000-000000000000'
     }
 
     componentDidMount() {
@@ -25,10 +26,18 @@ class FilterByBrand extends React.Component {
             )
     }
 
+    filterByBrand = (evt) => {
+        this.props.filterByBrand(evt.target.id);
+
+        this.setState({
+            filterByBrand: evt.target.id
+        })
+    }
+
     renderItem = () => {
         let items = this.state.items.map((item, idx) => 
             // eslint-disable-next-line jsx-a11y/anchor-has-content
-            <li key={ idx }><a href=" #">{ item.name }</a></li>
+            <li key={ idx }><a id={item.brandId} href=" #" onClick={this.filterByBrand}>{ item.name }</a></li>
         );
 
         return items;

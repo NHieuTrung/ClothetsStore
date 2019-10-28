@@ -1,4 +1,5 @@
 import React from 'react';
+import NumberFormat from 'react-number-format';
 
 class ProductInfo extends React.Component{
     render() {
@@ -10,8 +11,12 @@ class ProductInfo extends React.Component{
                         <span className="sale">-20%</span>
                     </div>
                     <h2 className="product-name">{this.props.itemName}</h2>
-                    <h3 className="product-price">$32.50 <del className="product-old-price">$45.00</del></h3>
-                    <div>
+                    { 
+                        this.props.itemDiscount === null ?
+                        <h3 className="product-price"><NumberFormat value={this.props.itemPrice} displayType={'text'} thousandSeparator={true}/></h3> :
+                        <h3 className="product-price">{this.props.itemPrice - (this.props.itemPrice * this.props.itemDiscount / 100)} <del className="product-old-price">${this.props.itemPrice}</del></h3>
+                    }
+                    {/* <div>
                         <div className="product-rating">
                             <i className="fa fa-star"></i>
                             <i className="fa fa-star"></i>
@@ -20,11 +25,10 @@ class ProductInfo extends React.Component{
                             <i className="fa fa-star-o empty"></i>
                         </div>
                         <a href=" #">3 Review(s) / Add Review</a>
-                    </div>
+                    </div> */}
                     <p><strong>Availability:</strong> In Stock</p>
                     <p><strong>Brand:</strong> E-SHOP</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-                        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    <p>{this.props.itemDetail}</p>
                     <div className="product-options">
                         <ul className="size-option">
                             <li><span className="text-uppercase">Size:</span></li>
@@ -46,7 +50,7 @@ class ProductInfo extends React.Component{
                             <span className="text-uppercase">QTY: </span>
                             <input className="input" type="number" />
                         </div>
-                        <button className="primary-btn add-to-cart"><i className="fa fa-shopping-cart"></i> Add to Cart</button>
+                        <button className="primary-btn add-to-cart"><i className="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
                         <div className="pull-right">
                             <button className="main-btn icon-btn"><i className="fa fa-heart"></i></button>
                             <button className="main-btn icon-btn"><i className="fa fa-exchange"></i></button>

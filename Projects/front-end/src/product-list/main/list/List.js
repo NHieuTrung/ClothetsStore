@@ -8,7 +8,7 @@ class List extends React.Component {
 
     renderItem = () => {
         const listItems = this.state.items.map((item, idx) =>
-            <ListItem key={idx} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></ListItem>
+            <ListItem key={idx} itemProductId={item.productId} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></ListItem>
         );
 
         return listItems;

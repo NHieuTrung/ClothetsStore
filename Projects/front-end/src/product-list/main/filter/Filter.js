@@ -9,11 +9,13 @@ class Filter extends React.Component {
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
         filterByColor: '00000000-0000-0000-0000-000000000000',
-        filterBySize: ''
+        filterBySize: '',
+        filterByBrand: '00000000-0000-0000-0000-000000000000',
+        filterByProductGender: '00000000-0000-0000-0000-000000000000'
     }
 
     getNumberOfPages = () => {
-        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}`)
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -78,7 +80,9 @@ class Filter extends React.Component {
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
             filterByColor: nextProps.color,
-            filterBySize: nextProps.size
+            filterBySize: nextProps.size,
+            filterByBrand: nextProps.brand,
+            filterByProductGender: nextProps.productGender
         }, () => {
             this.getNumberOfPages();
         }, () => {

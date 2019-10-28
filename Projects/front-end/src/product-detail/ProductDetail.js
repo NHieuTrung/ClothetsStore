@@ -1,9 +1,47 @@
 import React from 'react';
+import  { Redirect } from 'react-router-dom'
 import ProductNavigation from '../navigation/ProductNavigation'
 import Breadcrumb from './breadcrumb/Breadcrumb'
 import Main from './main/Main'
 
 class ProductDetail extends React.Component{
+    state = {
+        item: ''
+    }
+
+    getProduct = (id) => {
+        fetch(`https://localhost:44376/api/customer/product/getProductById?id=${id}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                item: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    getId = () => {
+        let idTemp = '', id = '';
+        let href = window.location.href;
+
+        if(href.indexOf("id") === -1) {
+            return <Redirect to='/productlist'/>; //Chưa chạy được
+        }
+        else {
+            idTemp = href.substring(href.indexOf("id"), href.length);
+            id = idTemp.substring(idTemp.indexOf('=') + 1, idTemp.length);
+        }
+
+        this.getProduct(id);
+    }
+
+    componentDidMount = () => {
+        this.productSlick(); //chạy JS (đừng quan tâm)
+        this.getId();
+    }
+
     productSlick = () => {
         // PRODUCT DETAILS SLICK
         window.$('#product-main-view').slick({
@@ -28,16 +66,12 @@ class ProductDetail extends React.Component{
         window.$('#product-main-view .product-view').zoom();
     }
 
-    componentDidMount = () => {
-        this.productSlick();
-    }
-
     render() {
         return (
             <div>
                 <ProductNavigation></ProductNavigation>
-                <Breadcrumb></Breadcrumb>
-                <Main></Main>
+                <Breadcrumb itemName={this.state.item.name}></Breadcrumb>
+                <Main item={this.state.item}></Main>
             </div>
         );
     }

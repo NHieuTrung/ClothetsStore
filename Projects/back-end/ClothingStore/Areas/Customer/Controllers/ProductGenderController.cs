@@ -22,7 +22,7 @@ namespace ClothingStore.Areas.Customer.Controllers
         }
 
         [HttpGet]
-        [Route("getColorById")]
+        [Route("getProductGenderById")]
         public async Task<IActionResult> GetProductGenderById(Guid id)
         {
             return Ok(await productGenderService.GetById(id));

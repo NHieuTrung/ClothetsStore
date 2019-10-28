@@ -7,20 +7,56 @@ class Filter extends React.Component {
         filterByMaxPrice: 0,
         filterByColor: '00000000-0000-0000-0000-000000000000',
         color: [],
-        filterBySize: ''
+        filterBySize: '',
+        filterByBrand: '00000000-0000-0000-0000-000000000000',
+        brand: [],
+        filterByProductGender: '00000000-0000-0000-0000-000000000000',
+        productGender: []
     }
 
     getColor = () => {
-        fetch(`https://localhost:44376/api/customer/color/getColorById?id=${this.state.filterByColor}`)
-        .then(res => res.json())
-        .then(res => {
-            this.setState({
-                color: res
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        })
+        if(this.state.filterByColor !== '00000000-0000-0000-0000-000000000000') {
+            fetch(`https://localhost:44376/api/customer/color/getColorById?id=${this.state.filterByColor}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    color: res
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
+    getBrand = () => {
+        if(this.state.filterByBrand !== '00000000-0000-0000-0000-000000000000') {
+            fetch(`https://localhost:44376/api/customer/brand/getBrandById?id=${this.state.filterByBrand}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    brand: res
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
+    getProductGender = () => {
+        if(this.state.filterByProductGender !== '00000000-0000-0000-0000-000000000000') {
+            fetch(`https://localhost:44376/api/customer/productgender/getProductGenderById?id=${this.state.filterByProductGender}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    productGender: res
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
     }
 
     resetPrice = () => {
@@ -47,6 +83,22 @@ class Filter extends React.Component {
         this.setState({
             filterBySize: ''
         });
+    }
+
+    resetBrand = () => {
+        this.props.filterByBrand('00000000-0000-0000-0000-000000000000');
+
+        this.setState({
+            filterByBrand: '00000000-0000-0000-0000-000000000000'
+        })
+    }
+
+    resetProductGender = () => {
+        this.props.filterByProductGender('00000000-0000-0000-0000-000000000000');
+
+        this.setState({
+            filterByProductGender: '00000000-0000-0000-0000-000000000000'
+        })
     }
 
     renderPrice = () => {
@@ -89,14 +141,44 @@ class Filter extends React.Component {
         return size;
     }
 
+    renderBrand = () => {
+        let brand;
+        
+        if(this.state.filterByBrand !== '00000000-0000-0000-0000-000000000000') {
+            brand = <ul className="filter-list">
+                        <li><span className="text-uppercase">Thương hiệu:</span></li>
+                        <li><a href=" #" onClick={this.resetBrand} style={{ border: "1px solid #F8694A" }}>{this.state.brand.name}</a></li>
+                    </ul>
+        }
+
+        return brand;
+    }
+
+    renderProductGender = () => {
+        let productGender;
+
+        if(this.state.filterByProductGender !== '00000000-0000-0000-0000-000000000000') {
+            productGender = <ul className="filter-list">
+                                <li><span className="text-uppercase">Giới tính:</span></li>
+                                <li><a href=" #" onClick={this.resetProductGender} style={{ border: "1px solid #F8694A" }}>{this.state.productGender.name}</a></li>
+                            </ul>
+        }
+
+        return productGender;
+    }
+
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
             filterByColor: nextProps.color,
-            filterBySize: nextProps.size
+            filterBySize: nextProps.size,
+            filterByBrand: nextProps.brand,
+            filterByProductGender: nextProps.productGender
         }, () => {
             this.getColor();
+            this.getBrand();
+            this.getProductGender();
         });
     }
 
@@ -109,30 +191,8 @@ class Filter extends React.Component {
                 {this.renderPrice()}
                 {this.renderColor()}
                 {this.renderSize()}
-                {/* <ul className="filter-list">
-                    <li><span className="text-uppercase">color:</span></li>
-                    <li><a href=" #" style={{ backgroundColor: "#8A2454", color: "#FFF" }}>Camelot</a></li>
-                    <li><a href=" #" style={{ backgroundColor: "#475984", color: "#FFF" }}>East Bay</a></li>
-                    <li><a href=" #" style={{ backgroundColor: "#BF6989", color: "#FFF" }}>Tapestry</a></li>
-                    <li><a href=" #" style={{ backgroundColor: "#9A54D8", color: "#FFF" }}>Medium Purple</a></li>
-                </ul>
-
-                <ul className="filter-list">
-                    <li><span className="text-uppercase">Size:</span></li>
-                    <li><a href=" #">X</a></li>
-                    <li><a href=" #">XL</a></li>
-                </ul>
-
-                <ul className="filter-list">
-                    <li><span className="text-uppercase">Price:</span></li>
-                    <li><a href=" #">MIN: $20.00</a></li>
-                    <li><a href=" #">MAX: $120.00</a></li>
-                </ul>
-
-                <ul className="filter-list">
-                    <li><span className="text-uppercase">Gender:</span></li>
-                    <li><a href=" #">Men</a></li>
-                </ul> */}
+                {this.renderBrand()}
+                {this.renderProductGender()}
 
                 <button className="primary-btn">Xoá tất cả</button>
             </div>

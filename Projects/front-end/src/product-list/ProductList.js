@@ -12,7 +12,9 @@ class ProductList extends React.Component {
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
         filterByColor: '00000000-0000-0000-0000-000000000000',
-        filterBySize: ''
+        filterBySize: '',
+        filterByBrand: '00000000-0000-0000-0000-000000000000',
+        filterByProductGender: '00000000-0000-0000-0000-000000000000'
     }
 
     getUrl = () => {
@@ -76,6 +78,18 @@ class ProductList extends React.Component {
         });
     }
 
+    filterByBrand = (brandId) => {
+        this.setState({
+            filterByBrand: brandId
+        });
+    }
+
+    filterByProductGender = (productGenderId) => {
+        this.setState({
+            filterByProductGender: productGenderId
+        });
+    }
+
     componentDidMount = () => {
         this.getUrl();
     }
@@ -93,8 +107,8 @@ class ProductList extends React.Component {
                     <div className="container">
                         {/* <!-- row --> */}
                         <div className="row">
-                            <Aside filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
-                            <Main size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
+                            <Aside filterByProductGender={this.filterByProductGender} filterByBrand={this.filterByBrand} filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
+                            <Main productGender={this.state.filterByProductGender} brand={this.state.filterByBrand} size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
                         </div>
                         {/* <!-- /row --> */}
                     </div>

@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+    // BrowserRouter as Router,
+    // Switch,
+    // Route,
+    Link
+} from "react-router-dom";
 import NumberFormat from 'react-number-format';
 
 class ListItem extends React.Component {
@@ -14,7 +20,9 @@ class ListItem extends React.Component {
                             <span>Mới</span>
                             { this.props.itemDiscount === null ? '' : <span className="sale">{ this.props.itemDiscount }</span>}
                         </div>
-                        <button className="main-btn quick-view"><i className="fa fa-search-plus"></i> Chi tiết</button>
+                        <Link to={`/product?id=${this.props.itemProductId}`}>
+                            <button className="main-btn quick-view"><i className="fa fa-search-plus"></i> Chi tiết</button>
+                        </Link>
                         <img src={ imgUrl } alt="" style={{width: '260px', height: '350px'}}/>
                     </div>
                     <div className="product-body">
