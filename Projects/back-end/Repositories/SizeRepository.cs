@@ -41,7 +41,7 @@ namespace Repositories
 
             return size;
         }
-        public async Task<IList<Size>> GetSize(Guid id)
+        public async Task<IList<Size>> GetSizeByProductId(Guid id)
         {
             IList<Size> size = new List<Size>();
 

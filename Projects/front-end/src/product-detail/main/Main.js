@@ -5,21 +5,25 @@ import ProductReview from './product-review/ProductReview'
 
 class Main extends React.Component {
     state = {
-        item: ''
+        item: '',
+        colorId: '00000000-0000-0000-0000-000000000000'
     }
 
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             item: nextProps.item,
+            colorId: nextProps.colorId            
         });
     }
-    // getImage=(id)=>{
-    //     fetch(`https://localhost:44376/api/customer/product/getImage?id=${id}`)
-    //     .then(res=>res.json())
-    //     .then(res=>{
-    //         this.
-    //     })
-    // }
+
+    selectColor = (colorId) => {
+        this.props.selectColor(colorId);
+
+        this.setState({
+            colorId: colorId
+        });
+    }
+
     render() {
         return (
             // {/* <!-- MAIN --> */}
@@ -31,7 +35,7 @@ class Main extends React.Component {
                         {/* <!--  Product Details --> */}
                         <div className="product product-details clearfix">
                             <ProductImage itemImage={this.state.item.imageUrl}></ProductImage>
-                            <ProductInfo itemId={this.state.item.productId} itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount}></ProductInfo>
+                            <ProductInfo selectColor={this.selectColor} colorId={this.state.colorId} itemId={this.state.item.productId} itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount}></ProductInfo>
                             <ProductReview></ProductReview>
                         </div>
                         {/* <!-- /Product Details --> */}

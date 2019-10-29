@@ -15,9 +15,9 @@ namespace Services
             return await sizeRepository.GetDistinctSizes();
 
         }
-        public async Task<IList<Size>> GetSizes(Guid id)
+        public async Task<IList<Size>> GetSizesByProductId(Guid id)
         {
-            return await sizeRepository.GetSize(id);
+            return await sizeRepository.GetSizeByProductId(id);
         }
     }
 }

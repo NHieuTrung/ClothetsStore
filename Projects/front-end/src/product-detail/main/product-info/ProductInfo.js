@@ -4,7 +4,9 @@ import NumberFormat from 'react-number-format';
 class ProductInfo extends React.Component{
     state = {
         productId: '00000000-0000-0000-0000-000000000000',
-        colorArr: []
+        colorArr: [],
+        colorId: '00000000-0000-0000-0000-000000000000',
+        size:[]
     }
 
     getProductColors = () => {
@@ -14,6 +16,22 @@ class ProductInfo extends React.Component{
             (res) => {
                 this.setState({
                     colorArr: res
+                });
+
+            },
+            (err) => {
+                console.log(err);
+            }
+        )
+    }
+
+    getProductSize=()=>{
+        fetch(`https://localhost:44376/api/customer/size/getSizeByProduct?id=${this.state.productId}`)
+        .then(res => res.json())
+        .then(
+            (res) => {
+                this.setState({
+                    size: res
                 });
             },
             (err) => {
@@ -25,17 +43,41 @@ class ProductInfo extends React.Component{
     renderProductColors = () => {
         const colors = this.state.colorArr.map((item, idx) => 
             // eslint-disable-next-line jsx-a11y/anchor-has-content
-            <li key={ idx }><a id={item.colorId} href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }}></a></li>
+            item.colorId === this.state.colorId ?
+                <li className="active" key={ idx }><a id={item.colorId} onClick={this.selectColor} href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }}> </a></li> :
+                <li key={ idx }><a id={item.colorId} onClick={this.selectColor} href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }}> </a></li>
         );
 
         return colors;
     }
 
+    renderProductSizes = () => {
+        // console.log(this.state.size);
+        const sizes = this.state.size.map((item, idx) => 
+            // eslint-disable-next-line jsx-a11y/anchor-has-content
+            <li key={idx}><a id={item.sizeId} href=" #">{item.name}</a></li>
+        );
+
+        return sizes;
+    }
+
+    selectColor = (e) => {
+        let colorId = e.target.id;
+        this.props.selectColor(colorId);
+
+        this.setState({
+            colorId: colorId
+        });
+    }
+
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
-            productId: nextProps.itemId
+            productId: nextProps.itemId,
+            colorId: nextProps.colorId
         }, () => {
             this.getProductColors();
+            // console.log(this.state)
+            this.getProductSize();
         });
     }
 
@@ -69,9 +111,10 @@ class ProductInfo extends React.Component{
                     <div className="product-options">
                         <ul className="size-option">
                             <li><span className="text-uppercase">Size:</span></li>
-                            <li className="active"><a href=" #">S</a></li>
+                            {this.renderProductSizes()}
+                            {/* <li className="active"><a href=" #">S</a></li>
                             <li><a href=" #">XL</a></li>
-                            <li><a href=" #">SL</a></li>
+                            <li><a href=" #">SL</a></li> */}
                         </ul>
                         <ul className="color-option">
                             <li><span className="text-uppercase">Color:</span></li>

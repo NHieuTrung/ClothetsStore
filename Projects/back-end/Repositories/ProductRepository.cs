@@ -40,11 +40,11 @@ namespace Repositories
         {
             IList<Size> size = new List<Size>();
             
-            List<Guid> productSize =  ctx.ProductSize.Where(p => p.ProductId == id)
+            List<Guid> productSize = await ctx.ProductSize.Where(p => p.ProductId == id)
                                                .GroupBy(p => p.SizeId)
                                                .Distinct()
                                                .Select(s=>s.Key)
-                                               .ToList();
+                                               .ToListAsync();
 
             foreach(Guid item in productSize)
             {

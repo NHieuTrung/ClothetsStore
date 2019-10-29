@@ -6,11 +6,13 @@ import Main from './main/Main'
 
 class ProductDetail extends React.Component{
     state = {
-        item: ''
+        productId: '00000000-0000-0000-0000-000000000000',
+        item: '',
+        colorId: '00000000-0000-0000-0000-000000000000',
     }
 
     getProduct = (id) => {
-        fetch(`https://localhost:44376/api/customer/product/getProductVMById?id=${id}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMById?id=${id}&colorId=${this.state.colorId}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -20,6 +22,10 @@ class ProductDetail extends React.Component{
         .catch(error =>{
             console.log(error)
         })
+
+        // this.setState({
+        //     productId: id
+        // })
     }
 
     getId = () => {
@@ -31,10 +37,18 @@ class ProductDetail extends React.Component{
         }
         else {
             idTemp = href.substring(href.indexOf("id"), href.length);
-            id = idTemp.substring(idTemp.indexOf('=') + 1, idTemp.length);
+            id = idTemp.substring(idTemp.indexOf('=') + 1, idTemp.indexOf("#") === -1 ? idTemp.length : idTemp.length - 1);
         }
-
+        
         this.getProduct(id);
+    }
+
+    selectColor = (colorId) => {
+        this.setState({
+            colorId: colorId
+        }, () => {
+            this.getId();
+        });
     }
 
     componentDidMount = () => {
@@ -71,7 +85,7 @@ class ProductDetail extends React.Component{
             <div>
                 <ProductNavigation></ProductNavigation>
                 <Breadcrumb itemName={this.state.item.name}></Breadcrumb>
-                <Main item={this.state.item}></Main>
+                <Main selectColor={this.selectColor} colorId={this.state.colorId} item={this.state.item}></Main>
             </div>
         );
     }

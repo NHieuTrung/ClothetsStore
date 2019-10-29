@@ -34,5 +34,11 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await sizeService.GetById(id));
         }
+        [HttpGet]
+        [Route("getSizeByProduct")]
+        public async Task<IActionResult> GetSizesByProductId(Guid id)
+        {
+            return Ok(await sizeService.GetSizesByProductId(id));
+        }
     }
 }
