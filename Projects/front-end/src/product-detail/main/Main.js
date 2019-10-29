@@ -13,7 +13,13 @@ class Main extends React.Component {
             item: nextProps.item,
         });
     }
-
+    // getImage=(id)=>{
+    //     fetch(`https://localhost:44376/api/customer/product/getImage?id=${id}`)
+    //     .then(res=>res.json())
+    //     .then(res=>{
+    //         this.
+    //     })
+    // }
     render() {
         return (
             // {/* <!-- MAIN --> */}
@@ -24,8 +30,8 @@ class Main extends React.Component {
                     <div className="row">
                         {/* <!--  Product Details --> */}
                         <div className="product product-details clearfix">
-                            <ProductImage></ProductImage>
-                            <ProductInfo itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount}></ProductInfo>
+                            <ProductImage itemImage={this.state.item.imageUrl}></ProductImage>
+                            <ProductInfo itemId={this.state.item.productId} itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount}></ProductInfo>
                             <ProductReview></ProductReview>
                         </div>
                         {/* <!-- /Product Details --> */}

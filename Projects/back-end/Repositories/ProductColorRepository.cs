@@ -34,5 +34,12 @@ namespace Repositories
 
             return productColors;
         }
+
+        public async Task<IList<ProductColor>> GetColorByProductId(Guid productId)
+        {
+            List<ProductColor> colors = await ctx.ProductColor.Where(p => p.ProductId == productId).ToListAsync();
+
+            return colors;
+        }
     }
 }

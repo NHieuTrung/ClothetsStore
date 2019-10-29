@@ -27,5 +27,12 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await colorService.GetById(id));
         }
+
+        [HttpGet]
+        [Route("getColorByProductId")]
+        public async Task<IActionResult> GetColorByProductId(Guid productId)
+        {
+            return Ok(await colorService.GetColorByProductId(productId));
+        }
     }
 }

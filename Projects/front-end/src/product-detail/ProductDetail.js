@@ -10,7 +10,7 @@ class ProductDetail extends React.Component{
     }
 
     getProduct = (id) => {
-        fetch(`https://localhost:44376/api/customer/product/getProductById?id=${id}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMById?id=${id}`)
         .then(res => res.json())
         .then(res => {
             this.setState({

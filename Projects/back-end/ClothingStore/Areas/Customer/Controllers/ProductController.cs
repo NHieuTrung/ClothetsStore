@@ -49,5 +49,11 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productVMService.GetNew());
         }
+        [HttpGet]
+        [Route("getProductVMById")]
+        public async Task<IActionResult> GetProductVMById(Guid id, Guid colorId)
+        {
+            return Ok(await productVMService.GetProductVMById(id, colorId));
+        }
     }
 }

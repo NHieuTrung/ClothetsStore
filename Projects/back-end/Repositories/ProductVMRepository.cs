@@ -204,6 +204,41 @@ namespace Repositories
             return productVMs;
         }
 
+        public async Task<ProductVM> GetProductVMById(Guid id, Guid colorId)
+        {
+            ProductVM product = new ProductVM();
+
+            if(colorId != Guid.Empty)
+            {
+                product = await ctx.ProductColor.Where(p => p.ProductId == id && p.ColorId == colorId)
+                                                .Select(p => new ProductVM
+                                                {
+                                                    ProductId = p.Product.ProductId,
+                                                    Name = p.Product.Name,
+                                                    Price = p.Product.Price,
+                                                    Discount = p.Product.Discount,
+                                                    ImageUrl = p.ImageUrl
+                                                })
+                                                .FirstOrDefaultAsync();
+            }
+            else
+            {
+                product = await ctx.ProductColor.Where(p => p.ProductId == id)
+                                                .Select(p => new ProductVM
+                                                {
+                                                    ProductId = p.Product.ProductId,
+                                                    Name = p.Product.Name,
+                                                    Price = p.Product.Price,
+                                                    Discount = p.Product.Discount,
+                                                    ImageUrl = p.ImageUrl
+                                                })
+                                                .FirstOrDefaultAsync();
+            }
+            //IList<string> product = await ctx.ProductColor.Where(s => s.ProductId == id).Select(s => s.ImageUrl).ToListAsync();
+            //return product;
+            return product;
+        }
+
         public async Task<int> GetNumberOfProductsWithFilter(decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
         {
             List<ProductSize> productSizes = await ctx.ProductSize.Include(p => p.Size)

@@ -2,6 +2,43 @@ import React from 'react';
 import NumberFormat from 'react-number-format';
 
 class ProductInfo extends React.Component{
+    state = {
+        productId: '00000000-0000-0000-0000-000000000000',
+        colorArr: []
+    }
+
+    getProductColors = () => {
+        fetch(`https://localhost:44376/api/customer/color/getColorByProductId?productId=${this.state.productId}`)
+        .then(res => res.json())
+        .then(
+            (res) => {
+                this.setState({
+                    colorArr: res
+                });
+            },
+            (err) => {
+                console.log(err);
+            }
+        )
+    }
+
+    renderProductColors = () => {
+        const colors = this.state.colorArr.map((item, idx) => 
+            // eslint-disable-next-line jsx-a11y/anchor-has-content
+            <li key={ idx }><a id={item.colorId} href=" #" style={{ backgroundColor: item.colorValue, border: "1px solid" }}></a></li>
+        );
+
+        return colors;
+    }
+
+    UNSAFE_componentWillReceiveProps = (nextProps) => {
+        this.setState({
+            productId: nextProps.itemId
+        }, () => {
+            this.getProductColors();
+        });
+    }
+
     render() {
         return (
             <div className="col-md-6">
@@ -38,10 +75,11 @@ class ProductInfo extends React.Component{
                         </ul>
                         <ul className="color-option">
                             <li><span className="text-uppercase">Color:</span></li>
-                            <li className="active"><a href=" #" style={{backgroundColor: '#475984'}}> </a></li>
+                            {this.renderProductColors()}
+                            {/* <li className="active"><a href=" #" style={{backgroundColor: '#475984'}}> </a></li>
                             <li><a href=" #" style={{backgroundColor: '#8A2454'}}> </a></li>
                             <li><a href=" #" style={{backgroundColor: '#BF6989'}}> </a></li>
-                            <li><a href=" #" style={{backgroundColor: '#9A54D8'}}> </a></li>
+                            <li><a href=" #" style={{backgroundColor: '#9A54D8'}}> </a></li> */}
                         </ul>
                     </div>
 
