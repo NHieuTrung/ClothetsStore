@@ -101,6 +101,24 @@ class Filter extends React.Component {
         })
     }
 
+    resetAll = () => {
+        this.props.filterByPrice(0, 0);
+        this.props.filterByColor('00000000-0000-0000-0000-000000000000');
+        this.props.filterBySize('');
+        this.props.filterByBrand('00000000-0000-0000-0000-000000000000');
+        this.props.filterByProductGender('00000000-0000-0000-0000-000000000000');
+
+        this.setState({
+            filterByMinPrice: 0,
+            filterByMaxPrice: 0,
+            filterByColor: '00000000-0000-0000-0000-000000000000',
+            color: [],
+            filterBySize: '',
+            filterByBrand: '00000000-0000-0000-0000-000000000000',
+            filterByProductGender: '00000000-0000-0000-0000-000000000000'
+        })
+    }
+
     renderPrice = () => {
         let price;
 
@@ -194,7 +212,7 @@ class Filter extends React.Component {
                 {this.renderBrand()}
                 {this.renderProductGender()}
 
-                <button className="primary-btn">Xoá tất cả</button>
+                <button className="primary-btn" onClick={this.resetAll}>Xoá tất cả</button>
             </div>
             // {/* <!-- /aside widget --> */}
         );

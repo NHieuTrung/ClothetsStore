@@ -7,6 +7,7 @@ class Main extends React.Component {
         pageSize: 9,
         pageNumber: 1,
         orderBy: 'new',
+        search: '',
         items: [],
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
@@ -47,7 +48,7 @@ class Main extends React.Component {
     }
 
     getProducts = () => {
-        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${this.state.search}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -63,6 +64,7 @@ class Main extends React.Component {
         this.setState({
             pageSize: nextProps.pageSize,
             pageNumber: nextProps.pageNumber,
+            search: nextProps.search,
             filterByMinPrice: nextProps.minPrice,
             filterByMaxPrice: nextProps.maxPrice,
             filterByColor: nextProps.color,
@@ -78,7 +80,7 @@ class Main extends React.Component {
         return (
             // {/* <!-- MAIN --> */}
             <div id="main" className="col-md-9">
-                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor} size={this.state.filterBySize} brand={this.state.filterByBrand} productGender={this.state.filterByProductGender}></Filter>
+                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} search={this.state.search} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor} size={this.state.filterBySize} brand={this.state.filterByBrand} productGender={this.state.filterByProductGender}></Filter>
                 <List items={this.state.items}></List>
             </div>
             // {/* <!-- /MAIN --> */}

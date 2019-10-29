@@ -31,16 +31,16 @@ namespace ClothingStore.Areas.Customer.Controllers
 
         [HttpGet]
         [Route("getProductVMs")]
-        public async Task<IActionResult> GetProducts(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<IActionResult> GetProducts(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
-            return Ok(await productVMService.GetAll(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId));
+            return Ok(await productVMService.GetAll(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId, search));
         }
 
         [HttpGet]
         [Route("getNumberOfPages")]
-        public async Task<IActionResult> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<IActionResult> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
-            return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId));
+            return Ok(await productVMService.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId, search));
         }
 
         [HttpGet]

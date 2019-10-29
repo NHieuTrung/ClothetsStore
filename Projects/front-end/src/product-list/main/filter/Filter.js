@@ -5,6 +5,7 @@ class Filter extends React.Component {
         numberOfPages: 0,
         pageSize: 9,
         orderBy: 'new',
+        search: '',
         currentPageNumber: 1,
         filterByMinPrice: 0,
         filterByMaxPrice: 0,
@@ -14,8 +15,22 @@ class Filter extends React.Component {
         filterByProductGender: '00000000-0000-0000-0000-000000000000'
     }
 
+    getSearchAndFilter = () => {
+        let searchTemp = '', search = '';
+        let url = window.location.href;
+
+        if(url.indexOf('search') !== -1) {
+            searchTemp = url.substring(url.indexOf('search'), url.length);
+            search = searchTemp.substr(searchTemp.indexOf('=') + 1, searchTemp.indexOf('&') === -1 ? searchTemp.length - searchTemp.indexOf('=') : searchTemp.indexOf('&') - searchTemp.indexOf('=') - 1);
+        }
+
+        return search;
+    }
+
     getNumberOfPages = () => {
-        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}`)
+        let search = this.getSearchAndFilter();
+
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${search}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -82,7 +97,8 @@ class Filter extends React.Component {
             filterByColor: nextProps.color,
             filterBySize: nextProps.size,
             filterByBrand: nextProps.brand,
-            filterByProductGender: nextProps.productGender
+            filterByProductGender: nextProps.productGender,
+            search: nextProps.search
         }, () => {
             this.getNumberOfPages();
         }, () => {

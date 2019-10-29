@@ -50,31 +50,31 @@ namespace Repositories
             return productVM;
         }
 
-        public async Task<IList<ProductVM>> GetAll(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<IList<ProductVM>> GetAll(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
             maxPrice = maxPrice == 0 ? 100000000 : maxPrice;
 
             IList<ProductVM> productVMs = new List<ProductVM>();
-            productVMs = await GetAllWithFilter(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId);
+            productVMs = await GetAllWithFilter(pageSize, pageNumber, orderBy, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId, search);
 
             Console.WriteLine(productVMs);
 
             return productVMs;
         }
 
-        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<int> GetNumberOfPages(int pageSize, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
             maxPrice = maxPrice == 0 ? 100000000 : maxPrice;
             int numberOfProducts = 0;
             int numberOfPages = 0;
 
-            numberOfProducts = await GetNumberOfProductsWithFilter(minPrice, maxPrice, colorId, sizeName, brandId, productGenderId);
+            numberOfProducts = await GetNumberOfProductsWithFilter(minPrice, maxPrice, colorId, sizeName, brandId, productGenderId, search);
             numberOfPages = numberOfProducts % pageSize > 0 ? (numberOfProducts / pageSize) + 1 : numberOfProducts / pageSize;
 
             return numberOfPages;
         }
 
-        public async Task<IList<ProductVM>> GetAllWithFilter(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<IList<ProductVM>> GetAllWithFilter(int pageSize, int pageNumber, string orderBy, decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
             List<ProductVM> productVMs = new List<ProductVM>();
             List<ProductSize> productSizes = await ctx.ProductSize.Include(p => p.Size)
@@ -105,6 +105,12 @@ namespace Repositories
             if (productGenderId != Guid.Empty)
             {
                 productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProduct.ProductGenderId == productGenderId).ToList();
+            }
+
+            //Search
+            if (search != null && search != "")
+            {
+                productSizes = productSizes.Where(p => p.ProductColor.Product.Name.Contains(search)).ToList();
             }
 
             //Filter by price
@@ -239,7 +245,7 @@ namespace Repositories
             return product;
         }
 
-        public async Task<int> GetNumberOfProductsWithFilter(decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId)
+        public async Task<int> GetNumberOfProductsWithFilter(decimal minPrice, decimal maxPrice, Guid colorId, string sizeName, Guid brandId, Guid productGenderId, string search)
         {
             List<ProductSize> productSizes = await ctx.ProductSize.Include(p => p.Size)
                                                                   .Include(p => p.ProductColor)
@@ -271,7 +277,13 @@ namespace Repositories
                 productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProduct.ProductGenderId == productGenderId).ToList();
             }
 
-            //Filter by rice
+            //Search
+            if (search != null && search != "")
+            {
+                productSizes = productSizes.Where(p => p.ProductColor.Product.Name.Contains(search)).ToList();
+            }
+
+            //Filter by price
             productSizes = productSizes.Where(p => p.ProductColor.Product.Price >= minPrice && p.ProductColor.Product.Price <= maxPrice).ToList();
 
             List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)

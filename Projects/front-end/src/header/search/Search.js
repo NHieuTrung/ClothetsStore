@@ -1,19 +1,23 @@
 import React from 'react';
 
 class Search extends React.Component {
+    searchProduct = (e) => {
+        e.preventDefault();
+        window.location.href = `/productlist?search=${window.$("#txt-search").val()}`;
+    }
 
     render() {
         return (
             // {/* <!-- Search --> */}
             <div className="header-search">
             <form>
-                <input className="input search-input" type="text" placeholder="Enter your keyword" />
+                <input id="txt-search" className="input search-input" type="text" placeholder="Nhập tên sản phẩm" />
                 <select className="input search-categories">
-                    <option value="0">All Categories</option>
-                    <option value="1">Category 01</option>
-                    <option value="1">Category 02</option>
+                    <option value="0">Tất cả</option>
+                    {/* <option value="1">Category 01</option>
+                    <option value="1">Category 02</option> */}
                 </select>
-                <button className="search-btn"><i className="fa fa-search"></i></button>
+                <button className="search-btn" onClick={this.searchProduct}><i className="fa fa-search"></i></button>
             </form>
             </div>
             // {/* <!-- /Search --> */}
