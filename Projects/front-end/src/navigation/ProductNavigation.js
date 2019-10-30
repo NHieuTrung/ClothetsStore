@@ -2,7 +2,9 @@ import React from 'react';
 
 class ProductNavigation extends React.Component {
     state = {
-        catListToggle: false
+        catListToggle: false,
+        maleCategories: [],
+        femaleCategories: []
     };
 
     navOnClick = () => {
@@ -10,6 +12,56 @@ class ProductNavigation extends React.Component {
         this.setState({
             catListToggle: catListToggle
         });
+    }
+
+    getMaleCategories = () => {
+        fetch(`https://localhost:44376/api/customer/ProductType/GetProductTypesByGender?productGenderId=006333C4-68BF-4954-B886-DD5E342E3938`)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            this.setState({
+                maleCategories: res
+            })
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    getFemaleCategories = () => {
+        fetch(`https://localhost:44376/api/customer/ProductType/GetProductTypesByGender?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A`)
+        .then(res => res.json())
+        .then(res => {
+            console.log(res);
+            this.setState({
+                femaleCategories: res
+            })
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+
+    renderMaleCategories = () => {
+        const maleCategories = this.state.maleCategories.map((item, idx) => 
+            <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+        )
+
+        return maleCategories;
+    }
+
+    renderFemaleCategories = () => {
+        const femaleCategories = this.state.femaleCategories.map((item, idx) => 
+            <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+        )
+
+        return femaleCategories;
+    }
+
+    componentDidMount = () => {
+        this.getMaleCategories();
+        this.getFemaleCategories();
     }
 
     render() {
@@ -27,65 +79,54 @@ class ProductNavigation extends React.Component {
                             {/* <ul className="category-list"> */}
                             <ul className = { catListClass }>
                                 <li><a href="/productlist">Tất cả</a></li>
-                                <li><a href="/productlist?productGenderId=006333C4-68BF-4954-B886-DD5E342E3938">Nam</a></li>
-                                <li><a href="/productlist?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A">Nữ</a></li>
-                                {/* <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Phones & Accessories <i className="fa fa-angle-right"></i></a>
-                                    <div className="custom-menu">
+                                
+                                {/* Male */}
+                                <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nam <i className="fa fa-angle-right"></i></a>
+                                    <div className="custom-menu" style={{width: "500px"}}>
                                         <div className="row">
-                                            <div className="col-md-4">
+                                            <div className="col-md-4" style={{width: "50%"}}>
                                                 <ul className="list-links">
                                                     <li>
-                                                        <h3 className="list-links-title">Categories</h3></li>
-                                                    <li><a href="/#">Women’s Clothing</a></li>
-                                                    <li><a href="/#">Men’s Clothing</a></li>
-                                                    <li><a href="/#">Phones & Accessories</a></li>
-                                                    <li><a href="/#">Jewelry & Watches</a></li>
-                                                    <li><a href="/#">Bags & Shoes</a></li>
-                                                </ul>
-                                                <hr />
-                                                <ul className="list-links">
-                                                    <li>
-                                                        <h3 className="list-links-title">Categories</h3></li>
-                                                    <li><a href="/#">Women’s Clothing</a></li>
-                                                    <li><a href="/#">Men’s Clothing</a></li>
-                                                    <li><a href="/#">Phones & Accessories</a></li>
-                                                    <li><a href="/#">Jewelry & Watches</a></li>
-                                                    <li><a href="/#">Bags & Shoes</a></li>
-                                                </ul>
-                                                <hr className="hidden-md hidden-lg" />
-                                            </div>
-                                            <div className="col-md-4">
-                                                <ul className="list-links">
-                                                    <li>
-                                                        <h3 className="list-links-title">Categories</h3></li>
-                                                    <li><a href="/#">Women’s Clothing</a></li>
-                                                    <li><a href="/#">Men’s Clothing</a></li>
-                                                    <li><a href="/#">Phones & Accessories</a></li>
-                                                    <li><a href="/#">Jewelry & Watches</a></li>
-                                                    <li><a href="/#">Bags & Shoes</a></li>
-                                                </ul>
-                                                <hr />
-                                                <ul className="list-links">
-                                                    <li>
-                                                        <h3 className="list-links-title">Categories</h3></li>
-                                                    <li><a href="/#">Women’s Clothing</a></li>
-                                                    <li><a href="/#">Men’s Clothing</a></li>
-                                                    <li><a href="/#">Phones & Accessories</a></li>
-                                                    <li><a href="/#">Jewelry & Watches</a></li>
-                                                    <li><a href="/#">Bags & Shoes</a></li>
+                                                        <h3 className="list-links-title">Danh mục</h3></li>
+                                                    <li><a href="/productlist?productGenderId=006333C4-68BF-4954-B886-DD5E342E3938">Tất cả</a></li>
+                                                    {this.renderMaleCategories()}
                                                 </ul>
                                             </div>
-                                            <div className="col-md-4 hidden-sm hidden-xs">
-                                                <a className="banner banner-2" href="/#">
+                                            <div className="col-md-4 hidden-sm hidden-xs" style={{width: "50%"}}>
+                                                <a className="banner banner-2" href="/productlist?productGenderId=006333C4-68BF-4954-B886-DD5E342E3938">
                                                     <img src="/assets//img/banner04.jpg" alt="" />
                                                     <div className="banner-caption">
-                                                        <h3 className="white-color">NEW<br />COLLECTION</h3>
+                                                        <h3 className="white-color">SẢN PHẨM<br />NAM</h3>
                                                     </div>
                                                 </a>
                                             </div>
                                         </div>
                                     </div>
-                                </li> */}
+                                </li>
+
+                                {/* Female */}
+                                <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nữ <i className="fa fa-angle-right"></i></a>
+                                    <div className="custom-menu" style={{width: "500px"}}>
+                                        <div className="row">
+                                            <div className="col-md-4" style={{width: "50%"}}>
+                                                <ul className="list-links">
+                                                    <li>
+                                                        <h3 className="list-links-title">Danh mục</h3></li>
+                                                    <li><a href="/productlist?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A">Tất cả</a></li>
+                                                    {this.renderFemaleCategories()}
+                                                </ul>
+                                            </div>
+                                            <div className="col-md-4 hidden-sm hidden-xs" style={{width: "50%"}}>
+                                                <a className="banner banner-2" href="/productlist?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A">
+                                                    <img src="/assets//img/banner04.jpg" alt="" />
+                                                    <div className="banner-caption">
+                                                        <h3 className="white-color">SẢN PHẨM<br />NỮ</h3>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                         {/* <!-- /category nav --> */}
