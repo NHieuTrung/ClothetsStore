@@ -35,8 +35,8 @@ class Main extends React.Component {
                         {/* <!--  Product Details --> */}
                         <div className="product product-details clearfix">
                             <ProductImage itemImage={this.state.item.imageUrl}></ProductImage>
-                            <ProductInfo selectColor={this.selectColor} colorId={this.state.colorId} itemId={this.state.item.productId} itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount}></ProductInfo>
-                            <ProductReview></ProductReview>
+                            <ProductInfo selectColor={this.selectColor} colorId={this.state.colorId} itemId={this.state.item.productId} itemName={this.state.item.name} itemPrice={this.state.item.price} itemDetail={this.state.item.detail} itemDiscount={this.state.item.discount} itemBrand={this.state.item.brandName}></ProductInfo>
+                            {/* <ProductReview></ProductReview> */}
                         </div>
                         {/* <!-- /Product Details --> */}
                     </div>

@@ -6,7 +6,10 @@ class ProductInfo extends React.Component{
         productId: '00000000-0000-0000-0000-000000000000',
         colorArr: [],
         colorId: '00000000-0000-0000-0000-000000000000',
-        size:[]
+        size:[],
+        sizeId: '00000000-0000-0000-0000-000000000000',
+        quantity: 0,
+        thongbao: ''
     }
 
     getProductColors = () => {
@@ -54,8 +57,10 @@ class ProductInfo extends React.Component{
     renderProductSizes = () => {
         // console.log(this.state.size);
         const sizes = this.state.size.map((item, idx) => 
-            // eslint-disable-next-line jsx-a11y/anchor-has-content
-            <li key={idx}><a id={item.sizeId} href=" #">{item.name}</a></li>
+                // eslint-disable-next-line jsx-a11y/anchor-has-content
+            item.sizeId === this.state.sizeId ?
+                <li className="active" key={idx}><a id={item.sizeId} onClick={this.selecSize} href=" #">{item.name}</a></li> :
+                <li key={idx}><a id={item.sizeId} onClick={this.selecSize} href=" #">{item.name}</a></li>
         );
 
         return sizes;
@@ -70,6 +75,78 @@ class ProductInfo extends React.Component{
         });
     }
 
+    selecSize =(e)=>{
+        let sizeId= e.target.id;
+        // this.props.selectSize(sizeId);
+
+        this.setState({
+            sizeId: sizeId
+        });
+    }
+
+    getSelectSize=()=>{
+        if(this.state.colorId !== '00000000-0000-0000-0000-000000000000' && this.state.sizeId !== '00000000-0000-0000-0000-000000000000')
+        {
+            fetch(`https://localhost:44376/api/customer/productsize/getQuatityBySelect?colorId=${this.state.colorId}&sizeId=${this.state.sizeId}`)
+            .then(res => res.json())
+            .then(
+                (res) => {
+                    this.setState({
+                        quantity: res
+                    });
+                },
+                (err) => {
+                    console.log(err);
+                }
+            )
+        }
+        
+    }    
+
+    addToCart = () => {
+        console.log(window.$("#txtsl").val())
+        if(window.$("#txtsl").val() === '')
+        {
+            this.setState({
+                thongbao: 'Vui lòng nhập số lượng'
+            })
+        }
+        else
+        {
+            if(this.state.colorId === '00000000-0000-0000-0000-000000000000' || this.state.sizeId === '00000000-0000-0000-0000-000000000000')
+            {
+                this.setState({
+                    thongbao: 'Vui lòng chọn size và màu!'
+                })
+            }
+            else
+            {
+                if(window.$("#txtsl").val() <= 0)
+                {
+                    this.setState({
+                        thongbao: 'Số lượng phải lớn hơn 0!'
+                    })
+                }
+                else
+                {
+                    if(window.$("#txtsl").val() > this.state.quantity)
+                    {
+                        this.setState({
+                            thongbao: 'Số lượng tồn không đủ!'
+                        })
+                    }
+                    else
+                    {
+                        this.setState({
+                            thongbao: ''
+                        })
+                        //Thêm vào giỏ hàng
+                    }
+                }
+            }
+        }
+    }
+
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             productId: nextProps.itemId,
@@ -78,7 +155,13 @@ class ProductInfo extends React.Component{
             this.getProductColors();
             // console.log(this.state)
             this.getProductSize();
+
+            this.getSelectSize();
         });
+    }
+
+    componentDidMount = () => {
+        // window.$("#txt-thongbao").hide();
     }
 
     render() {
@@ -86,14 +169,14 @@ class ProductInfo extends React.Component{
             <div className="col-md-6">
                 <div className="product-body">
                     <div className="product-label">
-                        <span>New</span>
-                        <span className="sale">-20%</span>
+                        {/* <span>New</span> */}
+                        { this.props.itemDiscount === null ? '' : <span className="sale">{ this.props.itemDiscount }</span>}
                     </div>
                     <h2 className="product-name">{this.props.itemName}</h2>
                     { 
                         this.props.itemDiscount === null ?
-                        <h3 className="product-price"><NumberFormat value={this.props.itemPrice} displayType={'text'} thousandSeparator={true}/></h3> :
-                        <h3 className="product-price">{this.props.itemPrice - (this.props.itemPrice * this.props.itemDiscount / 100)} <del className="product-old-price">${this.props.itemPrice}</del></h3>
+                        <h3 className="product-price"><NumberFormat value={this.props.itemPrice} displayType={'text'} thousandSeparator={true}/>₫</h3> :
+                        <h3 className="product-price">{this.props.itemPrice - (this.props.itemPrice * this.props.itemDiscount / 100)} <del className="product-old-price">₫{this.props.itemPrice}</del></h3>
                     }
                     {/* <div>
                         <div className="product-rating">
@@ -105,19 +188,19 @@ class ProductInfo extends React.Component{
                         </div>
                         <a href=" #">3 Review(s) / Add Review</a>
                     </div> */}
-                    <p><strong>Availability:</strong> In Stock</p>
-                    <p><strong>Brand:</strong> E-SHOP</p>
+                    <p><strong>Còn tồn:</strong> <b>{this.state.quantity}</b> sản phẩm</p>
+                    <p><strong>Thương hiệu:</strong> {this.props.itemBrand}</p>
                     <p>{this.props.itemDetail}</p>
                     <div className="product-options">
                         <ul className="size-option">
-                            <li><span className="text-uppercase">Size:</span></li>
+                            <li><span className="text-uppercase"><b>Size:</b></span></li>
                             {this.renderProductSizes()}
                             {/* <li className="active"><a href=" #">S</a></li>
                             <li><a href=" #">XL</a></li>
                             <li><a href=" #">SL</a></li> */}
                         </ul>
                         <ul className="color-option">
-                            <li><span className="text-uppercase">Color:</span></li>
+                            <li><span className="text-uppercase"><b>Màu:</b></span></li>
                             {this.renderProductColors()}
                             {/* <li className="active"><a href=" #" style={{backgroundColor: '#475984'}}> </a></li>
                             <li><a href=" #" style={{backgroundColor: '#8A2454'}}> </a></li>
@@ -128,16 +211,19 @@ class ProductInfo extends React.Component{
 
                     <div className="product-btns">
                         <div className="qty-input">
-                            <span className="text-uppercase">QTY: </span>
-                            <input className="input" type="number" />
+                            <span className="text-uppercase"><b>Số lượng mua: </b></span>
+                            <input className="input" id="txtsl" type="number" defaultValue="1" min="1"/>
                         </div>
-                        <button className="primary-btn add-to-cart"><i className="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
-                        <div className="pull-right">
+                        <button className="primary-btn add-to-cart" onClick={this.addToCart}><i className="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                        {/* <div className="pull-right">
                             <button className="main-btn icon-btn"><i className="fa fa-heart"></i></button>
                             <button className="main-btn icon-btn"><i className="fa fa-exchange"></i></button>
                             <button className="main-btn icon-btn"><i className="fa fa-share-alt"></i></button>
-                        </div>
+                        </div> */}
                     </div>
+                            
+                    <br />
+                    <h4 id="txt-thongbao" style={{color: "red"}}>{this.state.thongbao}</h4>
                 </div>
             </div>
         );

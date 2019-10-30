@@ -24,9 +24,10 @@ namespace Services
         {
             return await productVMRepository.GetNew();
         }
-        public async Task<ProductVM> GetProductVMById(Guid id, Guid colorId)
+        public async Task<ProductDetailVM> GetProductVMById(Guid id, Guid colorId)
         {
             return await productVMRepository.GetProductVMById(id, colorId);
         }
+        
     }
 }

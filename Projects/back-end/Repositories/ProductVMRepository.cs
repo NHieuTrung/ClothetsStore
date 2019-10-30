@@ -210,33 +210,37 @@ namespace Repositories
             return productVMs;
         }
 
-        public async Task<ProductVM> GetProductVMById(Guid id, Guid colorId)
+        public async Task<ProductDetailVM> GetProductVMById(Guid id, Guid colorId)
         {
-            ProductVM product = new ProductVM();
+            ProductDetailVM product = new ProductDetailVM();
 
             if(colorId != Guid.Empty)
             {
                 product = await ctx.ProductColor.Where(p => p.ProductId == id && p.ColorId == colorId)
-                                                .Select(p => new ProductVM
+                                                .Select(p => new ProductDetailVM
                                                 {
                                                     ProductId = p.Product.ProductId,
                                                     Name = p.Product.Name,
                                                     Price = p.Product.Price,
                                                     Discount = p.Product.Discount,
-                                                    ImageUrl = p.ImageUrl
+                                                    ImageUrl = p.ImageUrl,
+                                                    Detail = p.Product.Detail,
+                                                    BrandName = p.Product.Brand.Name
                                                 })
                                                 .FirstOrDefaultAsync();
             }
             else
             {
                 product = await ctx.ProductColor.Where(p => p.ProductId == id)
-                                                .Select(p => new ProductVM
+                                                .Select(p => new ProductDetailVM
                                                 {
                                                     ProductId = p.Product.ProductId,
                                                     Name = p.Product.Name,
                                                     Price = p.Product.Price,
                                                     Discount = p.Product.Discount,
-                                                    ImageUrl = p.ImageUrl
+                                                    ImageUrl = p.ImageUrl,
+                                                    Detail = p.Product.Detail,
+                                                    BrandName = p.Product.Brand.Name
                                                 })
                                                 .FirstOrDefaultAsync();
             }
@@ -301,5 +305,7 @@ namespace Repositories
 
             return productList.Count;
         }
+
+         
     }
 }
