@@ -31,5 +31,11 @@ namespace Repositories
         {
             return await ctx.Set<TEntity>().FindAsync(id);
         }
+
+        public virtual async Task Create(TEntity item)
+        {
+            ctx.Set<TEntity>().Add(item);
+            await ctx.SaveChangesAsync();
+        }
     }
 }

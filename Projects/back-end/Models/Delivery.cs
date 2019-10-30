@@ -13,7 +13,7 @@ namespace Models
         public Guid DeliveryId { get; set; }
         public string Name { get; set; }
         public string Phone { get; set; }
-        public byte[] Email { get; set; }
+        public string Email { get; set; }
 
         public ICollection<Order> Order { get; set; }
     }

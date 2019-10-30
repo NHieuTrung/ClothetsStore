@@ -35,7 +35,6 @@ namespace Repositories
                                                .FirstOrDefaultAsync();
 
             return product;
-        }
         public async Task<IList<Size>> GetSize(Guid id)
         {
             IList<Size> size = new List<Size>();
@@ -53,6 +52,11 @@ namespace Repositories
 
             return size;
         }
-        //public async Task<IList<ProductSize>>
+
+        public override async Task Create( Product product)
+        {
+            ctx.Product.Add(product);
+            await ctx.SaveChangesAsync();
+        }
     }
 }

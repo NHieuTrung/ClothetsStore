@@ -16,7 +16,7 @@ namespace Models
         public decimal TotalPrice { get; set; }
         public string ContactPhone { get; set; }
         public Guid DeliveryId { get; set; }
-        public decimal DeliveryAddress { get; set; }
+        public string DeliveryAddress { get; set; }
         public decimal DeliveryPrice { get; set; }
         public DateTime DeliveryDate { get; set; }
         public Guid StatusId { get; set; }

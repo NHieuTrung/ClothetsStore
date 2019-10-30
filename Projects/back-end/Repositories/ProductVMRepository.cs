@@ -26,11 +26,11 @@ namespace Repositories
         public override async Task<IList<ProductVM>> GetAll()
         {
             return await ctx.Product.Select(p => new ProductVM
-                                    {
-                                        Name = p.Name,
-                                        Price = p.Price,
-                                        Discount = p.Discount
-                                    }).ToListAsync();
+            {
+                Name = p.Name,
+                Price = p.Price,
+                Discount = p.Discount
+            }).ToListAsync();
         }
 
         public override async Task<ProductVM> GetById(Guid id)

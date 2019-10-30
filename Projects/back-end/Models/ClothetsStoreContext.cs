@@ -41,7 +41,7 @@ namespace Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=DESKTOP-HEOBAYsM;Database=ClothetsStore;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.;Database=ClothetsStore;Trusted_Connection=True;");
             }
         }
 
@@ -134,7 +134,9 @@ namespace Models
             {
                 entity.Property(e => e.DeliveryId).HasDefaultValueSql("(newid())");
 
-                entity.Property(e => e.Email).HasMaxLength(50);
+                entity.Property(e => e.Email)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Name)
                     .IsRequired()
@@ -236,7 +238,9 @@ namespace Models
 
                 entity.Property(e => e.CreatedDate).HasColumnType("datetime");
 
-                entity.Property(e => e.DeliveryAddress).HasColumnType("decimal(18, 0)");
+                entity.Property(e => e.DeliveryAddress)
+                    .IsRequired()
+                    .HasMaxLength(100);
 
                 entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
 
