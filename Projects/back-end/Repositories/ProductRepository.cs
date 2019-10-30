@@ -35,17 +35,18 @@ namespace Repositories
                                                .FirstOrDefaultAsync();
 
             return product;
+        }
         public async Task<IList<Size>> GetSize(Guid id)
         {
             IList<Size> size = new List<Size>();
-            
+
             List<Guid> productSize = await ctx.ProductSize.Where(p => p.ProductId == id)
                                                .GroupBy(p => p.SizeId)
                                                .Distinct()
-                                               .Select(s=>s.Key)
+                                               .Select(s => s.Key)
                                                .ToListAsync();
 
-            foreach(Guid item in productSize)
+            foreach (Guid item in productSize)
             {
                 size.Add(ctx.Size.Where(s => s.SizeId == item).FirstOrDefault());
             }
@@ -53,7 +54,7 @@ namespace Repositories
             return size;
         }
 
-        public override async Task Create( Product product)
+        public override async Task Create(Product product)
         {
             ctx.Product.Add(product);
             await ctx.SaveChangesAsync();

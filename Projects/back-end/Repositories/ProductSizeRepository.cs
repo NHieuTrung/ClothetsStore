@@ -23,7 +23,10 @@ namespace Repositories
         {
             this.ctx = ctx;
         }
-
+        public override async Task<IList<ProductSize>> GetAll()
+        {
+            return await ctx.ProductSize.ToListAsync();
+        }
         public async Task<IList<ProductSizeVM>> GetByProductId(Guid productId)
         {
             return await ctx.ProductSize.Where(m => m.ProductId == productId).Select(m => new ProductSizeVM { ColorId = m.ColorId, SizeId = m.SizeId, InventoryQuantity = m.InventoryQuantity, ProductId = productId }).ToListAsync();

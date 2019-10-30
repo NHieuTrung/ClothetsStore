@@ -18,6 +18,33 @@ namespace ClothingStore.Areas.Admin.Controllers
         ProductService productService = new ProductService();
         ProductSizeService productSizeService = new ProductSizeService();
         ExtendedProductService extendedProductService = new ExtendedProductService();
+        [HttpGet]
+        public async Task<IActionResult> GetExtendedProduct()
+        {
+            var listProduct = await productService.GetAll();
+            var listProductSize = await productSizeService.GetAll();
+            List<ExtendedProductVM> listExtendedProduct = new List<ExtendedProductVM>();
+            foreach (var product in listProduct)
+            {
+                ExtendedProductVM extendedProduct = new ExtendedProductVM
+                {
+                    ProductId = product.ProductId,
+                    Code = product.Code,
+                    Name = product.Name,
+                    TypeProductId = product.TypeProductId,
+                    Price = product.Price,
+                    Detail = product.Detail,
+                    Discount = product.Discount,
+                    CreatedDate = product.CreatedDate,
+                    BrandId = product.BrandId,
+                    StatusId = product.StatusId,
+                    ListProductSize = listProductSize.Where(m => m.ProductId == product.ProductId).Select(m => new ProductSizeVM() { ColorId = m.ColorId, ProductId = m.ProductId, SizeId = m.SizeId, InventoryQuantity = m.InventoryQuantity }).ToList()
+                };
+                listExtendedProduct.Add(extendedProduct);
+            }
+
+            return Ok(listExtendedProduct);
+        }
         [HttpGet("{id}")]
         public async Task<ActionResult<ExtendedProductVM>> GetExtendedProduct(Guid id)
         {
@@ -25,6 +52,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             var listProductSizeVM = await productSizeService.GetByProductId(id);
             ExtendedProductVM extendedProduct = new ExtendedProductVM
             {
+                ProductId = id,
                 Code = product.Code,
                 Name = product.Name,
                 TypeProductId = product.TypeProductId,
@@ -46,7 +74,7 @@ namespace ClothingStore.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Gender>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
+        public async Task<ActionResult<ExtendedProductVM>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
         {
             try
             {
