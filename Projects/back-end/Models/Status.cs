@@ -7,7 +7,6 @@ namespace Models
     {
         public Status()
         {
-            Brand = new HashSet<Brand>();
             Employee = new HashSet<Employee>();
             ImportOrder = new HashSet<ImportOrder>();
             Order = new HashSet<Order>();
@@ -21,7 +20,6 @@ namespace Models
         public Guid StatusId { get; set; }
         public string Name { get; set; }
 
-        public ICollection<Brand> Brand { get; set; }
         public ICollection<Employee> Employee { get; set; }
         public ICollection<ImportOrder> ImportOrder { get; set; }
         public ICollection<Order> Order { get; set; }

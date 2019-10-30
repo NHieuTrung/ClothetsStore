@@ -77,12 +77,6 @@ namespace Models
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(100);
-
-                entity.HasOne(d => d.Status)
-                    .WithMany(p => p.Brand)
-                    .HasForeignKey(d => d.StatusId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Brand_Status");
             });
 
             modelBuilder.Entity<Color>(entity =>
@@ -448,7 +442,6 @@ namespace Models
                 entity.HasOne(d => d.ProductGender)
                     .WithMany(p => p.TypeProduct)
                     .HasForeignKey(d => d.ProductGenderId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TypeProduct_ProductGender");
 
                 entity.HasOne(d => d.Status)

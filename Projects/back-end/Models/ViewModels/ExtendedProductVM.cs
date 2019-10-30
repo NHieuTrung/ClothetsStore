@@ -6,7 +6,6 @@ namespace Models.ViewModels
 {
     public class ExtendedProductVM
     {
-        public Guid ProductId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public Guid TypeProductId { get; set; }

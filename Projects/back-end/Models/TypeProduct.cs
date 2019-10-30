@@ -13,7 +13,7 @@ namespace Models
         public Guid TypeProductId { get; set; }
         public string Name { get; set; }
         public Guid StatusId { get; set; }
-        public Guid ProductGenderId { get; set; }
+        public Guid? ProductGenderId { get; set; }
 
         public ProductGender ProductGender { get; set; }
         public Status Status { get; set; }

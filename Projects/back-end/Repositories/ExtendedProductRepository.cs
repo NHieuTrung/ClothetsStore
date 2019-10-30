@@ -42,18 +42,18 @@ namespace Repositories
                     };
                     ctx.Product.Add(product);
                     await ctx.SaveChangesAsync();
-                    extendedProductVM.ProductId = product.ProductId;
+                    Guid productId = product.ProductId;
                     List<KeyValuePair<Guid, Guid>> listProductColor = new List<KeyValuePair<Guid, Guid>>();
                     foreach (var item in extendedProductVM.ListProductSize)
                     {
-                        item.ProductId = extendedProductVM.ProductId;
-                        if (listProductColor.Where(m => m.Key == item.ColorId && m.Value == extendedProductVM.ProductId).Any() == false)
+                        item.ProductId = productId;
+                        if (listProductColor.Where(m => m.Key == item.ColorId && m.Value == productId).Any() == false)
                         {
-                            var productColor = new ProductColor { ColorId = item.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "\\product\\" + item.ProductId + "\\" + item.ColorId + ".jpg", StatusId = product.StatusId };
+                            var productColor = new ProductColor { ColorId = item.ColorId, ProductId = productId, ImageUrl = "\\product\\" + item.ProductId + "\\" + item.ColorId + ".jpg", StatusId = product.StatusId };
                             ctx.ProductColor.Add(productColor);
-                            listProductColor.Add(new KeyValuePair<Guid, Guid>(item.ColorId, extendedProductVM.ProductId));
+                            listProductColor.Add(new KeyValuePair<Guid, Guid>(item.ColorId, productId));
                         }
-                        var productSize = new ProductSize { ProductId = extendedProductVM.ProductId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity, StatusId = product.StatusId };
+                        var productSize = new ProductSize { ProductId = productId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity, StatusId = product.StatusId };
                         ctx.ProductSize.Add(productSize);
                         await ctx.SaveChangesAsync();
                     }
