@@ -13,7 +13,9 @@ namespace Models
         public Guid BrandId { get; set; }
         public string Name { get; set; }
         public string CompanyName { get; set; }
+        public Guid StatusId { get; set; }
 
+        public Status Status { get; set; }
         public ICollection<Product> Product { get; set; }
     }
 }
