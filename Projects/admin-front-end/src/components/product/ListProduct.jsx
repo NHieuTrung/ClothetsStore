@@ -9,7 +9,33 @@ class ListProduct extends Component {
       listProduct: []
     };
   }
-  componentWillMount() {}
+  componentWillMount() {
+    const urlGender = "https://localhost:44376/api/admin/extendedproduct";
+    const optionsGender = {
+      method: "GET", // *GET, POST, PUT, DELETE, etc.
+      headers: headers
+    };
+    fetch(urlGender, optionsGender)
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            listProduct: [...result],
+            userInfo: this.state.userInfo
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          /*this.setState({
+            isSubmitted: true,
+            error
+          });*/
+          alert("Can't get gender info from backend server!!!");
+        }
+      );
+  }
   componentDidMount() {
     const scriptBootstrapDatatable = document.createElement("script");
     const scriptDemoDatatable = document.createElement("script");

@@ -13,7 +13,7 @@ namespace ClothingStore.Areas.Admin.Controllers
 {
     [Route("api/admin/[controller]")]
     [ApiController]
-    public class ExtendedProductController : ControllerBase
+    public class ExtendedProductsController : ControllerBase
     {
         ProductService productService = new ProductService();
         ProductSizeService productSizeService = new ProductSizeService();
@@ -50,27 +50,30 @@ namespace ClothingStore.Areas.Admin.Controllers
         {
             var product = await productService.GetById(id);
             var listProductSizeVM = await productSizeService.GetByProductId(id);
-            ExtendedProductVM extendedProduct = new ExtendedProductVM
-            {
-                ProductId = id,
-                Code = product.Code,
-                Name = product.Name,
-                TypeProductId = product.TypeProductId,
-                Price = product.Price,
-                Detail = product.Detail,
-                Discount = product.Discount,
-                CreatedDate = product.CreatedDate,
-                BrandId = product.BrandId,
-                StatusId = product.StatusId,
-                ListProductSize = listProductSizeVM,
-            };
-
-            if (extendedProduct == null)
+            if (product == null)
             {
                 return NotFound();
             }
+            else
+            {
+                ExtendedProductVM extendedProduct = new ExtendedProductVM
+                {
+                    ProductId = id,
+                    Code = product.Code,
+                    Name = product.Name,
+                    TypeProductId = product.TypeProductId,
+                    Price = product.Price,
+                    Detail = product.Detail,
+                    Discount = product.Discount,
+                    CreatedDate = product.CreatedDate,
+                    BrandId = product.BrandId,
+                    StatusId = product.StatusId,
+                    ListProductSize = listProductSizeVM,
+                };
+                return extendedProduct;
+            }
 
-            return extendedProduct;
+
         }
 
         [HttpPost]
