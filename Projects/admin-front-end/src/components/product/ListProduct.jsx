@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Product from "./Product";
+import ModalProductSize from "./ModalProductSize";
 import "./dataTables.bootstrap4.min.css";
 
 class ListProduct extends Component {
@@ -10,10 +11,9 @@ class ListProduct extends Component {
     };
   }
   componentWillMount() {
-    const urlGender = "https://localhost:44376/api/admin/extendedproduct";
+    const urlGender = "https://localhost:44376/api/admin/extendedproducts";
     const optionsGender = {
-      method: "GET", // *GET, POST, PUT, DELETE, etc.
-      headers: headers
+      method: "GET" // *GET, POST, PUT, DELETE, etc.
     };
     fetch(urlGender, optionsGender)
       .then(res => res.json())
@@ -79,40 +79,56 @@ class ListProduct extends Component {
               >
                 <thead>
                   <tr>
-                    <th>Code</th>
-                    <th>Name Product</th>
-                    <th>Discount</th>
-                    <th>Detail</th>
-                    <th>Created Date</th>
-                    <th>Brand</th>
-                    <th>Status</th>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Giảm giá</th>
+                    <th>Chi tiết</th>
+                    <th>Ngày tạo</th>
+                    <th>Nhãn hiệu</th>
+                    <th>Trạng thái</th>
+                    <th>Chủng loại</th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
-                    <th>Code</th>
-                    <th>Name Product</th>
-                    <th>Discount</th>
-                    <th>Detail</th>
-                    <th>Created Date</th>
-                    <th>Brand</th>
-                    <th>Status</th>
+                    <th>Mã sản phẩm</th>
+                    <th>Tên</th>
+                    <th>Loại sản phẩm</th>
+                    <th>Giảm giá</th>
+                    <th>Chi tiết</th>
+                    <th>Ngày tạo</th>
+                    <th>Nhãn hiệu</th>
+                    <th>Trạng thái</th>
+                    <th>Chủng loại</th>
                   </tr>
                 </tfoot>
                 <tbody>
-                  <tr>
-                    <td>Tiger Nixon</td>
-                    <td>System Architect</td>
-                    <td>Edinburgh</td>
-                    <td>61</td>
-                    <td>2011/04/25</td>
-                    <td>$320,800</td>
-                  </tr>
+                  {this.state.listProduct.map(product => (
+                    <Product
+                      key={product.productId}
+                      productId={product.productId}
+                      code={product.code}
+                      name={product.name}
+                      typeProductName={product.typeProductId}
+                      discount={product.discount}
+                      detail={product.detail}
+                      createdDate={product.createdDate}
+                      brandName={product.brandId}
+                      statusName={product.statusId}
+                    />
+                  ))}
                 </tbody>
               </table>
             </div>
           </div>
         </div>
+        {this.state.listProduct.map(product => (
+          <ModalProductSize
+            productId={product.productId}
+            listProductSize={product.listProductSize}
+          />
+        ))}
       </div>
     );
   }
