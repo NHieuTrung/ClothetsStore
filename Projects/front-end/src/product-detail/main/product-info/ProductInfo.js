@@ -104,7 +104,6 @@ class ProductInfo extends React.Component{
     }    
 
     addToCart = () => {
-        console.log(window.$("#txtsl").val())
         if(window.$("#txtsl").val() === '')
         {
             this.setState({
@@ -140,7 +139,18 @@ class ProductInfo extends React.Component{
                         this.setState({
                             thongbao: ''
                         })
+                        
                         //Thêm vào giỏ hàng
+                        let list = JSON.parse(localStorage.getItem("cart")) == null ? [] : JSON.parse(localStorage.getItem("cart"));
+                        let item = {
+                            productId: this.state.productId,
+                            colorId: this.state.colorId,
+                            sizeId: this.state.sizeId,
+                            quantity: window.$("#txtsl").val()
+                        }
+                        list.push(item);
+                        localStorage.setItem("cart", JSON.stringify(list));
+                        window.location.reload();
                     }
                 }
             }

@@ -10,7 +10,6 @@ class HomeNavigation extends React.Component {
         fetch(`https://localhost:44376/api/customer/ProductType/GetProductTypesByGender?productGenderId=006333C4-68BF-4954-B886-DD5E342E3938`)
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             this.setState({
                 maleCategories: res
             })
@@ -24,7 +23,6 @@ class HomeNavigation extends React.Component {
         fetch(`https://localhost:44376/api/customer/ProductType/GetProductTypesByGender?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A`)
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             this.setState({
                 femaleCategories: res
             })

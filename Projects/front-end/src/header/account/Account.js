@@ -1,6 +1,39 @@
 import React from 'react';
 
 class Account extends React.Component {
+    state = {
+        cart: []
+    }
+    renderCart = () => {
+        if(this.state.cart !== null)
+        {
+            const listItems = this.state.cart.map((item, idx) =>
+                <div className="product product-widget" key={idx}>
+                    <div className="product-thumb">
+                        <img src="/assets/img/thumb-product01.jpg" alt="" />
+                    </div>
+                    <div className="product-body">
+                        <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
+                        <h2 className="product-name"><a href="/#">Product Name Goes Here</a></h2>
+                    </div>
+                    <button className="cancel-btn"><i className="fa fa-trash"></i></button>
+                </div>
+            );
+
+            return listItems;
+        }
+    }
+
+    getAllProducts = () => {
+        this.setState({
+            cart: JSON.parse(localStorage.getItem("cart"))
+        })
+    }
+
+    componentDidMount = () => {
+        this.getAllProducts();
+    }
+
     render() {
         return (
             <div className="pull-right">
@@ -38,28 +71,7 @@ class Account extends React.Component {
                         </a>
                         <div className="custom-menu">
                             <div id="shopping-cart">
-                                <div className="shopping-cart-list">
-                                    <div className="product product-widget">
-                                        <div className="product-thumb">
-                                            <img src="/assets/img/thumb-product01.jpg" alt="" />
-                                        </div>
-                                        <div className="product-body">
-                                            <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
-                                            <h2 className="product-name"><a href="/#">Product Name Goes Here</a></h2>
-                                        </div>
-                                        <button className="cancel-btn"><i className="fa fa-trash"></i></button>
-                                    </div>
-                                    <div className="product product-widget">
-                                        <div className="product-thumb">
-                                            <img src="/assets/img/thumb-product01.jpg" alt="" />
-                                        </div>
-                                        <div className="product-body">
-                                            <h3 className="product-price">$32.50 <span className="qty">x3</span></h3>
-                                            <h2 className="product-name"><a href="/#">Product Name Goes Here</a></h2>
-                                        </div>
-                                        <button className="cancel-btn"><i className="fa fa-trash"></i></button>
-                                    </div>
-                                </div>
+                                {this.renderCart()}
                                 <div className="shopping-cart-btns">
                                     <button className="main-btn">View Cart</button>
                                     <button className="primary-btn">Checkout <i className="fa fa-arrow-circle-right"></i></button>
