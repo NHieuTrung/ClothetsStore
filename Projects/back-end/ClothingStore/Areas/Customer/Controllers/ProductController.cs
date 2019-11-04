@@ -49,6 +49,7 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productVMService.GetNew());
         }
+
         [HttpGet]
         [Route("getProductVMById")]
         public async Task<IActionResult> GetProductVMById(Guid id, Guid colorId)
@@ -56,6 +57,11 @@ namespace ClothingStore.Areas.Customer.Controllers
             return Ok(await productVMService.GetProductVMById(id, colorId));
         }
 
-        
+        [HttpGet]
+        [Route("getProductsForCart")]
+        public async Task<IActionResult> GetProductsForCart(string carts)
+        {
+            return Ok(await productVMService.GetProductsForCart(carts));
+        }
     }
 }

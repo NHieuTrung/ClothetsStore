@@ -1,4 +1,5 @@
 ﻿using Models.ViewModels;
+using Newtonsoft.Json;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -20,14 +21,22 @@ namespace Services
         {
             return await productVMRepository.GetNumberOfPages(pageSize, minPrice, maxPrice, colorId, sizeName, brandId, productGenderId, search);
         }
+
         public async Task<IList<ProductVM>> GetNew()
         {
             return await productVMRepository.GetNew();
         }
+
         public async Task<ProductDetailVM> GetProductVMById(Guid id, Guid colorId)
         {
             return await productVMRepository.GetProductVMById(id, colorId);
         }
-        
+
+        public async Task<List<CartDetailVM>> GetProductsForCart(string carts)
+        {
+            List<CartVM> cartVMs = JsonConvert.DeserializeObject<List<CartVM>>(carts);
+
+            return await productVMRepository.GetProductsForCart(cartVMs);
+        }
     }
 }

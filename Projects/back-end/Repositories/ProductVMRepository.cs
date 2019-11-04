@@ -306,6 +306,28 @@ namespace Repositories
             return productList.Count;
         }
 
-         
+        public async Task<List<CartDetailVM>> GetProductsForCart(List<CartVM> carts)
+        {
+            List<CartDetailVM> cartDetails = new List<CartDetailVM>();
+
+            foreach(CartVM item in carts)
+            {
+                cartDetails.Add(await ctx.ProductSize.Where(p => p.ProductId == item.ProductId && p.ColorId == item.ColorId && p.SizeId == item.SizeId)
+                                                     .Select(p => new CartDetailVM
+                                                     {
+                                                         ProductId = p.ProductId,
+                                                         ColorId = p.ColorId,
+                                                         SizeId = p.SizeId,
+                                                         Quantity = item.Quantity,
+                                                         Name = p.ProductColor.Product.Name,
+                                                         Price = p.ProductColor.Product.Price,
+                                                         Discount = p.ProductColor.Product.Discount,
+                                                         ImageUrl = p.ProductColor.ImageUrl
+                                                     })
+                                                     .FirstOrDefaultAsync());
+            }
+
+            return cartDetails;
+        }
     }
 }

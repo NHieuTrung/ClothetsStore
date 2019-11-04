@@ -142,13 +142,25 @@ class ProductInfo extends React.Component{
                         
                         //Thêm vào giỏ hàng
                         let list = JSON.parse(localStorage.getItem("cart")) == null ? [] : JSON.parse(localStorage.getItem("cart"));
-                        let item = {
-                            productId: this.state.productId,
-                            colorId: this.state.colorId,
-                            sizeId: this.state.sizeId,
-                            quantity: window.$("#txtsl").val()
+                        let checkExisted = list.find(item => item.productId === this.state.productId && item.colorId === this.state.colorId && item.sizeId === this.state.sizeId);
+                        
+
+                        if(checkExisted === undefined)
+                        {
+                            let item = {
+                                productId: this.state.productId,
+                                colorId: this.state.colorId,
+                                sizeId: this.state.sizeId,
+                                quantity: parseInt(window.$("#txtsl").val())
+                            }
+                            list.push(item);
                         }
-                        list.push(item);
+                        else
+                        {
+                            let index = list.findIndex(item => item.productId === this.state.productId && item.colorId === this.state.colorId && item.sizeId === this.state.sizeId);
+                            list[index].quantity += 1;
+                        }
+                        
                         localStorage.setItem("cart", JSON.stringify(list));
                         window.location.reload();
                     }

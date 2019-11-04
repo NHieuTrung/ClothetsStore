@@ -1,6 +1,7 @@
 import React from 'react';  
 import ProductImage from './product-image/ProductImage'
 import ProductInfo from './product-info/ProductInfo'
+// eslint-disable-next-line
 import ProductReview from './product-review/ProductReview'
 
 class Main extends React.Component {
