@@ -9,12 +9,14 @@ class ProductColor extends Component {
   render() {
     const { listProductSize } = this.props;
     const { color } = this.props;
+    const domainServer = "https://localhost:44376/";
     return (
       <div className="card">
         <div className="card-img-top">
           <img
             className="mx-auto d-block"
-            src="https://placekitten.com/250/250"
+            src={domainServer + this.props.imageUrl}
+            height="200"
             alt="Product"
           />
         </div>

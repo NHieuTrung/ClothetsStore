@@ -11,6 +11,22 @@ class ListProduct extends Component {
     };
   }
   componentWillMount() {
+    this.fetchProduct();
+    this.timer = setInterval(() => this.fetchProduct(), 1000);
+  }
+  componentDidMount() {
+    const scriptBootstrapDatatable = document.createElement("script");
+    const scriptDemoDatatable = document.createElement("script");
+
+    scriptBootstrapDatatable.src =
+      "/vendor/datatables/dataTables.bootstrap4.min.js";
+    scriptDemoDatatable.src = "/js/demo/datatables-demo.js";
+
+    document.body.appendChild(scriptBootstrapDatatable);
+
+    document.body.appendChild(scriptDemoDatatable);
+  }
+  fetchProduct() {
     const urlGender = "https://localhost:44376/api/admin/extendedproducts";
     const optionsGender = {
       method: "GET" // *GET, POST, PUT, DELETE, etc.
@@ -20,8 +36,7 @@ class ListProduct extends Component {
       .then(
         result => {
           this.setState({
-            listProduct: [...result],
-            userInfo: this.state.userInfo
+            listProduct: [...result]
           });
         },
         // Note: it's important to handle errors here
@@ -35,18 +50,6 @@ class ListProduct extends Component {
           alert("Can't get gender info from backend server!!!");
         }
       );
-  }
-  componentDidMount() {
-    const scriptBootstrapDatatable = document.createElement("script");
-    const scriptDemoDatatable = document.createElement("script");
-
-    scriptBootstrapDatatable.src =
-      "/vendor/datatables/dataTables.bootstrap4.min.js";
-    scriptDemoDatatable.src = "/js/demo/datatables-demo.js";
-
-    document.body.appendChild(scriptBootstrapDatatable);
-
-    document.body.appendChild(scriptDemoDatatable);
   }
   render() {
     return (
