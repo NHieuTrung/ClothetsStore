@@ -12,7 +12,7 @@ namespace Services
     {
         ProductSizeRepository productSizeRepository = new ProductSizeRepository();
 
-        public async Task<IList<ProductSizeVM>> GetByProductId(Guid productId)
+        public async Task<IList<ProductSize>> GetByProductId(Guid productId)
         {
             return await productSizeRepository.GetByProductId(productId);
         }

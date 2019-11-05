@@ -16,16 +16,28 @@ namespace ClothingStore.Areas.Admin.Controllers
     public class ExtendedProductsController : ControllerBase
     {
         ProductService productService = new ProductService();
+        ProductColorService productColorService = new ProductColorService();
         ProductSizeService productSizeService = new ProductSizeService();
         ExtendedProductService extendedProductService = new ExtendedProductService();
         [HttpGet]
         public async Task<IActionResult> GetExtendedProduct()
         {
             var listProduct = await productService.GetAll();
+            var listProductColor = await productColorService.GetAll();
             var listProductSize = await productSizeService.GetAll();
             List<ExtendedProductVM> listExtendedProduct = new List<ExtendedProductVM>();
             foreach (var product in listProduct)
             {
+                IList<ProductColorVM> listProductColorVM = listProductColor
+                    .Where(m => m.ProductId == product.ProductId)
+                    .Select(m => new ProductColorVM()
+                    {
+                        ColorId = m.ColorId,
+                        ImageUrl = m.ImageUrl,
+                        ListProductSize = listProductSize
+                        .Where(n => n.ColorId == m.ColorId && n.ProductId == m.ProductId)
+                        .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, SizeId = n.SizeId }).ToList()
+                    }).ToList();
                 ExtendedProductVM extendedProduct = new ExtendedProductVM
                 {
                     ProductId = product.ProductId,
@@ -38,7 +50,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                     CreatedDate = product.CreatedDate,
                     BrandId = product.BrandId,
                     StatusId = product.StatusId,
-                    ListProductSize = listProductSize.Where(m => m.ProductId == product.ProductId).Select(m => new ProductSizeVM() { ColorId = m.ColorId, ProductId = m.ProductId, SizeId = m.SizeId, InventoryQuantity = m.InventoryQuantity }).ToList()
+                    ListProductColor = listProductColorVM
                 };
                 listExtendedProduct.Add(extendedProduct);
             }
@@ -49,13 +61,22 @@ namespace ClothingStore.Areas.Admin.Controllers
         public async Task<ActionResult<ExtendedProductVM>> GetExtendedProduct(Guid id)
         {
             var product = await productService.GetById(id);
-            var listProductSizeVM = await productSizeService.GetByProductId(id);
+            var listProductColor = await productColorService.GetByProductId(id);
+            var listProductSize = await productSizeService.GetByProductId(id);
             if (product == null)
             {
                 return NotFound();
             }
             else
             {
+                IList<ProductColorVM> listProductColorVM = listProductColor
+                                        .Select(m => new ProductColorVM()
+                                        {
+                                            ColorId = m.ColorId,
+                                            ImageUrl = m.ImageUrl,
+                                            ListProductSize = listProductSize.Where(n => n.ColorId == m.ColorId)
+                                                                                                                                            .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, SizeId = n.SizeId }).ToList()
+                                        }).ToList();
                 ExtendedProductVM extendedProduct = new ExtendedProductVM
                 {
                     ProductId = id,
@@ -68,7 +89,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                     CreatedDate = product.CreatedDate,
                     BrandId = product.BrandId,
                     StatusId = product.StatusId,
-                    ListProductSize = listProductSizeVM,
+                    ListProductColor = listProductColorVM
                 };
                 return extendedProduct;
             }
@@ -89,7 +110,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             }
             return CreatedAtAction("GetExtendedProduct", new
             {
-                id = extendedProductVM.ListProductSize.Select(m => m.ProductId).FirstOrDefault()
+                id = extendedProductVM.ProductId
             }, extendedProductVM);
         }
     }

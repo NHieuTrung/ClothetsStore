@@ -1,10 +1,12 @@
 import React, { Component } from "react";
-class ModalProductSize extends Component {
+import ProductSize from "./ProductSize";
+class ListProductSize extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
   render() {
+    const { listProductSize } = this.props;
     return (
       <div
         className="modal fade"
@@ -18,7 +20,7 @@ class ModalProductSize extends Component {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalCenterTitle">
-                Modal title
+                Product Name
               </h5>
               <button
                 type="button"
@@ -29,7 +31,11 @@ class ModalProductSize extends Component {
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <div className="modal-body">...</div>
+            <div className="modal-body">
+              {listProductSize.map(productSize => (
+                <ProductSize />
+              ))}
+            </div>
             <div className="modal-footer">
               <button
                 type="button"
@@ -49,4 +55,4 @@ class ModalProductSize extends Component {
   }
 }
 
-export default ModalProductSize;
+export default ListProductSize;

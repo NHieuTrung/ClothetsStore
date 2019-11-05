@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Product from "./Product";
-import ModalProductSize from "./ModalProductSize";
+import ListProductSize from "./ListProductSize";
 import "./dataTables.bootstrap4.min.css";
 
 class ListProduct extends Component {
@@ -124,7 +124,7 @@ class ListProduct extends Component {
           </div>
         </div>
         {this.state.listProduct.map(product => (
-          <ModalProductSize
+          <ListProductSize
             productId={product.productId}
             listProductSize={product.listProductSize}
           />

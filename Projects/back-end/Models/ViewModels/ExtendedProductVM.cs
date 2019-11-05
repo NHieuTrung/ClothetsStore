@@ -16,6 +16,6 @@ namespace Models.ViewModels
         public DateTime CreatedDate { get; set; }
         public Guid BrandId { get; set; }
         public Guid StatusId { get; set; }
-        public IList<ProductSizeVM> ListProductSize { get; set; }
+        public IList<ProductColorVM> ListProductColor { get; set; }
     }
 }

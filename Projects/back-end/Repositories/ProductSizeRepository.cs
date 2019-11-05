@@ -27,9 +27,9 @@ namespace Repositories
         {
             return await ctx.ProductSize.ToListAsync();
         }
-        public async Task<IList<ProductSizeVM>> GetByProductId(Guid productId)
+        public async Task<IList<ProductSize>> GetByProductId(Guid productId)
         {
-            return await ctx.ProductSize.Where(m => m.ProductId == productId).Select(m => new ProductSizeVM { ColorId = m.ColorId, SizeId = m.SizeId, InventoryQuantity = m.InventoryQuantity, ProductId = productId }).ToListAsync();
+            return await ctx.ProductSize.Where(m => m.ProductId == productId).ToListAsync();
         }
 
         public override async Task Create(ProductSize productSize)

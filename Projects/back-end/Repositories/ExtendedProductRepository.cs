@@ -43,19 +43,14 @@ namespace Repositories
                     ctx.Product.Add(product);
                     await ctx.SaveChangesAsync();
                     extendedProductVM.ProductId = product.ProductId;
-                    List<KeyValuePair<Guid, Guid>> listProductColor = new List<KeyValuePair<Guid, Guid>>();
-                    foreach (var item in extendedProductVM.ListProductSize)
+                    foreach (var item in extendedProductVM.ListProductColor)
                     {
-                        item.ProductId = extendedProductVM.ProductId;
-                        if (listProductColor.Where(m => m.Key == item.ColorId && m.Value == extendedProductVM.ProductId).Any() == false)
-                        {
-                            var productColor = new ProductColor { ColorId = item.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "\\product\\" + item.ProductId + "\\" + item.ColorId + ".jpg", StatusId = product.StatusId };
-                            ctx.ProductColor.Add(productColor);
-                            listProductColor.Add(new KeyValuePair<Guid, Guid>(item.ColorId, extendedProductVM.ProductId));
-                        }
-                        var productSize = new ProductSize { ProductId = extendedProductVM.ProductId, SizeId = item.SizeId, ColorId = item.ColorId, InventoryQuantity = item.InventoryQuantity, StatusId = product.StatusId };
-                        ctx.ProductSize.Add(productSize);
+                        var productColor = new ProductColor() { ColorId = item.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "", StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992") };
                         await ctx.SaveChangesAsync();
+                        foreach (var itemProductSize in item.ListProductSize)
+                        {
+                            var productSize = new ProductSize() { ColorId = productColor.ColorId, SizeId = itemProductSize.SizeId, InventoryQuantity = itemProductSize.InventoryQuantity };
+                        }
                     }
                     // Commit transaction if all commands succeed, transaction will auto-rollback
                     // when disposed if either commands fails
