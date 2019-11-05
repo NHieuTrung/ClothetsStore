@@ -9,13 +9,13 @@ namespace Models.ViewModels
         public Guid ProductId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
-        public Guid TypeProductId { get; set; }
+        public TypeProductVM TypeProduct { get; set; }
         public decimal Price { get; set; }
         public string Detail { get; set; }
         public double? Discount { get; set; }
         public DateTime CreatedDate { get; set; }
-        public Guid BrandId { get; set; }
-        public Guid StatusId { get; set; }
+        public BrandVM Brand { get; set; }
+        public StatusVM Status { get; set; }
         public IList<ProductColorVM> ListProductColor { get; set; }
     }
 }

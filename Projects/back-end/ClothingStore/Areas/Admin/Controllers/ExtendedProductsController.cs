@@ -32,24 +32,24 @@ namespace ClothingStore.Areas.Admin.Controllers
                     .Where(m => m.ProductId == product.ProductId)
                     .Select(m => new ProductColorVM()
                     {
-                        ColorId = m.ColorId,
+                        Color = new ColorVM() { ColorId = m.ColorId, ColorValue = m.Color.ColorValue, Name = m.Color.Name },
                         ImageUrl = m.ImageUrl,
                         ListProductSize = listProductSize
                         .Where(n => n.ColorId == m.ColorId && n.ProductId == m.ProductId)
-                        .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, SizeId = n.SizeId }).ToList()
+                        .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, Size = new SizeVM() { SizeId = n.SizeId, Name = n.Size.Name } }).ToList()
                     }).ToList();
                 ExtendedProductVM extendedProduct = new ExtendedProductVM
                 {
                     ProductId = product.ProductId,
                     Code = product.Code,
                     Name = product.Name,
-                    TypeProductId = product.TypeProductId,
+                    TypeProduct = new TypeProductVM() { Name = product.Name, TypeProductId = product.TypeProductId },
                     Price = product.Price,
                     Detail = product.Detail,
                     Discount = product.Discount,
                     CreatedDate = product.CreatedDate,
-                    BrandId = product.BrandId,
-                    StatusId = product.StatusId,
+                    Brand = new BrandVM() { Name = product.Brand.Name, BrandId = product.Brand.BrandId },
+                    Status = new StatusVM() { Name = product.Status.Name, StatusId = product.Status.StatusId },
                     ListProductColor = listProductColorVM
                 };
                 listExtendedProduct.Add(extendedProduct);
@@ -72,23 +72,23 @@ namespace ClothingStore.Areas.Admin.Controllers
                 IList<ProductColorVM> listProductColorVM = listProductColor
                                         .Select(m => new ProductColorVM()
                                         {
-                                            ColorId = m.ColorId,
+                                            Color = new ColorVM() { ColorId = m.ColorId, ColorValue = m.Color.ColorValue, Name = m.Color.Name },
                                             ImageUrl = m.ImageUrl,
                                             ListProductSize = listProductSize.Where(n => n.ColorId == m.ColorId)
-                                                                                                                                            .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, SizeId = n.SizeId }).ToList()
+                                            .Select(n => new ProductSizeVM() { InventoryQuantity = n.InventoryQuantity, Size = new SizeVM() { SizeId = n.SizeId, Name = n.Size.Name } }).ToList()
                                         }).ToList();
                 ExtendedProductVM extendedProduct = new ExtendedProductVM
                 {
                     ProductId = id,
                     Code = product.Code,
                     Name = product.Name,
-                    TypeProductId = product.TypeProductId,
+                    TypeProduct = new TypeProductVM() { TypeProductId = product.TypeProduct.TypeProductId, Name = product.TypeProduct.Name },
                     Price = product.Price,
                     Detail = product.Detail,
                     Discount = product.Discount,
                     CreatedDate = product.CreatedDate,
-                    BrandId = product.BrandId,
-                    StatusId = product.StatusId,
+                    Brand = new BrandVM() { BrandId = product.Brand.BrandId, Name = product.Brand.Name },
+                    Status = new StatusVM() { StatusId = product.Status.StatusId, Name = product.Status.Name },
                     ListProductColor = listProductColorVM
                 };
                 return extendedProduct;

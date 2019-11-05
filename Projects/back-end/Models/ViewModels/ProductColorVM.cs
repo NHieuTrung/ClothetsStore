@@ -6,7 +6,7 @@ namespace Models.ViewModels
 {
     public class ProductColorVM
     {
-        public Guid ColorId { get; set; }
+        public ColorVM Color { get; set; }
         public string ImageUrl { get; set; }
         public IList<ProductSizeVM> ListProductSize { get; set; }
     }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Product from "./Product";
-import ListProductSize from "./ListProductSize";
+import ListProductColor from "./ListProductColor";
 import "./dataTables.bootstrap4.min.css";
 
 class ListProduct extends Component {
@@ -110,12 +110,12 @@ class ListProduct extends Component {
                       productId={product.productId}
                       code={product.code}
                       name={product.name}
-                      typeProductName={product.typeProductId}
+                      typeProduct={product.typeProduct}
                       discount={product.discount}
                       detail={product.detail}
                       createdDate={product.createdDate}
-                      brandName={product.brandId}
-                      statusName={product.statusId}
+                      brand={product.brand}
+                      status={product.status}
                     />
                   ))}
                 </tbody>
@@ -123,10 +123,11 @@ class ListProduct extends Component {
             </div>
           </div>
         </div>
-        {this.state.listProduct.map(product => (
-          <ListProductSize
+        {this.state.listProduct.map((product, index) => (
+          <ListProductColor
+            key={index}
             productId={product.productId}
-            listProductSize={product.listProductSize}
+            listProductColor={product.listProductColor}
           />
         ))}
       </div>

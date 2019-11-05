@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Models.ViewModels
 {
-    public class TypeProductVM
+    public class StatusVM
     {
-        public Guid TypeProductId { get; set; }
+        public Guid StatusId { get; set; }
         public string Name { get; set; }
     }
 }

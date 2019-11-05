@@ -32,24 +32,24 @@ namespace Repositories
                     {
                         Code = extendedProductVM.Code,
                         Name = extendedProductVM.Name,
-                        TypeProductId = extendedProductVM.TypeProductId,
+                        TypeProductId = extendedProductVM.TypeProduct.TypeProductId,
                         Price = extendedProductVM.Price,
                         Detail = extendedProductVM.Detail,
                         Discount = extendedProductVM.Discount,
                         CreatedDate = currentDate,
-                        BrandId = extendedProductVM.BrandId,
-                        StatusId = extendedProductVM.StatusId
+                        BrandId = extendedProductVM.Brand.BrandId,
+                        StatusId = extendedProductVM.Status.StatusId
                     };
                     ctx.Product.Add(product);
                     await ctx.SaveChangesAsync();
                     extendedProductVM.ProductId = product.ProductId;
                     foreach (var item in extendedProductVM.ListProductColor)
                     {
-                        var productColor = new ProductColor() { ColorId = item.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "", StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992") };
+                        var productColor = new ProductColor() { ColorId = item.Color.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "", StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992") };
                         await ctx.SaveChangesAsync();
                         foreach (var itemProductSize in item.ListProductSize)
                         {
-                            var productSize = new ProductSize() { ColorId = productColor.ColorId, SizeId = itemProductSize.SizeId, InventoryQuantity = itemProductSize.InventoryQuantity };
+                            var productSize = new ProductSize() { ColorId = productColor.ColorId, SizeId = itemProductSize.Size.SizeId, InventoryQuantity = itemProductSize.InventoryQuantity };
                         }
                     }
                     // Commit transaction if all commands succeed, transaction will auto-rollback

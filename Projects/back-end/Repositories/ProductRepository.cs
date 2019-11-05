@@ -26,12 +26,12 @@ namespace Repositories
 
         public override async Task<IList<Product>> GetAll()
         {
-            return await ctx.Product.ToListAsync();
+            return await ctx.Product.Include(m => m.TypeProduct).Include(m => m.Status).Include(m => m.Brand).ToListAsync();
         }
 
         public override async Task<Product> GetById(Guid id)
         {
-            Product product = await ctx.Product.Where(p => p.ProductId == id)
+            Product product = await ctx.Product.Where(p => p.ProductId == id).Include(m => m.TypeProduct).Include(m => m.Status).Include(m => m.Brand)
                                                .FirstOrDefaultAsync();
 
             return product;

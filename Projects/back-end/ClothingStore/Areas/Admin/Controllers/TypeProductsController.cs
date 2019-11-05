@@ -24,7 +24,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             List<TypeProductVM> typeProductVMs = new List<TypeProductVM>();
             foreach (var item in typeProducts)
             {
-                typeProductVMs.Add(new TypeProductVM() { Name = item.Name, ProductGender = item.ProductGender.Name, TypeProductId = item.TypeProductId });
+                typeProductVMs.Add(new TypeProductVM() { Name = item.Name, TypeProductId = item.TypeProductId });
             }
             return Ok(typeProductVMs);
         }

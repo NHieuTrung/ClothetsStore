@@ -6,7 +6,7 @@ namespace Models.ViewModels
 {
     public class ProductSizeVM
     {
-        public Guid SizeId { get; set; }
+        public SizeVM Size { get; set; }
         public int InventoryQuantity { get; set; }
     }
 }

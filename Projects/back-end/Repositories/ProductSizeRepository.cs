@@ -25,11 +25,11 @@ namespace Repositories
         }
         public override async Task<IList<ProductSize>> GetAll()
         {
-            return await ctx.ProductSize.ToListAsync();
+            return await ctx.ProductSize.Include(m => m.Size).ToListAsync();
         }
         public async Task<IList<ProductSize>> GetByProductId(Guid productId)
         {
-            return await ctx.ProductSize.Where(m => m.ProductId == productId).ToListAsync();
+            return await ctx.ProductSize.Where(m => m.ProductId == productId).Include(m => m.Size).ToListAsync();
         }
 
         public override async Task Create(ProductSize productSize)

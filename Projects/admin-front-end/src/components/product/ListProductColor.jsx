@@ -1,12 +1,12 @@
 import React, { Component } from "react";
-import ProductSize from "./ProductSize";
-class ListProductSize extends Component {
+import ProductColor from "./ProductColor";
+class ListProductColor extends Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
   render() {
-    const { listProductSize } = this.props;
+    const { listProductColor } = this.props;
     return (
       <div
         className="modal fade"
@@ -32,8 +32,13 @@ class ListProductSize extends Component {
               </button>
             </div>
             <div className="modal-body">
-              {listProductSize.map(productSize => (
-                <ProductSize />
+              {listProductColor.map(productColor => (
+                <ProductColor
+                  key={productColor.color.colorId}
+                  color={productColor.color}
+                  imageUrl={productColor.imageUrl}
+                  listProductSize={productColor.listProductSize}
+                />
               ))}
             </div>
             <div className="modal-footer">
@@ -55,4 +60,4 @@ class ListProductSize extends Component {
   }
 }
 
-export default ListProductSize;
+export default ListProductColor;
