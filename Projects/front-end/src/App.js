@@ -1,21 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './header/Header';
 import Footer from './footer/Footer';
 import Index from './index/Index';
 import ProductList from './product-list/ProductList.js'
 import ProductDetail from './product-detail/ProductDetail'
+import Register from './login/Register'
 
 function App() {
      return (
         <Router>
-            <div>
+            {/* Đăng ký */}
+            <Route path="/register" component={Register}></Route>
+
+            {/* Trang chủ */}
+            <Route exact path="/" component={ Index }>
                 <Header></Header>
-                <Route exact path="/" component={ Index } />
-                <Route path="/productlist" component={ ProductList } />
-                <Route path="/product" component={ProductDetail}/>
+                <Index></Index>
                 <Footer></Footer>
-            </div>
+            </Route>
+
+            {/* Danh sách sp */}
+            <Route path="/productlist" component={ ProductList }>
+                <Header></Header>
+                <ProductList></ProductList>
+                <Footer></Footer>
+            </Route>
+
+            {/* Chi tiết sp */}
+            <Route path="/product" component={ProductDetail}>
+                <Header></Header>
+                <ProductDetail></ProductDetail>
+                <Footer></Footer>
+            </Route>
         </Router>
     );
 }
