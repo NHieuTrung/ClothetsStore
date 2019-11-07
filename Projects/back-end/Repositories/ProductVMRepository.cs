@@ -320,6 +320,8 @@ namespace Repositories
                                                          SizeId = p.SizeId,
                                                          Quantity = item.Quantity,
                                                          Name = p.ProductColor.Product.Name,
+                                                         ColorName = p.ProductColor.Color.Name,
+                                                         SizeName = p.Size.Name,
                                                          Price = p.ProductColor.Product.Price,
                                                          Discount = p.ProductColor.Product.Discount,
                                                          ImageUrl = p.ProductColor.ImageUrl

@@ -9,32 +9,31 @@ class Order extends React.Component{
         cart:[],
         sizeId:'00000000-0000-0000-0000-000000000000',
         colorId:'00000000-0000-0000-0000-000000000000',
-        namesize:"",
-        namecolor:""
+        namesize:'',
+        namecolor:''
     }
 
     renderCart = () => {
         if(this.state.cart !== null)
         {
             const listItems = this.state.cart.map((item, idx) =>
-            
-            <tr>
-                <td className="thumb"><img src={"/assets/"+ item.imageUrl} alt=""/></td>
-                    <td className="details">
-                        <a href={"/product?id="+ item.productId}>{item.name}</a>
-                        <ul>
-                            <li><span>Size: {item.sizeId}</span></li>
-                            <li><span>Color: {item.colorId}</span></li>
-                        </ul>
-                    </td>
+                <tr key={idx}>
+                    <td className="thumb"><img src={"/assets/"+ item.imageUrl} alt=""/></td>
+                        <td className="details">
+                            <a href={"/product?id="+ item.productId}>{item.name}</a>
+                            <ul>
+                                <li><span>Size: {item.sizeName}</span></li>
+                                <li><span>Color: {item.colorName}</span></li>
+                            </ul>
+                        </td>
+                        
+                    <td className="price text-center"><NumberFormat value={item.price} displayType={'text'} thousandSeparator={true}/></td>
+                    <td className="qty text-center"><input id={"txt" + idx} className="input" type="number" min="1" defaultValue={item.quantity} onChange={this.changeQuantity}/></td>
                     
-                <td className="price text-center">{item.price}</td>
-                <td className="qty text-center"><input class="input" type="number" value={item.quantity}/></td>
-                
-                <td className="total text-center">{item.discount}</td>
-                <td className="total text-center"><strong class="primary-color">{(item.price - (item.price * item.discount / 100))*item.quantity}</strong></td>
-                <td className="text-right"><button class="main-btn icon-btn"><i class="fa fa-close"></i></button></td>
-        </tr>
+                    <td className="total text-center">{item.discount === null ? 0 : item.discount}</td>
+                    <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100))*item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
+                    <td className="text-right"><button className="main-btn icon-btn" onClick={this.deleteProduct} id={"btn" + idx}><i className="fa fa-close"></i></button></td>
+                </tr>
             );
 
             return listItems;
@@ -98,6 +97,39 @@ class Order extends React.Component{
         )
     }
 
+    changeQuantity = (e) => {
+        let id = e.target.id;
+        let value = e.target.value;
+        let number = id.substr(3, id.length - 3);
+
+        if(value > 0) {
+            let list = JSON.parse(localStorage.getItem("cart")) == null ? [] : JSON.parse(localStorage.getItem("cart"));
+            if(list !== []) {
+                list[number].quantity = value;
+                localStorage.setItem("cart", JSON.stringify(list));
+
+                //setState
+                let cart = this.state.cart;
+                cart[number].quantity = value;
+                this.setState({
+                    cart: cart
+                })
+            }
+        }
+    }
+
+    deleteProduct = (e) => {
+        let id = e.target.id;
+        let number = id.substr(3, id.length - 3);
+
+        let list = JSON.parse(localStorage.getItem("cart")) == null ? [] : JSON.parse(localStorage.getItem("cart"));
+        if(list !== []) {
+            list.splice(number, 1);
+            localStorage.setItem("cart", JSON.stringify(list));
+            window.location.reload();
+        }
+    }
+
     componentDidMount = () => {
         this.getAllProducts();
     }
@@ -137,14 +169,14 @@ class Order extends React.Component{
 								<td colspan="2">Free Shipping</td>
 							</tr> */}
 							<tr>
-								<th class="empty" colspan="3"></th>
+								<th className="empty" colSpan="3"></th>
 								<th>Tổng tiền</th>
-								<th colspan="2" class="total">{this.renderTotalPrice()}</th>
+								<th colSpan="2" className="total">{this.renderTotalPrice()}</th>
 							</tr>
 						</tfoot>
                     </table>
-                    <div class="pull-right">
-						<button class="primary-btn">Thanh toán</button>
+                    <div className="pull-right">
+						<button className="primary-btn">Thanh toán</button>
 					</div>
                 </div>
             </div>

@@ -266,9 +266,11 @@ class Register extends React.Component {
             <div className="register">
                 { this.renderSnowEffect() }
                 <div className="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
-                <div className="wrapper wrapper--w780">
-                    <div className="card card-3">
-                        <div className="card-heading"></div>
+                    <div className="wrapper wrapper--w780">
+                        <div className="card card-3">
+                            <div className="card-heading">
+                                <a href="/"><img src="./assets/img/logo.png" alt="logo.png"></img></a>
+                            </div>
                             <div className="card-body">
                                 <h2 className="title"><center>Thông tin</center></h2>
                                 <form onSubmit={this.handleSubmit}>
