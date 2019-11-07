@@ -1,5 +1,11 @@
 import React from 'react';
 import NumberFormat from 'react-number-format';
+import {
+    // BrowserRouter as Router,
+    // Switch,
+    // Route,
+    Link
+} from "react-router-dom";
 
 class Account extends React.Component {
     state = {
@@ -123,7 +129,10 @@ class Account extends React.Component {
                             <div id="shopping-cart">
                                 {this.renderCart()}
                                 <div className="shopping-cart-btns">
+                                    <Link to={"/cartdetail"}>
                                     <button className="main-btn">Xem giỏ hàng</button>
+                                    </Link>
+                                    
                                     <button className="primary-btn">Thanh toán <i className="fa fa-arrow-circle-right"></i></button>
                                 </div>
                             </div>

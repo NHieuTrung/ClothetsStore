@@ -58,5 +58,10 @@ namespace Repositories
 
             return size;
         }
+        public async Task<string> GetSizeById(Guid sizeId)
+        {
+            string name = ctx.Size.Where(p => p.SizeId == sizeId).Select(p => p.Name).FirstOrDefault();
+            return name;
+        }
     }
 }

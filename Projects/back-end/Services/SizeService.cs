@@ -19,5 +19,10 @@ namespace Services
         {
             return await sizeRepository.GetSizeByProductId(id);
         }
+
+        public async Task<string> GetSizeById(Guid sizeId)
+        {
+            return await sizeRepository.GetSizeById(sizeId);
+        }
     }
 }

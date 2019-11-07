@@ -6,6 +6,7 @@ import Index from './index/Index';
 import ProductList from './product-list/ProductList.js'
 import ProductDetail from './product-detail/ProductDetail'
 import Register from './login/Register'
+import CartDetail from './cart-detail/Cart'
 
 function App() {
      return (
@@ -31,6 +32,13 @@ function App() {
             <Route path="/product" component={ProductDetail}>
                 <Header></Header>
                 <ProductDetail></ProductDetail>
+                <Footer></Footer>
+            </Route>
+
+            {/* Giỏ hàng */}
+            <Route path="/cartdetail" component={CartDetail}>
+                <Header></Header>
+                <CartDetail></CartDetail>
                 <Footer></Footer>
             </Route>
         </Router>
