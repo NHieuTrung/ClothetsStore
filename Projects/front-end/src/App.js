@@ -5,6 +5,7 @@ import Footer from './footer/Footer';
 import Index from './index/Index';
 import ProductList from './product-list/ProductList.js'
 import ProductDetail from './product-detail/ProductDetail'
+import CartDetail from './cart-detail/Cart'
 
 function App() {
      return (
@@ -14,6 +15,7 @@ function App() {
                 <Route exact path="/" component={ Index } />
                 <Route path="/productlist" component={ ProductList } />
                 <Route path="/product" component={ProductDetail}/>
+                <Route path="/cartdetail" component={CartDetail}/>
                 <Footer></Footer>
             </div>
         </Router>

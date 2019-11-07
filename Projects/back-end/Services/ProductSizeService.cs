@@ -14,5 +14,7 @@ namespace Services
         {
             return await productsizeRepository.GetQuatityBySelect(colorId, sizeId);
         }
+
+       
     }
 }

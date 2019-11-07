@@ -23,5 +23,7 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productSizeService.GetQuatityBySelect(colorId, sizeId));
         }
+
+
     }
 }
