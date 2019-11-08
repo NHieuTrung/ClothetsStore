@@ -10,34 +10,16 @@ class ListProduct extends Component {
       listProduct: []
     };
   }
-  componentWillMount() {
-    this.fetchProduct();
-    this.timer = setInterval(() => this.fetchProduct(), 1000);
-  }
-  componentDidMount() {
-    const scriptBootstrapDatatable = document.createElement("script");
-    const scriptDemoDatatable = document.createElement("script");
-
-    scriptBootstrapDatatable.src =
-      "/vendor/datatables/dataTables.bootstrap4.min.js";
-    scriptDemoDatatable.src = "/js/demo/datatables-demo.js";
-
-    document.body.appendChild(scriptBootstrapDatatable);
-
-    document.body.appendChild(scriptDemoDatatable);
-  }
-  fetchProduct() {
+  async componentWillMount() {
     const urlGender = "https://localhost:44376/api/admin/extendedproducts";
     const optionsGender = {
       method: "GET" // *GET, POST, PUT, DELETE, etc.
     };
-    fetch(urlGender, optionsGender)
+    const result = await fetch(urlGender, optionsGender)
       .then(res => res.json())
       .then(
         result => {
-          this.setState({
-            listProduct: [...result]
-          });
+          return result;
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
@@ -50,6 +32,21 @@ class ListProduct extends Component {
           alert("Can't get gender info from backend server!!!");
         }
       );
+    this.setState({
+      listProduct: [...result]
+    });
+  }
+  componentDidMount() {
+    const scriptBootstrapDatatable = document.createElement("script");
+    const scriptDemoDatatable = document.createElement("script");
+
+    scriptBootstrapDatatable.src =
+      "/vendor/datatables/dataTables.bootstrap4.min.js";
+    scriptDemoDatatable.src = "/js/demo/datatables-demo.js";
+
+    document.body.appendChild(scriptBootstrapDatatable);
+
+    document.body.appendChild(scriptDemoDatatable);
   }
   render() {
     return (

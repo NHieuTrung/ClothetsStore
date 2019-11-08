@@ -16,6 +16,7 @@ class ProductSize extends Component {
             className="form-control"
             id="inputSize"
             value={size.name}
+            readOnly
           />
         </div>
         <div className="form-group col-md-6">
@@ -26,6 +27,7 @@ class ProductSize extends Component {
             id="inputInventory"
             min="0"
             value={this.props.inventoryQuantity}
+            readOnly
           />
         </div>
       </div>

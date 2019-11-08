@@ -18,11 +18,13 @@ class ProductColor extends Component {
             src={domainServer + this.props.imageUrl}
             height="200"
             alt="Product"
+            readOnly
           />
         </div>
         <div className="card-body">
           <h5 className="card-title">
-            Màu {color.name} <input type="color" value={color.colorValue} />
+            Màu {color.name}{" "}
+            <input type="color" value={color.colorValue} readOnly />
           </h5>
           <form action="">
             {listProductSize.map(productSize => (
@@ -30,6 +32,7 @@ class ProductColor extends Component {
                 key={productSize.size.sizeId}
                 size={productSize.size}
                 inventoryQuantity={productSize.inventoryQuantity}
+                isEdit={productSize.isEdit}
               />
             ))}
           </form>

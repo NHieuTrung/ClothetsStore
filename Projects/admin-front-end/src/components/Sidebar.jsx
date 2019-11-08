@@ -57,10 +57,10 @@ const Sidebar = () => {
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <h6 className="collapse-header">Product Function:</h6>
-            <a className="collapse-item" href="/product-page">
+            <a className="collapse-item" href="product-page">
               View Products
             </a>
-            <a className="collapse-item" href="cards.html">
+            <a className="collapse-item" href="create-product-page">
               Create Product
             </a>
           </div>

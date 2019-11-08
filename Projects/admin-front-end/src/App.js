@@ -6,6 +6,7 @@ import Sidebar from "./components/Sidebar";
 import Topbar from "./components/Topbar";
 import Home from "./components/Home";
 import ListProduct from "./components/product/ListProduct";
+import CreateProductPage from "./components/product/CreateProductPage";
 
 function App() {
   return (
@@ -27,8 +28,8 @@ function App() {
               <Route path="/product-page">
                 <ListProduct />
               </Route>
-              <Route path="/dashboard">
-                <Home />
+              <Route path="/create-product-page">
+                <CreateProductPage />
               </Route>
             </Switch>
             {/* /.container-fluid */}
