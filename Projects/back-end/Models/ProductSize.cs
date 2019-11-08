@@ -15,6 +15,7 @@ namespace Models
         public Guid ProductId { get; set; }
         public Guid ColorId { get; set; }
         public int InventoryQuantity { get; set; }
+        public Guid StatusId { get; set; }
 
         public ProductColor ProductColor { get; set; }
         public Size Size { get; set; }

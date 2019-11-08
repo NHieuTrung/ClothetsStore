@@ -8,6 +8,5 @@ namespace Services
 {
     public class ProductService : BaseService<Product, ProductRepository>
     {
-
     }
 }

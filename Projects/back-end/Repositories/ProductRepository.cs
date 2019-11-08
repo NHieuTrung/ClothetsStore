@@ -26,12 +26,12 @@ namespace Repositories
 
         public override async Task<IList<Product>> GetAll()
         {
-            return await ctx.Product.ToListAsync();
+            return await ctx.Product.Include(m => m.TypeProduct).Include(m => m.Status).Include(m => m.Brand).ToListAsync();
         }
 
         public override async Task<Product> GetById(Guid id)
         {
-            Product product = await ctx.Product.Where(p => p.ProductId == id)
+            Product product = await ctx.Product.Where(p => p.ProductId == id).Include(m => m.TypeProduct).Include(m => m.Status).Include(m => m.Brand)
                                                .FirstOrDefaultAsync();
 
             return product;
@@ -39,20 +39,25 @@ namespace Repositories
         public async Task<IList<Size>> GetSize(Guid id)
         {
             IList<Size> size = new List<Size>();
-            
+
             List<Guid> productSize = await ctx.ProductSize.Where(p => p.ProductId == id)
                                                .GroupBy(p => p.SizeId)
                                                .Distinct()
-                                               .Select(s=>s.Key)
+                                               .Select(s => s.Key)
                                                .ToListAsync();
 
-            foreach(Guid item in productSize)
+            foreach (Guid item in productSize)
             {
                 size.Add(ctx.Size.Where(s => s.SizeId == item).FirstOrDefault());
             }
 
             return size;
         }
-        //public async Task<IList<ProductSize>>
+
+        public override async Task Create(Product product)
+        {
+            ctx.Product.Add(product);
+            await ctx.SaveChangesAsync();
+        }
     }
 }

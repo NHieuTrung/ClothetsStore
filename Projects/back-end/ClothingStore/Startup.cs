@@ -49,6 +49,7 @@ namespace ClothingStore
             }
 
             // Enable Cors
+            app.UseStaticFiles();
             app.UseCors("MyPolicy");
             app.UseHttpsRedirection();
             app.UseMvc(routes =>

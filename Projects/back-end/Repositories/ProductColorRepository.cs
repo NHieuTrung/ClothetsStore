@@ -24,7 +24,7 @@ namespace Repositories
 
         public override async Task<IList<ProductColor>> GetAll()
         {
-            return await ctx.ProductColor.ToListAsync();
+            return await ctx.ProductColor.Include(m => m.Color).ToListAsync();
         }
 
         public async Task<IList<ProductColor>> GetProductColorsByColorId(Guid colorId)
@@ -35,11 +35,11 @@ namespace Repositories
             return productColors;
         }
 
-        public async Task<IList<ProductColor>> GetColorByProductId(Guid productId)
+        public async Task<IList<ProductColor>> GetByProductId(Guid productId)
         {
-            List<ProductColor> colors = await ctx.ProductColor.Where(p => p.ProductId == productId).ToListAsync();
+            List<ProductColor> productColors = await ctx.ProductColor.Where(p => p.ProductId == productId).Include(m => m.Color).ToListAsync();
 
-            return colors;
+            return productColors;
         }
     }
 }
