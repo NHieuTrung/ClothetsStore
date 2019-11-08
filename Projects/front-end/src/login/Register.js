@@ -62,6 +62,18 @@ class Register extends React.Component {
             return;
         }
 
+        //check name validity
+        let nameValidity = this.checkNameValidity(window.$("#name").val());
+        if(nameValidity === false) {
+            return;
+        }
+
+        //check account validity
+        let usernameValidity = this.checkUsernameValidity(window.$("#username").val());
+        if(usernameValidity === false) {
+            return;
+        }
+
         //check password validity
         let passwordValidity = this.checkPasswordValidity(window.$("#password").val());
         if(passwordValidity === false) {
@@ -135,6 +147,23 @@ class Register extends React.Component {
         }
     }
 
+    checkNameValidity = (name) => {
+        let nameLength = name.length;
+        
+        if(nameLength < 2) {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Họ tên không hợp lệ</p>"
+            })
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
     checkPhoneValidity = (phone) => {
         let phoneLength = phone.length;
         
@@ -166,6 +195,34 @@ class Register extends React.Component {
         }
         else {
             return true;
+        }
+    }
+
+    checkUsernameValidity = (username) => {
+        if(username.includes(" ")) {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Tài khoản không được có khoảng trắng</p>"
+            })
+            return false;
+        }
+        else {
+            let usernameLength = username.length;
+
+            if(usernameLength < 8) {
+                MySwal.fire({
+                    title: 'Thông báo',
+                    width: 300,
+                    padding: '2em',
+                    html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Độ dài tài khoản phải từ 8 ký tự/</p>"
+                })
+                return false;
+            }
+            else {
+                return true;
+            }
         }
     }
 
