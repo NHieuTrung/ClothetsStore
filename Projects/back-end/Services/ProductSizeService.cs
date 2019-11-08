@@ -13,11 +13,22 @@ namespace Services
         ProductSizeRepository productSizeRepository = new ProductSizeRepository();
         public async Task<int> GetQuatityBySelect(Guid colorId, Guid sizeId)
         {
+            if (colorId == Guid.Empty || sizeId == Guid.Empty)
+            {
+                return 0;
+            }
+
             return await productSizeRepository.GetQuatityBySelect(colorId, sizeId);
         }
 
         public async Task<IList<ProductSize>> GetByProductId(Guid productId)
         {
+            if (productId == Guid.Empty)
+            {
+                List<ProductSize> productSizes = new List<ProductSize>();
+                return productSizes;
+            }
+
             return await productSizeRepository.GetByProductId(productId);
         }
     }

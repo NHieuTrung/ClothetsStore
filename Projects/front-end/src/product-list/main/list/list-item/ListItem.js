@@ -9,7 +9,7 @@ import NumberFormat from 'react-number-format';
 
 class ListItem extends React.Component {
     render() {
-        let imgUrl = "/assets/" + this.props.itemImage;
+        let imgUrl = "https://localhost:44376/" + this.props.itemImage;
 
         return (
             // {/* <!-- Product Single --> */}
@@ -38,7 +38,7 @@ class ListItem extends React.Component {
                             <i className="fa fa-star"></i>
                             <i className="fa fa-star-o empty"></i>
                         </div>
-                        <h2 className="product-name"><a href=" #">{this.props.itemName}</a></h2>
+                        <h2 className="product-name"><a href={`/product?id=${this.props.itemProductId}`}>{this.props.itemName}</a></h2>
                         <div className="product-btns">
                             <button className="main-btn icon-btn"><i className="fa fa-heart"></i></button>
                             <button className="main-btn icon-btn"><i className="fa fa-exchange"></i></button>

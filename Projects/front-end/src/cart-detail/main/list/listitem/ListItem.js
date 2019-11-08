@@ -6,7 +6,7 @@ import NumberFormat from "react-number-format";
 
 class ListItem extends React.Component{
     render(){
-        let imgUrl="/assets" + this.props.itemImage;
+        let imgUrl="/https://localhost:44376/" + this.props.itemImage;
         return(
             <div className="col-md-12">
                 <div className="order-summary clearfix">

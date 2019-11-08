@@ -29,6 +29,12 @@ namespace Services
 
         public async Task<ProductDetailVM> GetProductVMById(Guid id, Guid colorId)
         {
+            if (id == Guid.Empty)
+            {
+                ProductDetailVM productDetail = new ProductDetailVM();
+                return productDetail;
+            }
+
             return await productVMRepository.GetProductVMById(id, colorId);
         }
 

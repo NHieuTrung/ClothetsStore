@@ -19,6 +19,12 @@ namespace Services
 
         public virtual async Task<TEntity> GetById(Guid id)
         {
+            if(id == Guid.Empty)
+            {
+                TEntity entity = new TEntity();
+                return entity;
+            }
+
             return await repository.GetById(id);
         }
         public virtual async Task Create(TEntity entity)

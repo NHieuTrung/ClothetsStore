@@ -17,11 +17,22 @@ namespace Services
         }
         public async Task<IList<Size>> GetSizesByProductId(Guid id)
         {
+            if(id == Guid.Empty)
+            {
+                List<Size> sizes = new List<Size>();
+                return sizes;
+            }
+
             return await sizeRepository.GetSizeByProductId(id);
         }
 
         public async Task<string> GetSizeById(Guid sizeId)
         {
+            if (sizeId == Guid.Empty)
+            {
+                return "";
+            }
+
             return await sizeRepository.GetSizeById(sizeId);
         }
     }

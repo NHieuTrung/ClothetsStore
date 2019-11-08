@@ -2,7 +2,7 @@ import React from 'react';
 
 class ProductImage extends React.Component{
     render() {
-        let imgUrl = "/assets/" + this.props.itemImage;
+        let imgUrl = "https://localhost:44376/" + this.props.itemImage;
 
         return (
             <div className="col-md-6">

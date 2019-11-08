@@ -18,7 +18,7 @@ class Order extends React.Component{
         {
             const listItems = this.state.cart.map((item, idx) =>
                 <tr key={idx}>
-                    <td className="thumb"><img src={"/assets/"+ item.imageUrl} alt=""/></td>
+                    <td className="thumb"><img src={"https://localhost:44376/"+ item.imageUrl} alt=""/></td>
                         <td className="details">
                             <a href={"/product?id="+ item.productId}>{item.name}</a>
                             <ul>
@@ -169,7 +169,7 @@ class Order extends React.Component{
 								<td colspan="2">Free Shipping</td>
 							</tr> */}
 							<tr>
-								<th className="empty" colSpan="3"></th>
+								<th className="empty" colSpan="4"></th>
 								<th>Tổng tiền</th>
 								<th colSpan="2" className="total">{this.renderTotalPrice()}</th>
 							</tr>

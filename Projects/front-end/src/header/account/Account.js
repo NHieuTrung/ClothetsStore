@@ -18,7 +18,7 @@ class Account extends React.Component {
             const listItems = this.state.cart.map((item, idx) =>
                 <div className="product product-widget" key={idx} style={{marginBottom: "35px"}}>
                     <div className="product-thumb">
-                        <img src={"/assets/" + item.imageUrl} alt="" />
+                        <img src={"https://localhost:44376/" + item.imageUrl} alt="" />
                     </div>
                     <div className="product-body">
                         {/* <h3 className="product-price">{item.price}  */}

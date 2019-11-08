@@ -13,6 +13,12 @@ namespace Services
 
         public async Task<IList<ProductColor>> GetByProductId(Guid productId)
         {
+            if (productId == Guid.Empty)
+            {
+                List<ProductColor> productColors = new List<ProductColor>();
+                return productColors;
+            }
+
             return await productColorRepository.GetByProductId(productId);
         }
     }

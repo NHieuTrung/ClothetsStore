@@ -17,11 +17,21 @@ namespace Services
 
         public async Task<bool> CheckAvailability(string username)
         {
+            if(username == "")
+            {
+                return false;
+            }
+
             return await accountRepository.CheckAvailability(username);
         }
 
         public async Task<bool> CheckEmailAvailability(string email)
         {
+            if(email == "")
+            {
+                return false;
+            }
+
             return await accountRepository.CheckEmailAvailability(email);
         }
 

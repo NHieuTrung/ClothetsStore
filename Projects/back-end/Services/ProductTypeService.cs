@@ -14,6 +14,12 @@ namespace Services
 
         public async Task<IList<TypeProduct>> GetProductTypesByProductGender(Guid productGenderId)
         {
+            if(productGenderId == Guid.Empty)
+            {
+                List<TypeProduct> typeProducts = new List<TypeProduct>();
+                return typeProducts;
+            }
+
             return await productTypeRepository.GetProductTypesByProductGender(productGenderId);
         }
     }
