@@ -19,7 +19,6 @@ namespace Models
         public virtual DbSet<Brand> Brand { get; set; }
         public virtual DbSet<Color> Color { get; set; }
         public virtual DbSet<Customer> Customer { get; set; }
-        public virtual DbSet<Delivery> Delivery { get; set; }
         public virtual DbSet<Employee> Employee { get; set; }
         public virtual DbSet<Gender> Gender { get; set; }
         public virtual DbSet<ImportOrder> ImportOrder { get; set; }
@@ -136,23 +135,6 @@ namespace Models
                     .HasConstraintName("FK_Customer_Gender");
             });
 
-            modelBuilder.Entity<Delivery>(entity =>
-            {
-                entity.Property(e => e.DeliveryId).HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Email)
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.Property(e => e.Phone)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-            });
-
             modelBuilder.Entity<Employee>(entity =>
             {
                 entity.Property(e => e.EmployeeId).HasDefaultValueSql("(newid())");
@@ -250,6 +232,15 @@ namespace Models
 
                 entity.Property(e => e.DeliveryDate).HasColumnType("datetime");
 
+                entity.Property(e => e.DeliveryEmail)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DeliveryName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
                 entity.Property(e => e.DeliveryPrice).HasColumnType("decimal(18, 0)");
 
                 entity.Property(e => e.TotalPrice).HasColumnType("decimal(18, 0)");
@@ -259,12 +250,6 @@ namespace Models
                     .HasForeignKey(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Order_Customer");
-
-                entity.HasOne(d => d.Delivery)
-                    .WithMany(p => p.Order)
-                    .HasForeignKey(d => d.DeliveryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Order_Delivery");
 
                 entity.HasOne(d => d.Status)
                     .WithMany(p => p.Order)
