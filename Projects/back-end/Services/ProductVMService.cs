@@ -34,6 +34,12 @@ namespace Services
 
         public async Task<List<CartDetailVM>> GetProductsForCart(string carts)
         {
+            if(carts == "null")
+            {
+                List<CartDetailVM> cartDetails = new List<CartDetailVM>();
+                return cartDetails;
+            }
+
             List<CartVM> cartVMs = JsonConvert.DeserializeObject<List<CartVM>>(carts);
 
             return await productVMRepository.GetProductsForCart(cartVMs);

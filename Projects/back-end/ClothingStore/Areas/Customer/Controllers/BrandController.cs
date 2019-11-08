@@ -16,14 +16,14 @@ namespace ClothingStore.Areas.Customer.Controllers
 
         [HttpGet]
         [Route("getBrands")] //api/customer/brand/getBrands
-        public async Task<IActionResult> GetColors()
+        public async Task<IActionResult> GetBrands()
         {
             return Ok(await brandService.GetAll());
         }
 
         [HttpGet]
         [Route("getBrandById")]
-        public async Task<IActionResult> GetColorById(Guid id)
+        public async Task<IActionResult> GetBrandById(Guid id)
         {
             return Ok(await brandService.GetById(id));
         }
