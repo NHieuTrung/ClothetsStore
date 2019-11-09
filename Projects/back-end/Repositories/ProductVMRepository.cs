@@ -331,5 +331,44 @@ namespace Repositories
 
             return cartDetails;
         }
+
+        public async Task<IList<ProductVM>> GetBestSeller()
+        {
+            List<ProductVM> list = new List<ProductVM>();
+            List<Guid> idSp = ctx.OrderProductSize.GroupBy(p => p.ProductId)
+                                                  .Distinct()
+                                                  .Select(s => s.Key)
+                                                  .ToList();
+            Dictionary<Guid, int> slsp = new Dictionary<Guid, int>();
+            foreach(var item in idSp)
+            {
+                int sl = ctx.OrderProductSize.Where(s => s.ProductId == item).ToList().Count;
+                slsp.Add(item, sl);
+            }
+            slsp = slsp.OrderByDescending(s => s.Value).ToDictionary(s => s.Key, s => s.Value);
+            int tmp = 0;
+            foreach ( var item in slsp)
+            {
+                list.Add(ctx.ProductColor.Where(s => s.ProductId == item.Key).Select(p => new ProductVM
+                {
+                    ProductId = p.Product.ProductId,
+                    Name = p.Product.Name,
+                    Price = p.Product.Price,
+                    Discount = p.Product.Discount,
+                    ImageUrl = p.ImageUrl
+                }).FirstOrDefault());
+   
+                //list =await ctx.ProductColor.Where(s => s.ProductId == item.Key).Di.Select(p => new ProductVM
+                //{
+                //    ProductId = p.Product.ProductId,
+                //    Name = p.Product.Name,
+                //    Price = p.Product.Price,
+                //    Discount = p.Product.Discount,
+                //    ImageUrl = p.ImageUrl
+                //}).ToListAsync();
+            }
+            List<ProductVM> lists = list.Take(3).ToList();
+            return lists;
+        }
     }
 }

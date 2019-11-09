@@ -1,6 +1,6 @@
 import React from 'react';
 import LatestProduct from './latest-product/LatestProduct';
-import Deal from './deal/Deal';
+import Deal from './bestseller/BestSeller';
 
 class MainMenu extends React.Component {
     render() {

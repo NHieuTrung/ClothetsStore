@@ -63,5 +63,11 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productVMService.GetProductsForCart(carts));
         }
+        [HttpGet]
+        [Route("getBestSeller")]
+        public async Task<IActionResult> GetBestSaler()
+        {
+            return Ok(await productVMService.GetBestSeller());
+        }
     }
 }
