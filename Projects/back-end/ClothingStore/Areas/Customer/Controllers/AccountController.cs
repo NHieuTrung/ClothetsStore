@@ -14,20 +14,41 @@ namespace ClothingStore.Areas.Customer.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        AccountService accountService = new AccountService();
+        private readonly ClothetsStoreContext context;
+        private readonly AccountService accountService;
+
+        public AccountController(ClothetsStoreContext context, AccountService accountService)
+        {
+            this.context = context;
+            this.accountService = accountService;
+        }
 
         [HttpGet]
         [Route("getAccounts")] //api/customer/product/getProducts
-        public async Task<IActionResult> GetColors()
+        public async Task<IActionResult> GetAccounts()
         {
             return Ok(await accountService.GetAll());
         }
 
         [HttpGet]
         [Route("getAccountById")]
-        public async Task<IActionResult> GetColorById(Guid id)
+        public async Task<IActionResult> GetAccountById(Guid id)
         {
             return Ok(await accountService.GetById(id));
+        }
+
+        [HttpGet]
+        [Route("getACcountByUsername")]
+        public async Task<IActionResult> GetAccountByUsername(string username)
+        {
+            return Ok(await accountService.GetAccountByUsername(username));
+        }
+
+        [HttpPost]
+        [Route("authenticateAccount")]
+        public async Task<IActionResult> AuthenticateAccount(Account account)
+        {
+            return Ok(await accountService.AuthenticateAccount(account));
         }
 
         [HttpGet]

@@ -1,4 +1,6 @@
-﻿using Models;
+﻿using Microsoft.Extensions.Options;
+using Models;
+using Models.Helpers;
 using Models.ViewModels;
 using Repositories;
 using System;
@@ -12,8 +14,30 @@ namespace Services
 {
     public class AccountService : BaseService<Account, AccountRepository>
     {
-
+        private readonly ClothetsStoreContext context;
+        private readonly AppSettings appSettings;
         AccountRepository accountRepository = new AccountRepository();
+
+        public AccountService(ClothetsStoreContext context, IOptions<AppSettings> appSettings)
+        {
+            this.context = context;
+            this.appSettings = appSettings.Value;
+        }
+        
+        public string Authenticate(Account account)
+        {
+            return "";
+        }
+            public async Task<Account> GetAccountByUsername(string username)
+        {
+            if(username == "")
+            {
+                Account account = new Account();
+                return account;
+            }
+
+            return await accountRepository.GetAccountByUsername(username);
+        }
 
         public async Task<bool> CheckAvailability(string username)
         {
@@ -45,6 +69,12 @@ namespace Services
         {
             accountCustomer.Password = HashPassword(accountCustomer.Password);
             return await accountRepository.CreateCustomerAccountAndCustomer(accountCustomer);
+        }
+
+        public async Task<string> AuthenticateAccount(Account account)
+        {
+            account.Password = HashPassword(account.Password);
+            return await accountRepository.AuthenticateAccount(account, this.appSettings);
         }
 
         public string HashPassword(string password)

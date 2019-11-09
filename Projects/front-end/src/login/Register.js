@@ -68,7 +68,7 @@ class Register extends React.Component {
             return;
         }
 
-        //check account validity
+        //check username validity
         let usernameValidity = this.checkUsernameValidity(window.$("#username").val());
         if(usernameValidity === false) {
             return;
@@ -184,12 +184,12 @@ class Register extends React.Component {
     checkPasswordValidity = (password) => {
         let passwordLength = password.length;
         
-        if(passwordLength < 8) {
+        if(passwordLength < 6) {
             MySwal.fire({
                 title: 'Thông báo',
                 width: 300,
                 padding: '2em',
-                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Độ dài mật khẩu phải từ 8 ký tự</p>"
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Độ dài mật khẩu phải từ 6 ký tự</p>"
             })
             return false;
         }
@@ -211,12 +211,12 @@ class Register extends React.Component {
         else {
             let usernameLength = username.length;
 
-            if(usernameLength < 8) {
+            if(usernameLength < 6) {
                 MySwal.fire({
                     title: 'Thông báo',
                     width: 300,
                     padding: '2em',
-                    html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Độ dài tài khoản phải từ 8 ký tự/</p>"
+                    html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Độ dài tài khoản phải từ 6 ký tự/</p>"
                 })
                 return false;
             }
@@ -278,39 +278,51 @@ class Register extends React.Component {
         if(username === "") {
             document.getElementById("username").setCustomValidity("Vui lòng nhập vào tên tài khoản!");
             return;
+        } else {
+            document.getElementById("username").setCustomValidity("");
         }
+
         if(password === "") {
             document.getElementById("password").setCustomValidity("Vui lòng nhập vào mật khẩu!");
             return;
+        } else {
+            document.getElementById("password").setCustomValidity("");
         }
+
         if(name === "") {
             document.getElementById("name").setCustomValidity("Vui lòng nhập vào họ tên!");
             return;
+        } else {
+            document.getElementById("name").setCustomValidity("");
         }
+
         if(birthday === "") {
             document.getElementById("birthday").setCustomValidity("Vui lòng chọn ngày tháng năm sinh!");
             return;
+        } else {
+            document.getElementById("birthday").setCustomValidity("");
         }
+
         if(phone === "") {
             document.getElementById("phone").setCustomValidity("Vui lòng nhập vào số điện thoại!");
             return;
+        } else {
+            document.getElementById("phone").setCustomValidity("");
         }
+
         if(address === "") {
             document.getElementById("address").setCustomValidity("Vui lòng nhập vào địa chỉ!");
             return;
+        } else {
+            document.getElementById("address").setCustomValidity("");
         }
+
         if(email === "") {
             document.getElementById("email").setCustomValidity("Vui lòng nhập vào email!");
             return;
+        } else {
+            document.getElementById("email").setCustomValidity("");
         }
-        
-        document.getElementById("username").setCustomValidity("");
-        document.getElementById("password").setCustomValidity("");
-        document.getElementById("name").setCustomValidity("");
-        document.getElementById("birthday").setCustomValidity("");
-        document.getElementById("phone").setCustomValidity("");
-        document.getElementById("address").setCustomValidity("");
-        document.getElementById("email").setCustomValidity("");
     }
 
     componentDidMount() {
@@ -361,7 +373,7 @@ class Register extends React.Component {
                                         <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" required/>
                                     </div>
                                     <div className="p-t-10">
-                                        <center><button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Save</button></center>
+                                        <center><button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Đăng ký</button></center>
                                     </div>
                                 </form>
                             </div>

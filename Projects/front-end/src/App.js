@@ -6,6 +6,7 @@ import Index from './index/Index';
 import ProductList from './product-list/ProductList.js'
 import ProductDetail from './product-detail/ProductDetail'
 import Register from './login/Register'
+import Login from './login/Login'
 import CartDetail from './cart-detail/Cart'
 
 function App() {
@@ -13,6 +14,9 @@ function App() {
         <Router>
             {/* Đăng ký */}
             <Route path="/register" component={Register}></Route>
+
+            {/* Đăng nhập */}
+            <Route path="/login" component={Login}></Route>
 
             {/* Trang chủ */}
             <Route exact path="/" component={ Index }>
