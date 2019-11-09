@@ -1,19 +1,36 @@
 import React from 'react';
-import DealItem from './deal-item/DealItem';
+import DealItem from './bestseller-item/SellerItem';
 
 class Deal extends React.Component {
     state = {
-        numberOfItem: 3
+        item: []
     };
 
     renderItem = () => {
-        let items = [];
+        let items = null;
 
-        for(let i = 1; i <= this.state.numberOfItem; i++) {
-            items.push(<DealItem key={i} id={i}></DealItem>);
-        }
+        if(this.state.item.length!==0){
+            items=this.state.item.map((item,idx )=>
+            <DealItem key={idx} itemId={item.productId} itemName={item.name} itemPrice={item.price} itemDiscount={item.discount} itemImage={item.imageUrl}></DealItem>)
+        };
 
         return items;
+    }
+
+    getProduct=()=>{
+        fetch(`https://localhost:44376/api/customer/product/getBestSeller`)
+        .then(res=>res.json())
+        .then(res=>{
+            this.setState({
+                item:res
+            })
+        })
+        .catch(e=>{
+            console.log(e)
+        })
+    }
+    componentDidMount=()=>{
+        this.getProduct();
     }
 
     render() {
@@ -62,8 +79,15 @@ class Deal extends React.Component {
                 {/* <!-- /container --> */}
             </div>
             // {/* <!-- /section --> */}
+
+
+
+
+            
         )
     }
 }
 
 export default Deal;
+
+

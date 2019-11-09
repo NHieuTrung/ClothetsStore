@@ -50,5 +50,9 @@ namespace Services
 
             return await productVMRepository.GetProductsForCart(cartVMs);
         }
+        public async Task<IList<ProductVM>> GetBestSeller()
+        {
+            return await productVMRepository.GetBestSeller();
+        }
     }
 }
