@@ -45,7 +45,7 @@ class LatestProduct extends React.Component {
                     {/* <!-- section title --> */}
                     <div className="col-md-12">
                         <div className="section-title">
-                            <h2 className="title">Latest Products</h2>
+                            <h2 className="title">Sản phẩm mới nhất</h2>
                         </div>
                     </div>
                     {/* <!-- section title --> */}

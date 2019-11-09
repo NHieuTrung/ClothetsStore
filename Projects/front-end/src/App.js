@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './header/Header';
 import Footer from './footer/Footer';
@@ -19,28 +20,28 @@ function App() {
             <Route path="/login" component={Login}></Route>
 
             {/* Trang chủ */}
-            <Route exact path="/" component={ Index }>
+            <Route exact path="/">
                 <Header></Header>
                 <Index></Index>
                 <Footer></Footer>
             </Route>
 
             {/* Danh sách sp */}
-            <Route path="/productlist" component={ ProductList }>
+            <Route path="/productlist">
                 <Header></Header>
                 <ProductList></ProductList>
                 <Footer></Footer>
             </Route>
 
             {/* Chi tiết sp */}
-            <Route path="/product" component={ProductDetail}>
+            <Route path="/product">
                 <Header></Header>
                 <ProductDetail></ProductDetail>
                 <Footer></Footer>
             </Route>
 
             {/* Giỏ hàng */}
-            <Route path="/cartdetail" component={CartDetail}>
+            <Route path="/cartdetail">
                 <Header></Header>
                 <CartDetail></CartDetail>
                 <Footer></Footer>

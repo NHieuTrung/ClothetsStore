@@ -3,7 +3,8 @@ import React from 'react';
 class HomeNavigation extends React.Component {
     state = {
         maleCategories: [],
-        femaleCategories: []
+        femaleCategories: [],
+        categories: []
     }
 
     getMaleCategories = () => {
@@ -32,6 +33,19 @@ class HomeNavigation extends React.Component {
         })
     }
 
+    getAllCategories = () => {
+        fetch(`https://localhost:44376/api/customer/ProductType/getProductTypes`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                categories: res
+            })
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
 
     renderMaleCategories = () => {
         const maleCategories = this.state.maleCategories.map((item, idx) => 
@@ -49,9 +63,18 @@ class HomeNavigation extends React.Component {
         return femaleCategories;
     }
 
+    renderAllCategories = () => {
+        const categories = this.state.categories.map((item, idx) => 
+            <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+        )
+
+        return categories;
+    }
+
     componentDidMount = () => {
         this.getMaleCategories();
         this.getFemaleCategories();
+        this.getAllCategories();
     }
 
     render() {
@@ -65,10 +88,11 @@ class HomeNavigation extends React.Component {
                         <div className="category-nav">
                             <span className="category-header">Danh mục <i className="fa fa-list"></i></span>
                             <ul className="category-list">
-                                <li><a href="/productlist">Tất cả</a></li>
+                                {/* <li><a href="/productlist">Tất cả</a></li> */}
+                                {this.renderAllCategories()}
                                 
                                 {/* Male */}
-                                <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nam <i className="fa fa-angle-right"></i></a>
+                                {/* <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nam <i className="fa fa-angle-right"></i></a>
                                     <div className="custom-menu" style={{width: "500px"}}>
                                         <div className="row">
                                             <div className="col-md-4" style={{width: "50%"}}>
@@ -89,10 +113,10 @@ class HomeNavigation extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> */}
 
                                 {/* Female */}
-                                <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nữ <i className="fa fa-angle-right"></i></a>
+                                {/* <li className="dropdown side-dropdown"><a className="dropdown-toggle" data-toggle="dropdown" aria-expanded="true" href="/#">Nữ <i className="fa fa-angle-right"></i></a>
                                     <div className="custom-menu" style={{width: "500px"}}>
                                         <div className="row">
                                             <div className="col-md-4" style={{width: "50%"}}>
@@ -113,7 +137,7 @@ class HomeNavigation extends React.Component {
                                             </div>
                                         </div>
                                     </div>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                         {/* <!-- /category nav --> */}

@@ -1,5 +1,11 @@
 import React from 'react';
 import DealItem from './bestseller-item/SellerItem';
+import {
+    // BrowserRouter as Router,
+    // Switch,
+    // Route,
+    Link
+} from "react-router-dom";
 
 class Deal extends React.Component {
     state = {
@@ -41,16 +47,13 @@ class Deal extends React.Component {
                 <div className="container">
                     {/* <!-- row --> */}
                     <div className="row">
-                        {/* <!-- section-title --> */}
+                        {/* <!-- section title --> */}
                         <div className="col-md-12">
                             <div className="section-title">
-                                <h2 className="title">Deals Of The Day</h2>
-                                <div className="pull-right">
-                                    <div className="product-slick-dots-1 custom-dots"></div>
-                                </div>
+                                <h2 className="title">Sản phẩm bán chạy</h2>
                             </div>
                         </div>
-                        {/* <!-- /section-title --> */}
+                        {/* <!-- section title --> */}
 
                         {/* <!-- banner --> */}
                         <div className="col-md-3 col-sm-6 col-xs-6">
@@ -58,28 +61,21 @@ class Deal extends React.Component {
                                 <img src="/assets/img/banner14.jpg" alt="" />
                                 <div className="banner-caption">
                                     <h2 className="white-color">NEW<br />COLLECTION</h2>
-                                    <button className="primary-btn">Shop Now</button>
+                                    <Link to={`/productlist`}>
+                                        <button className="primary-btn">Shop Now</button>
+                                    </Link>
                                 </div>
                             </div>
                         </div>
                         {/* <!-- /banner --> */}
 
-                        {/* <!-- Product Slick --> */}
-                        <div className="col-md-9 col-sm-6 col-xs-6">
-                            <div className="row">
-                                <div id="product-slick-1" className="product-slick">
-                                    { this.renderItem() }
-                                </div>
-                            </div>
-                        </div>
-                        {/* <!-- /Product Slick --> */}
+                        { this.renderItem() }
                     </div>
                     {/* <!-- /row --> */}
                 </div>
                 {/* <!-- /container --> */}
             </div>
             // {/* <!-- /section --> */}
-
 
 
 

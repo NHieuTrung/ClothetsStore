@@ -114,7 +114,7 @@ class Account extends React.Component {
                             </div>
                             <strong className="text-uppercase">Tài khoản <i className="fa fa-caret-down"></i></strong>
                         </div>
-                        <a href="/#" className="text-uppercase">Đăng nhập</a>
+                        <a href="/login" className="text-uppercase">Đăng nhập</a>
                         <ul className="custom-menu">
                             <li><a href="/register"><i className="fa fa-user-plus"></i> Đăng ký</a></li>
                             <li><a href="/#"><i className="fa fa-user-o"></i> My Account</a></li>

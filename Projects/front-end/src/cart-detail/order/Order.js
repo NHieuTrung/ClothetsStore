@@ -1,7 +1,6 @@
 import React from 'react';
-import {
-    Link
-} from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
+import { Link } from "react-router-dom";
 import NumberFormat from "react-number-format";
 
 class Order extends React.Component{

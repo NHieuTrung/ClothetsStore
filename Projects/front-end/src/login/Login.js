@@ -1,6 +1,7 @@
 import React from 'react';
-// import google from './img/gg.jpg';
+// eslint-disable-next-line no-unused-vars
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+// eslint-disable-next-line no-unused-vars
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 //SweetAlert2
 import Swal from 'sweetalert2'
@@ -42,7 +43,7 @@ class Login extends React.Component{
         })
         .then(res => res.text())
         .then(res => {
-            if(res == "") {
+            if(res === "") {
                 this.createUser(username, password);
             }
             else {
@@ -61,7 +62,7 @@ class Login extends React.Component{
         fetch(`https://localhost:44376/api/customer/customer/getCustomerByAccountId?accountId=${localStorage.getItem('id')}`)
         .then(res => res.text())
         .then(res => {
-            if(res == "") {
+            if(res === "") {
                 this.props.history.push("/information");
             }
             else {
