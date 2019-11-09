@@ -1,17 +1,19 @@
+﻿
+--ĐÃ BỎ VÀO DATA.SQL
 
 insert into Account values ('94b8a79d-fdbc-408d-8412-1588f7f95b59','customer04','8D969EEF6ECAD3C29A3A629280E686CF0C3F5D5A86AFF3CA12020C923ADC6C92','E1BDF26E-230C-42FE-BC87-084FB7753835','87577063-322E-4901-98D2-FF519341D992')
 
-insert into Customer values ('93a2d361-6086-4106-9127-618b40cc6118',N'Nguy?n T??ng Vy','0861234567','18A24DAA-7DD7-4D70-B7CC-D4D76DF56911', N'255 An D??ng V??ng, P3, Q5',CAST(N'1997-08-09T00:00:00.000' AS DateTime),'customer04@gmail.com','94b8a79d-fdbc-408d-8412-1588f7f95b59')
+insert into Customer values ('93a2d361-6086-4106-9127-618b40cc6118',N'Nguyễn Tường Vy','0861234567','18A24DAA-7DD7-4D70-B7CC-D4D76DF56911', N'255 An Dương Vương, P3, Q5',CAST(N'1997-08-09T00:00:00.000' AS DateTime),'customer04@gmail.com','94b8a79d-fdbc-408d-8412-1588f7f95b59')
 
-insert into [Status] values ('f2983653-f040-43d8-bde0-d80b2f8ba7aa',N'?� thanh to�n'),
-							('a1ad8def-626a-4a06-b39c-956b6255c37c',N'Ch?a thanh to�n')
+insert into [Status] values ('f2983653-f040-43d8-bde0-d80b2f8ba7aa',N'Đã thanh toán'),
+							('a1ad8def-626a-4a06-b39c-956b6255c37c',N'Chưa thanh toán')
 
 
-insert into [Order] values ('d5d3a658-70a0-4886-8fa6-4c53eb9759b9','49B36127-7E70-422A-93BF-55C15FBEFC6D', CAST(N'2019-08-09' AS DateTime), 655000,'0934625795',N'Anh V?','customer01@gmail.com',N'440 Tr?n V?n �ang, P10, Q3',15000,CAST(N'2019-08-09' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
-							('41e15c21-0ce0-464a-b54f-98ffeabecaad','6541B576-F983-47BB-B387-983D909720CD', CAST(N'2019-09-09' AS DateTime), 255000,'0934851362',N'Minh B?o','customer03@gmail.com',N'482 H?ng B�ng, P6, Q6',30000,CAST(N'2019-09-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
-							('dd009ae2-a115-488e-95fe-db61c9557880','2D2D8D8B-3987-441A-81F5-D037D79CA0B6', CAST(N'2019-09-09' AS DateTime), 800000,'0931652346',N'Anh D?ng','customer02@gmail.com',N'289 L�nh Binh Th?ng, P8, Q11',30000,CAST(N'2019-09-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
-							('625aaa27-ad70-44ec-928f-11cb9d86d69b','2D2D8D8B-3987-441A-81F5-D037D79CA0B6', CAST(N'2019-11-09' AS DateTime), 800000,'0931652346',N'Anh D?ng','customer02@gmail.com',N'289 L�nh Binh Th?ng, P8, Q11',30000,CAST(N'2019-11-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
-							('053aa69e-04c9-4ec5-a462-938515f9a183','93a2d361-6086-4106-9127-618b40cc6118', CAST(N'2019-11-09' AS DateTime), 255000,'0861234567',N'T??ng Vy','customer04@gmail.com',N'255 An D??ng V??ng, P3, Q5',20000,CAST(N'2019-11-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa')
+insert into [Order] values ('d5d3a658-70a0-4886-8fa6-4c53eb9759b9','49B36127-7E70-422A-93BF-55C15FBEFC6D', CAST(N'2019-08-09' AS DateTime), 655000,'0934625795',N'Anh Vũ','customer01@gmail.com',N'440 Trần Văn Ðang, P10, Q3',15000,CAST(N'2019-08-09' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
+							('41e15c21-0ce0-464a-b54f-98ffeabecaad','6541B576-F983-47BB-B387-983D909720CD', CAST(N'2019-09-09' AS DateTime), 255000,'0934851362',N'Minh Bảo','customer03@gmail.com',N'482 Hồng Bàng, P6, Q6',30000,CAST(N'2019-09-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
+							('dd009ae2-a115-488e-95fe-db61c9557880','2D2D8D8B-3987-441A-81F5-D037D79CA0B6', CAST(N'2019-09-09' AS DateTime), 800000,'0931652346',N'Anh Dũng','customer02@gmail.com',N'289 Lãnh Binh Thăng, P8, Q11',30000,CAST(N'2019-09-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
+							('625aaa27-ad70-44ec-928f-11cb9d86d69b','2D2D8D8B-3987-441A-81F5-D037D79CA0B6', CAST(N'2019-11-09' AS DateTime), 800000,'0931652346',N'Anh Dũng','customer02@gmail.com',N'289 Lãnh Binh Thăng, P8, Q11',30000,CAST(N'2019-11-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa'),
+							('053aa69e-04c9-4ec5-a462-938515f9a183','93a2d361-6086-4106-9127-618b40cc6118', CAST(N'2019-11-09' AS DateTime), 255000,'0861234567',N'Tường Vy','customer04@gmail.com',N'255 An Dương Vương, P3, Q5',20000,CAST(N'2019-11-10' AS DateTime),'f2983653-f040-43d8-bde0-d80b2f8ba7aa')
 
 insert into Order_ProductSize values ('d5d3a658-70a0-4886-8fa6-4c53eb9759b9','1EF2C0F8-B38D-42C0-9E5D-6A70F0313A07','53382C8F-E7D4-4359-A553-13B87B817F98','08DD28A6-51D3-4CCB-BB07-1A131D1C2752',1,255000),
 									('d5d3a658-70a0-4886-8fa6-4c53eb9759b9','1EF2C0F8-B38D-42C0-9E5D-6A70F0313A07','D83A80CF-02E2-4C7F-8376-08976097E0DC','08DD28A6-51D3-4CCB-BB07-1A131D1C2752',1,400000),
