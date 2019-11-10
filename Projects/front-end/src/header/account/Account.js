@@ -309,7 +309,7 @@ class Account extends React.Component {
                         { information.length !== 0 ?  <a className="text-uppercase">Xin chào</a> :  <a href="/login" className="text-uppercase">Đăng nhập</a>}
                         <ul className="custom-menu">
                             { information.length !== 0 ?  '' :  <li><a href="/register"><i className="fa fa-user-plus"></i> Đăng ký</a></li>}
-                            { information.length !== 0 ?  <li><a href="/#"><i className="fa fa-user"></i> Thông tin</a></li> :  ''}
+                            { information.length !== 0 ?  <li><a href="/information"><i className="fa fa-user"></i> Thông tin</a></li> :  ''}
                             { information.length !== 0 ?  <li><a href="/#" onClick={this.changePassword}><i className="fa fa-unlock-alt"></i> Thay đổi mật khẩu</a></li> :  ''}
                             <li><a href="/cartdetail"><i className="fa fa-check"></i> Thanh toán</a></li>
                             { information.length !== 0 ?  <li><a href="/#" onClick={this.logout}><i className="fa fa-sign-out"></i> Đăng xuất</a></li> :  ''}

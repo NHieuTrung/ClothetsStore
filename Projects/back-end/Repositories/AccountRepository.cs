@@ -169,8 +169,11 @@ namespace Repositories
                     {
                         new Claim(ClaimTypes.Name, customer.Name),
                         new Claim(ClaimTypes.Email, customer.Email),
-                        new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()),
-                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()),
+                        new Claim(ClaimTypes.MobilePhone, customer.Phone),
+                        new Claim(ClaimTypes.StreetAddress, customer.Address),
+                        new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
+                        new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
+                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //customerId
                         new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
@@ -205,24 +208,39 @@ namespace Repositories
             var claimList = principal.Claims.ToList();
             JWTClaims claims = new JWTClaims();
 
-            foreach (var item in claimList)
+            for(int i = 0; i < 8; i++)
             {
-                switch (item.Properties.Values.FirstOrDefault())
+                string type = claimList[i].Type;
+                type = type.Substring(type.IndexOf("claims/") + 7);
+
+                switch (type)
                 {
-                    case "nameid":
-                        claims.CustomerId = item.Value;
+                    case "nameidentifier":
+                        claims.CustomerId = claimList[i].Value;
                         break;
-                    case "unique_name":
-                        claims.Name = item.Value;
+                    case "name":
+                        claims.Name = claimList[i].Value;
                         break;
-                    case "email":
-                        claims.Email = item.Value;
+                    case "emailaddress":
+                        claims.Email = claimList[i].Value;
+                        break;
+                    case "streetaddress":
+                        claims.Address = claimList[i].Value;
+                        break;
+                    case "mobilephone":
+                        claims.Phone = claimList[i].Value;
+                        break;
+                    case "dateofbirth":
+                        claims.Birthday = DateTime.Parse(claimList[i].Value);
                         break;
                     case "role":
-                        claims.Role = item.Value;
+                        claims.Role = claimList[i].Value;
                         break;
                     case "primarysid":
-                        claims.AccountId = item.Value;
+                        claims.AccountId = claimList[i].Value;
+                        break;
+                    default:
+                        claims.Phone = claimList[i].Value;
                         break;
                 }
             }
