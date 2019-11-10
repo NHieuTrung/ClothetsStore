@@ -59,22 +59,63 @@ namespace Services
             return await accountRepository.CheckEmailAvailability(email);
         }
 
+        public async Task<bool> CheckOldPasswordByAccountId(ValidationAccountVM validationAccount)
+        {
+            validationAccount.Password = HashPassword(validationAccount.Password);
+            return await accountRepository.CheckOldPasswordByAccountId(validationAccount);
+        }
+
+        public async Task<bool> CheckOldPasswordByUsername(ValidationAccountVM validationAccount)
+        {
+            validationAccount.Password = HashPassword(validationAccount.Password);
+            return await accountRepository.CheckOldPasswordByUsername(validationAccount);
+        }
+
+        public async Task<bool> ChangePasswordByAccountId(ValidationAccountVM validationAccount)
+        {
+            Account account = await accountRepository.GetById(validationAccount.AccountId);
+            if (account == null)
+            {
+                return false;
+            }
+
+            account.Password = HashPassword(validationAccount.Password);
+            return await accountRepository.ChangePassword(account);
+        }
+
+        public async Task<bool> ChangePasswordByUsername(ValidationAccountVM validationAccount)
+        {
+            Account account = await accountRepository.GetAccountByUsername(validationAccount.Username);
+            if(account == null)
+            {
+                return false;
+            }
+
+            account.Password = HashPassword(validationAccount.Password);
+            return await accountRepository.ChangePassword(account);
+        }
+
         public async Task<bool> CreateCustomerAccount(Account account)
         {
             account.Password = HashPassword(account.Password);
             return await accountRepository.CreateCustomerAccount(account);
         }
 
-        public async Task<bool> CreateCustomerAccountAndCustomer(AccountCustomerVM accountCustomer)
+        public async Task<bool> CreateCustomerAccountAndCustomer(CustomerAccountVM customerAccount)
         {
-            accountCustomer.Password = HashPassword(accountCustomer.Password);
-            return await accountRepository.CreateCustomerAccountAndCustomer(accountCustomer);
+            customerAccount.Password = HashPassword(customerAccount.Password);
+            return await accountRepository.CreateCustomerAccountAndCustomer(customerAccount);
         }
 
         public async Task<string> AuthenticateAccount(Account account)
         {
             account.Password = HashPassword(account.Password);
             return await accountRepository.AuthenticateAccount(account, this.appSettings);
+        }
+
+        public async Task<JWTClaims> ValidateToken(Token token)
+        {
+            return await accountRepository.ValidateToken(token, this.appSettings);
         }
 
         public string HashPassword(string password)

@@ -2,7 +2,9 @@ import React from 'react';
 
 class ProductImage extends React.Component{
     render() {
-        let imgUrl = "https://localhost:44376/" + this.props.itemImage;
+        let imgUrl = "";
+        if(this.props.itemImage !== undefined)
+            imgUrl = "https://localhost:44376/" + this.props.itemImage;
 
         return (
             <div className="col-md-6">

@@ -135,6 +135,8 @@ class Order extends React.Component{
 
 
     render(){
+        const cart = this.state.cart;
+
         return(
             <div className="col-md-12">
                 <div className="order-summary clearfix">
@@ -175,7 +177,7 @@ class Order extends React.Component{
 						</tfoot>
                     </table>
                     <div className="pull-right">
-						<button className="primary-btn">Thanh toán</button>
+						{ cart.length === 0 ? <button className="primary-btn" disabled style={{backgroundColor: "grey"}}>Thanh toán</button> : <button className="primary-btn">Thanh toán</button> }
 					</div>
                 </div>
             </div>

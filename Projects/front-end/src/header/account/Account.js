@@ -6,10 +6,17 @@ import {
     // Route,
     Link
 } from "react-router-dom";
+//SweetAlert2
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 
 class Account extends React.Component {
     state = {
-        cart: []
+        cart: [],
+        isLoggedIn: false,
+        token: '',
+        information: []
     }
 
     renderCart = () => {
@@ -98,11 +105,194 @@ class Account extends React.Component {
         }
     }
 
+    checkLoggedIn = () => {
+        let token = localStorage.getItem('authenticatedToken');
+
+        if(token) {
+            this.setState({
+                token: token,
+                isLoggedIn: true
+            }, () => {
+                this.getUserInformation();
+            });
+        }
+    }
+
+    getUserInformation = () => {
+        fetch('https://localhost:44376/api/customer/account/validateToken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token
+            },
+            body: JSON.stringify({
+                tokenId: this.state.token
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                information: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    changePassword = () => {
+        Swal.fire({
+            title: 'Thay đổi mật khẩu',
+            width: 300,
+            padding: '2em',
+            html: '<img src="./assets/img/lock.gif" style="width: 250px"/><p style="font-size: 15px">' +
+                  '<input type="password" placeholder="Mật khẩu cũ" id="oldPassword" name="oldPassword" ref="oldPassword" class="swal2-input">' +
+                  '<input type="password" placeholder="Mật khẩu mới" id="newPassword" name="newPassword" ref="newPassword" class="swal2-input">' +
+                  '<input type="password" placeholder="Nhập lại mật khẩu mới" id="confirmNewPassword" name="confirmNewPassword" ref="confirmNewPassword" class="swal2-input">',
+            showCancelButton: true,
+            confirmButtonText: 'Thay đổi mật khẩu',
+            cancelButtonText: 'Huỷ',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                let validateInput = this.validateInput();
+                if (validateInput === false) {
+                    Swal.showValidationMessage(`Độ dài mật khẩu phải từ 6 ký tự`);
+                }
+                else {
+                    let checkSamePassword = this.checkSamePassword();
+                    if (checkSamePassword === false) {
+                        Swal.showValidationMessage(`Mật khẩu mới không trùng nhau`);
+                    }
+                    else {
+                        let checkDuplicatedPassword = this.checkDuplicatedPassword();
+                        if (checkDuplicatedPassword === false) {
+                            Swal.showValidationMessage(`Mật khẩu mới không được trùng cũ`);
+                        }
+                        else {
+                            fetch('https://localhost:44376/api/customer/account/checkOldPasswordByAccountId', {
+                                method: 'POST',
+                                headers: {
+                                    'Accept': 'application/json',
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer ' + this.state.token
+                                },
+                                body: JSON.stringify({
+                                    AccountId: this.state.information.accountId,
+                                    Password: window.$("#oldPassword").val()
+                                })
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if(res === false) {
+                                    MySwal.fire({
+                                        title: 'Thông báo',
+                                        width: 300,
+                                        padding: '2em',
+                                        html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Mật khẩu cũ được nhập không chính xác</p>"
+                                    })
+                                }
+                                else {
+                                    fetch('https://localhost:44376/api/customer/account/changePasswordByAccountId', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json',
+                                            'Authorization': 'Bearer ' + this.state.token
+                                        },
+                                        body: JSON.stringify({
+                                            AccountId: this.state.information.accountId,
+                                            Password: window.$("#newPassword").val()
+                                        })
+                                    })
+                                    .then(res => res.json())
+                                    .then(res => {
+                                        if(res === false) {
+                                            MySwal.fire({
+                                                title: 'Thông báo',
+                                                width: 300,
+                                                padding: '2em',
+                                                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Lỗi</p>"
+                                            })
+                                        }
+                                        else {
+                                            MySwal.fire({
+                                                title: 'Thông báo',
+                                                width: 300,
+                                                padding: '2em',
+                                                icon: 'success',
+                                                html: "<p style='font-size: 15px'>Đổi mật khẩu thành công</p>"
+                                            }).then((res) => {
+                                               window.location.reload(); 
+                                            });
+                                        }
+                                    })
+                                    .catch(error =>{
+                                        console.log(error)
+                                    })
+                                }
+                            })
+                            .catch(error =>{
+                                console.log(error)
+                            })
+                        }
+                    }
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        })
+    }
+
+    validateInput = () => {
+        let oldPassword = window.$("#oldPassword").val();
+        let newPassword = window.$("#newPassword").val();
+        let confirmNewPassword = window.$("#confirmNewPassword").val();
+
+        if(oldPassword.length >= 6 && newPassword.length >= 6 && confirmNewPassword.length >= 6) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    checkSamePassword = () => {
+        let newPassword = window.$("#newPassword").val();
+        let confirmNewPassword = window.$("#confirmNewPassword").val();
+        
+        if(newPassword === confirmNewPassword) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    checkDuplicatedPassword = () => {
+        let oldPassword = window.$("#oldPassword").val();
+        let newPassword = window.$("#newPassword").val();
+
+        if(newPassword === oldPassword) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    logout = () => {
+        localStorage.removeItem("authenticatedToken");
+        window.location.reload();
+    }
+
     componentDidMount = () => {
         this.getAllProducts();
+        this.checkLoggedIn();
     }
 
     render() {
+        const information = this.state.information;
+
         return (
             <div className="pull-right">
                 <ul className="header-btns">
@@ -110,16 +300,21 @@ class Account extends React.Component {
                     <li className="header-account dropdown default-dropdown">
                         <div className="dropdown-toggle" role="button" data-toggle="dropdown" aria-expanded="true">
                             <div className="header-btns-icon">
-                                <i className="fa fa-user-o"></i>
+                                { information.length !== 0 ? <img src="/assets/img/user.png" style={{width: "100%"}} alt="user.png" /> : <i className="fa fa-user-o"></i>}
                             </div>
-                            <strong className="text-uppercase">Tài khoản <i className="fa fa-caret-down"></i></strong>
+                            <strong className="text-uppercase">{ information.length !== 0 ? information.name : 'Tài khoản'} <i className="fa fa-caret-down"></i></strong>
                         </div>
-                        <a href="/login" className="text-uppercase">Đăng nhập</a>
+
+                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                        { information.length !== 0 ?  <a className="text-uppercase">Xin chào</a> :  <a href="/login" className="text-uppercase">Đăng nhập</a>}
                         <ul className="custom-menu">
-                            <li><a href="/register"><i className="fa fa-user-plus"></i> Đăng ký</a></li>
-                            <li><a href="/#"><i className="fa fa-user-o"></i> My Account</a></li>
-                            <li><a href="/#"><i className="fa fa-check"></i> Checkout</a></li>
+                            { information.length !== 0 ?  '' :  <li><a href="/register"><i className="fa fa-user-plus"></i> Đăng ký</a></li>}
+                            { information.length !== 0 ?  <li><a href="/#"><i className="fa fa-user"></i> Thông tin</a></li> :  ''}
+                            { information.length !== 0 ?  <li><a href="/#" onClick={this.changePassword}><i className="fa fa-unlock-alt"></i> Thay đổi mật khẩu</a></li> :  ''}
+                            <li><a href="/cartdetail"><i className="fa fa-check"></i> Thanh toán</a></li>
+                            { information.length !== 0 ?  <li><a href="/#" onClick={this.logout}><i className="fa fa-sign-out"></i> Đăng xuất</a></li> :  ''}
                         </ul>
+                        
                     </li>
                     {/* <!-- /Account --> */}
 
