@@ -1,7 +1,9 @@
 import React, { Component } from "react";
 import Product from "./Product";
 import ListProductColor from "./ListProductColor";
+import { Redirect } from "react-router-dom";
 import "./dataTables.bootstrap4.min.css";
+import { createHashHistory } from "history";
 
 class ListProduct extends Component {
   constructor(props) {
@@ -10,31 +12,31 @@ class ListProduct extends Component {
       listProduct: []
     };
   }
-  async componentWillMount() {
+  componentWillMount() {
+    const history = createHashHistory();
     const urlGender = "https://localhost:44376/api/admin/extendedproducts";
     const optionsGender = {
       method: "GET" // *GET, POST, PUT, DELETE, etc.
     };
-    const result = await fetch(urlGender, optionsGender)
+    fetch(urlGender, optionsGender)
       .then(res => res.json())
       .then(
         result => {
-          return result;
+          if (result.status !== 404) {
+            this.setState({
+              listProduct: [...result]
+            });
+          } else {
+            this.window.location.href("/error-404");
+          }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         error => {
-          /*this.setState({
-            isSubmitted: true,
-            error
-          });*/
-          alert("Can't get gender info from backend server!!!");
+          this.window.location.href("/error-404");
         }
       );
-    this.setState({
-      listProduct: [...result]
-    });
   }
   componentDidMount() {
     const scriptBootstrapDatatable = document.createElement("script");
