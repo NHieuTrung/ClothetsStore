@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Models.ViewModels
 {
-    public class AccountCustomerVM
+    public class CustomerAccountVM
     {
         public Guid AccountId { get; set; }
         public string Username { get; set; }

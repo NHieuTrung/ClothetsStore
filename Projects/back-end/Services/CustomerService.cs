@@ -22,5 +22,10 @@ namespace Services
         {
             return await customerRepository.CreateCustomerWithUsername(customer);
         }
+
+        public async Task<bool> UpdateCustomerInformation(Customer customer)
+        {
+            return await customerRepository.UpdateCustomerInformation(customer);
+        }
     }
 }

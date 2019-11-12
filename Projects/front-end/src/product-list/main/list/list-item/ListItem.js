@@ -3,6 +3,7 @@ import {
     // BrowserRouter as Router,
     // Switch,
     // Route,
+    // eslint-disable-next-line no-unused-vars
     Link
 } from "react-router-dom";
 import NumberFormat from 'react-number-format';
@@ -20,9 +21,7 @@ class ListItem extends React.Component {
                             <span>Mới</span>
                             { this.props.itemDiscount === null ? '' : <span className="sale">{ this.props.itemDiscount }</span>}
                         </div>
-                        <Link to={`/product?id=${this.props.itemProductId}`}>
-                            <button className="main-btn quick-view"><i className="fa fa-search-plus"></i> Chi tiết</button>
-                        </Link>
+                            <button className="main-btn quick-view"><i className="fa fa-search-plus"></i><a href={`/product?id=${this.props.itemProductId}`}>Chi tiết</a></button>
                         <img src={ imgUrl } alt="" style={{width: '260px', height: '350px'}}/>
                     </div>
                     <div className="product-body">

@@ -92,6 +92,7 @@ namespace ClothingStore
             app.UseStaticFiles();
             app.UseCors("MyPolicy");
             app.UseHttpsRedirection();
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute("areaRoute", "{area:exists}/api/{controller}/{action}/{id?}");

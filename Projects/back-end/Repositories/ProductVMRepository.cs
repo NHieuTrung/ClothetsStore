@@ -335,10 +335,11 @@ namespace Repositories
         public async Task<IList<ProductVM>> GetBestSeller()
         {
             List<ProductVM> list = new List<ProductVM>();
-            List<Guid> idSp = ctx.OrderProductSize.GroupBy(p => p.ProductId)
-                                                  .Distinct()
-                                                  .Select(s => s.Key)
-                                                  .ToList();
+            List<Guid> idSp = await ctx.OrderProductSize.GroupBy(p => p.ProductId)
+                                                        .Distinct()
+                                                        .Select(s => s.Key)
+                                                        .ToListAsync();
+
             Dictionary<Guid, int> slsp = new Dictionary<Guid, int>();
             foreach(var item in idSp)
             {
@@ -346,7 +347,8 @@ namespace Repositories
                 slsp.Add(item, sl);
             }
             slsp = slsp.OrderByDescending(s => s.Value).ToDictionary(s => s.Key, s => s.Value);
-            int tmp = 0;
+
+            //int tmp = 0;
             foreach ( var item in slsp)
             {
                 list.Add(ctx.ProductColor.Where(s => s.ProductId == item.Key).Select(p => new ProductVM

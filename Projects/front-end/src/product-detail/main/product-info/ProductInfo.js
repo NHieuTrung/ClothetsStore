@@ -28,7 +28,7 @@ class ProductInfo extends React.Component{
         )
     }
 
-    getProductSize=()=>{
+    getProductSizes=()=>{
         fetch(`https://localhost:44376/api/customer/size/getSizeByProduct?id=${this.state.productId}`)
         .then(res => res.json())
         .then(
@@ -176,7 +176,7 @@ class ProductInfo extends React.Component{
         }, () => {
             this.getProductColors();
             // console.log(this.state)
-            this.getProductSize();
+            this.getProductSizes();
 
             this.getSelectSize();
         });

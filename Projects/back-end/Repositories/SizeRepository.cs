@@ -45,11 +45,11 @@ namespace Repositories
         {
             IList<Size> size = new List<Size>();
 
-            List<Guid> productSize = ctx.ProductSize.Where(p => p.ProductId == id)
-                                               .GroupBy(p => p.SizeId)
-                                               .Distinct()
-                                               .Select(s => s.Key)
-                                               .ToList();
+            List<Guid> productSize = await ctx.ProductSize.Where(p => p.ProductId == id)
+                                                          .GroupBy(p => p.SizeId)
+                                                          .Distinct()
+                                                          .Select(s => s.Key)
+                                                          .ToListAsync();
 
             foreach (Guid item in productSize)
             {
@@ -60,7 +60,9 @@ namespace Repositories
         }
         public async Task<string> GetSizeById(Guid sizeId)
         {
-            string name = ctx.Size.Where(p => p.SizeId == sizeId).Select(p => p.Name).FirstOrDefault();
+            string name = await ctx.Size.Where(p => p.SizeId == sizeId)
+                                        .Select(p => p.Name)
+                                        .FirstOrDefaultAsync();
             return name;
         }
     }

@@ -6,9 +6,11 @@ import Footer from './footer/Footer';
 import Index from './index/Index';
 import ProductList from './product-list/ProductList.js'
 import ProductDetail from './product-detail/ProductDetail'
-import Register from './login/Register'
-import Login from './login/Login'
+import Register from './account/Register'
+import Login from './account/Login'
+import Information from './account/Information'
 import CartDetail from './cart-detail/Cart'
+import Delivery from './delivery/Deliverry'
 
 function App() {
      return (
@@ -18,6 +20,9 @@ function App() {
 
             {/* Đăng nhập */}
             <Route path="/login" component={Login}></Route>
+
+            {/* Thông tin */}
+            <Route path="/information" component={Information}></Route>
 
             {/* Trang chủ */}
             <Route exact path="/">
@@ -44,6 +49,12 @@ function App() {
             <Route path="/cartdetail">
                 <Header></Header>
                 <CartDetail></CartDetail>
+                <Footer></Footer>
+            </Route>
+            {/*thanh toan*/}
+            <Route path="/delivery">
+                <Header></Header>
+                <Delivery></Delivery>
                 <Footer></Footer>
             </Route>
         </Router>

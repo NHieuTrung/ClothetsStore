@@ -117,8 +117,6 @@ class Login extends React.Component{
         let username = window.$("#username").val();
         let password = window.$("#password").val();
         
-        console.log(username);
-        console.log(password);
         //check blank
         if(username === "") {
             document.getElementById("username").setCustomValidity("Vui lòng nhập vào tên tài khoản!");

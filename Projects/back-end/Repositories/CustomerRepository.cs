@@ -73,5 +73,25 @@ namespace Repositories
 
             return true;
         }
+
+        public async Task<bool> UpdateCustomerInformation(Customer customer)
+        {
+            Customer cus = await ctx.Customer.Where(c => c.CustomerId == customer.CustomerId)
+                                             .FirstOrDefaultAsync();
+
+            if(cus == null)
+            {
+                return false;
+            }
+
+            cus.Name = customer.Name;
+            cus.Birthday = customer.Birthday;
+            cus.Phone = customer.Phone;
+            cus.GenderId = customer.GenderId;
+            cus.Address = customer.Address;
+            await ctx.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

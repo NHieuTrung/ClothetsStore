@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.DataProtection;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Models;
@@ -65,6 +66,34 @@ namespace Repositories
             return customer == null ? true : false;
         }
 
+        public async Task<bool> CheckOldPasswordByAccountId(ValidationAccountVM validationAccount)
+        {
+            Account account = await ctx.Account.Where(a => a.AccountId == validationAccount.AccountId && a.Password == validationAccount.Password)
+                                               .FirstOrDefaultAsync();
+
+            return account == null ? false : true;
+        }
+
+        public async Task<bool> CheckOldPasswordByUsername(ValidationAccountVM validationAccount)
+        {
+            Account account = await ctx.Account.Where(a => a.Username == validationAccount.Username && a.Password == validationAccount.Password)
+                                               .FirstOrDefaultAsync();
+
+            return account == null ? false : true;
+        }
+
+        public async Task<bool> ChangePassword(Account account)
+        {
+            Account acc = new Account();
+            acc = await ctx.Account.Where(a => a.AccountId == account.AccountId)
+                                   .FirstOrDefaultAsync();
+
+            acc.Password = account.Password;
+            await ctx.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<bool> CreateCustomerAccount(Account account)
         {
             account.AccountId = Guid.NewGuid();
@@ -76,12 +105,12 @@ namespace Repositories
             return true;
         }
 
-        public async Task<bool> CreateCustomerAccountAndCustomer(AccountCustomerVM accountCustomer)
+        public async Task<bool> CreateCustomerAccountAndCustomer(CustomerAccountVM customerAccount)
         {
             Account account = new Account();
             account.AccountId = Guid.NewGuid();
-            account.Username = accountCustomer.Username;
-            account.Password = accountCustomer.Password;
+            account.Username = customerAccount.Username;
+            account.Password = customerAccount.Password;
             account.RoleId = Guid.Parse("E1BDF26E-230C-42FE-BC87-084FB7753835"); //Customer
             account.StatusId = Guid.Parse("87577063-322E-4901-98D2-FF519341D992");
             ctx.Account.Add(account);
@@ -89,12 +118,12 @@ namespace Repositories
 
             Customer customer = new Customer();
             customer.CustomerId = Guid.NewGuid();
-            customer.Name = accountCustomer.Name;
-            customer.Phone = accountCustomer.Phone;
-            customer.GenderId = accountCustomer.GenderId;
-            customer.Address = accountCustomer.Address;
-            customer.Birthday = accountCustomer.Birthday;
-            customer.Email = accountCustomer.Email;
+            customer.Name = customerAccount.Name;
+            customer.Phone = customerAccount.Phone;
+            customer.GenderId = customerAccount.GenderId;
+            customer.Address = customerAccount.Address;
+            customer.Birthday = customerAccount.Birthday;
+            customer.Email = customerAccount.Email;
             customer.AccountId = account.AccountId;
             ctx.Customer.Add(customer);
             await ctx.SaveChangesAsync();
@@ -139,8 +168,12 @@ namespace Repositories
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim(ClaimTypes.Name, customer.Name),
-                        new Claim(ClaimTypes.Email, customer.Email.ToString()),
-                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString()),
+                        new Claim(ClaimTypes.Email, customer.Email),
+                        new Claim(ClaimTypes.MobilePhone, customer.Phone),
+                        new Claim(ClaimTypes.StreetAddress, customer.Address),
+                        new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
+                        new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
+                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //customerId
                         new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
@@ -151,39 +184,68 @@ namespace Repositories
             }
         }
 
-        public void Test()
+        public async Task<JWTClaims> ValidateToken(Token token, AppSettings appSettings)
         {
-            List<ProductVM> list = new List<ProductVM>();
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var jwtToken = tokenHandler.ReadToken(token.TokenId) as JwtSecurityToken;
 
-            List<Guid> orderProductIdList = ctx.OrderProductSize.GroupBy(p => p.ProductId)
-                                                                .Distinct()
-                                                                .Select(p => p.Key)
-                                                                .ToList();
+            if (jwtToken == null)
+                return new JWTClaims();
 
-            Dictionary<Guid, int> slsp = new Dictionary<Guid, int>();
-            foreach(var item in orderProductIdList)
+            var symmetricKey = Encoding.ASCII.GetBytes(appSettings.Secret);
+
+            var validationParameters = new TokenValidationParameters()
             {
-                int sl = ctx.OrderProductSize.Where(s => s.ProductId == item)
-                                             .ToList()
-                                             .Count;
+                RequireExpirationTime = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
+            };
 
-                slsp.Add(item, sl);
-            }
+            SecurityToken securityToken;
+            var principal = tokenHandler.ValidateToken(token.TokenId, validationParameters, out securityToken);
 
-            slsp = slsp.OrderByDescending(s => s.Value).ToDictionary(x => x.Key, x => x.Value);
+            var claimList = principal.Claims.ToList();
+            JWTClaims claims = new JWTClaims();
 
-            foreach(var item in slsp)
+            for(int i = 0; i < 8; i++)
             {
-                list.Add(ctx.ProductColor.Where(s => s.ProductId == item.Key).Select(p => new ProductVM
+                string type = claimList[i].Type;
+                type = type.Substring(type.IndexOf("claims/") + 7);
+
+                switch (type)
                 {
-                    ProductId = p.Product.ProductId,
-                    Name = p.Product.Name,
-                    Price = p.Product.Price,
-                    Discount = p.Product.Discount,
-                    ImageUrl = p.ImageUrl
-                }).FirstOrDefault());
+                    case "nameidentifier":
+                        claims.CustomerId = claimList[i].Value;
+                        break;
+                    case "name":
+                        claims.Name = claimList[i].Value;
+                        break;
+                    case "emailaddress":
+                        claims.Email = claimList[i].Value;
+                        break;
+                    case "streetaddress":
+                        claims.Address = claimList[i].Value;
+                        break;
+                    case "mobilephone":
+                        claims.Phone = claimList[i].Value;
+                        break;
+                    case "dateofbirth":
+                        claims.Birthday = DateTime.Parse(claimList[i].Value);
+                        break;
+                    case "role":
+                        claims.Role = claimList[i].Value;
+                        break;
+                    case "primarysid":
+                        claims.AccountId = claimList[i].Value;
+                        break;
+                    default:
+                        claims.Phone = claimList[i].Value;
+                        break;
+                }
             }
 
+            return claims;
         }
     }
 }

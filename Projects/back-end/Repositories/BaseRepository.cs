@@ -24,7 +24,8 @@ namespace Repositories
 
         public virtual async Task<IList<TEntity>> GetAll()
         {
-            return (IList<TEntity>)ctx.Set<TEntity>();
+            //return (IList<TEntity>)ctx.Set<TEntity>();
+            return await ctx.Set<TEntity>().ToListAsync();
         }
 
         public virtual async Task<TEntity> GetById(Guid id)

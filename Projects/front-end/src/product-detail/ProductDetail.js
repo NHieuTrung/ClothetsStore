@@ -1,4 +1,5 @@
 import React from 'react';
+// eslint-disable-next-line no-unused-vars
 import  { Redirect } from 'react-router-dom'
 import ProductNavigation from '../navigation/ProductNavigation'
 import Breadcrumb from './breadcrumb/Breadcrumb'
@@ -15,17 +16,21 @@ class ProductDetail extends React.Component{
         fetch(`https://localhost:44376/api/customer/product/getProductVMById?id=${id}&colorId=${this.state.colorId}`)
         .then(res => res.json())
         .then(res => {
-            this.setState({
-                item: res
-            });
+            let check = res.id;
+            if(check === undefined) {
+                this.setState({
+                    item: res
+                });
+            }
+            else {
+                alert("Sai đường dẫn");
+                window.location.href = "/";
+            }
+            
         })
         .catch(error =>{
             console.log(error)
         })
-
-        // this.setState({
-        //     productId: id
-        // })
     }
 
     getId = () => {
@@ -33,7 +38,7 @@ class ProductDetail extends React.Component{
         let href = window.location.href;
 
         if(href.indexOf("id") === -1) {
-            return <Redirect to='/productlist'/>; //Chưa chạy được
+            window.location.href = "/";
         }
         else {
             idTemp = href.substring(href.indexOf("id"), href.length);
