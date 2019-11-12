@@ -1,7 +1,7 @@
 import React from 'react';
 
 class Search extends React.Component {
-    searchProduct = (e) => {
+    searchProductsByName = (e) => {
         e.preventDefault();
         window.location.href = `/productlist?search=${window.$("#txt-search").val()}`;
     }
@@ -17,7 +17,7 @@ class Search extends React.Component {
                     {/* <option value="1">Category 01</option>
                     <option value="1">Category 02</option> */}
                 </select>
-                <button className="search-btn" onClick={this.searchProduct}><i className="fa fa-search"></i></button>
+                <button className="search-btn" onClick={this.searchProductsByName}><i className="fa fa-search"></i></button>
             </form>
             </div>
             // {/* <!-- /Search --> */}
