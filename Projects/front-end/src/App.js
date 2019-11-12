@@ -11,6 +11,11 @@ import Login from './account/Login'
 import Information from './account/Information'
 import CartDetail from './cart-detail/Cart'
 import Delivery from './delivery/Deliverry'
+//Font-awesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
+library.add(fab, faCheckSquare, faCoffee)
 
 function App() {
      return (
