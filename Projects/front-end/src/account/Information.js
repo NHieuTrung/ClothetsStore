@@ -90,9 +90,9 @@ class Information extends React.Component {
     renderBirthday = () => {
         if(this.state.information.birthday !== undefined) {
             let value = new Date(this.state.information.birthday);
-
+            
             let date = value.getDate() < 10 ? "0" + value.getDate() : value.getDate();
-            let month = value.getMonth() < 10 ? "0" + value.getMonth() : value.getMonth();
+            let month = value.getMonth() + 1 < 10 ? "0" + (value.getMonth() + 1) : value.getMonth() + 1;
             let year = value.getFullYear();
 
             let fullDate = `${year}-${month}-${date}`;
@@ -123,6 +123,30 @@ class Information extends React.Component {
             return;
         }
 
+        if(this.state.information.email === "blank") {
+            //check email validity
+            let emailAvailability = false;
+            fetch(`https://localhost:44376/api/customer/account/checkEmailAvailability?email=${window.$("#email").val()}`)
+            .then(res => res.json())
+            .then(res => {
+                emailAvailability = res;
+            }).then(() => {
+                if(emailAvailability === false) {
+                    MySwal.fire({
+                        title: 'Thông báo',
+                        width: 300,
+                        padding: '2em',
+                        html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Email đã được sử dụng</p>"
+                    })
+
+                    return;
+                }
+            })
+            .catch(error =>{
+                console.log(error)
+            });
+        }
+        
         //updateInformation
         fetch('https://localhost:44376/api/customer/customer/updateCustomerInformation', {
             method: 'POST',
@@ -143,7 +167,6 @@ class Information extends React.Component {
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res);
             if(res === true) {
                 MySwal.fire({
                     title: 'Thông báo',
@@ -299,13 +322,16 @@ class Information extends React.Component {
                                         <i className="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                     <div className="input-group">
-                                        <input className="input--style-3" type="text" placeholder="Số điện thoại" id="phone" name="phone" ref="phone" defaultValue={this.state.information.phone} required/>
+                                        <input className="input--style-3" type="text" placeholder="Số điện thoại" id="phone" name="phone" ref="phone" defaultValue={this.state.information.phone === "blank" ? "" : this.state.information.phone} required/>
                                     </div>
                                     <div className="input-group">
-                                        <input className="input--style-3" type="text" placeholder="Địa chỉ" id="address" name="Address" ref="address" defaultValue={this.state.information.address} required/>
+                                        <input className="input--style-3" type="text" placeholder="Địa chỉ" id="address" name="Address" ref="address" defaultValue={this.state.information.address === "blank" ? "" : this.state.information.address} required/>
                                     </div>
                                     <div className="input-group">
-                                        <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" defaultValue={this.state.information.email} required disabled/>
+                                        { this.state.information.email === "blank" ?
+                                            <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" defaultValue={this.state.information.email === "blank" ? "" : this.state.information.email} required/> :
+                                            <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" defaultValue={this.state.information.email === "blank" ? "" : this.state.information.email} required disabled/> }
+                                        {/* <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" defaultValue={this.state.information.email === "blank" ? "" : this.state.information.email} required disabled/> */}
                                     </div>
                                     <div className="p-t-10">
                                         <center><button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Lưu</button></center>

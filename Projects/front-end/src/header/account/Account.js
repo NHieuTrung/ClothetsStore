@@ -16,7 +16,8 @@ class Account extends React.Component {
         cart: [],
         isLoggedIn: false,
         token: '',
-        information: []
+        information: [],
+        space: ''
     }
 
     renderCart = () => {
@@ -134,11 +135,30 @@ class Account extends React.Component {
         .then(res => {
             this.setState({
                 information: res
+            }, () => {
+                this.checkBlankInformation();
             });
         })
         .catch(error =>{
             console.log(error)
         })
+    }
+
+    checkBlankInformation = () => {
+        let phone = this.state.information.phone;
+        let address = this.state.information.address;
+        let email = this.state.information.email;
+
+        if(phone === "blank" || address === "blank" || email === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng cập nhật thông tin tài khoản</p>"
+            }).then((res) => {
+                window.location.href = "/information"; 
+            });
+        }
     }
 
     changePassword = () => {
@@ -302,7 +322,7 @@ class Account extends React.Component {
                             <div className="header-btns-icon">
                                 { information.length !== 0 ? <img src="/assets/img/user.png" style={{width: "100%"}} alt="user.png" /> : <i className="fa fa-user-o"></i>}
                             </div>
-                            <strong className="text-uppercase">{ information.length !== 0 ? information.name : 'Tài khoản'} <i className="fa fa-caret-down"></i></strong>
+                            <strong className="text-uppercase">{ information.length !== 0 ? information.name : "Tài khoản" } <i className="fa fa-caret-down"></i></strong>
                         </div>
 
                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}

@@ -119,11 +119,11 @@ namespace Repositories
             Customer customer = new Customer();
             customer.CustomerId = Guid.NewGuid();
             customer.Name = customerAccount.Name;
-            customer.Phone = customerAccount.Phone;
-            customer.GenderId = customerAccount.GenderId;
-            customer.Address = customerAccount.Address;
+            customer.Phone = customerAccount.Phone == "" ? "blank" : customerAccount.Phone;
+            customer.GenderId = customerAccount.GenderId == Guid.Empty ? Guid.Parse("45E3CC14-E862-459F-AB58-09FD3FFEA244") : customerAccount.GenderId; //Nam
+            customer.Address = customerAccount.Address == "" ? "blank" : customerAccount.Address;
             customer.Birthday = customerAccount.Birthday;
-            customer.Email = customerAccount.Email;
+            customer.Email = customerAccount.Email == "" ? "blank" : customerAccount.Email;
             customer.AccountId = account.AccountId;
             ctx.Customer.Add(customer);
             await ctx.SaveChangesAsync();
@@ -167,12 +167,12 @@ namespace Repositories
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        new Claim(ClaimTypes.Name, customer.Name),
-                        new Claim(ClaimTypes.Email, customer.Email),
-                        new Claim(ClaimTypes.MobilePhone, customer.Phone),
-                        new Claim(ClaimTypes.StreetAddress, customer.Address),
-                        new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
-                        new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
+                        //new Claim(ClaimTypes.Name, customer.Name),
+                        //new Claim(ClaimTypes.Email, customer.Email),
+                        //new Claim(ClaimTypes.MobilePhone, customer.Phone),
+                        //new Claim(ClaimTypes.StreetAddress, customer.Address),
+                        //new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
+                        //new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
                         new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //customerId
                         new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
                     }),
@@ -208,42 +208,60 @@ namespace Repositories
             var claimList = principal.Claims.ToList();
             JWTClaims claims = new JWTClaims();
 
-            for(int i = 0; i < 8; i++)
-            {
-                string type = claimList[i].Type;
-                type = type.Substring(type.IndexOf("claims/") + 7);
+            Guid customerId = Guid.Parse(claimList.Where(c => c.Properties.Values.Contains("nameid"))
+                                                  .Select(c => c.Value)
+                                                  .FirstOrDefault());
 
-                switch (type)
-                {
-                    case "nameidentifier":
-                        claims.CustomerId = claimList[i].Value;
-                        break;
-                    case "name":
-                        claims.Name = claimList[i].Value;
-                        break;
-                    case "emailaddress":
-                        claims.Email = claimList[i].Value;
-                        break;
-                    case "streetaddress":
-                        claims.Address = claimList[i].Value;
-                        break;
-                    case "mobilephone":
-                        claims.Phone = claimList[i].Value;
-                        break;
-                    case "dateofbirth":
-                        claims.Birthday = DateTime.Parse(claimList[i].Value);
-                        break;
-                    case "role":
-                        claims.Role = claimList[i].Value;
-                        break;
-                    case "primarysid":
-                        claims.AccountId = claimList[i].Value;
-                        break;
-                    default:
-                        claims.Phone = claimList[i].Value;
-                        break;
-                }
-            }
+            Customer customer = await ctx.Customer.Where(c => c.CustomerId == customerId)
+                                                  .Include(c => c.Account)
+                                                  .Include(c => c.Account.Role)
+                                                  .FirstOrDefaultAsync();
+
+            claims.AccountId = customer.AccountId.ToString();
+            claims.CustomerId = customer.CustomerId.ToString();
+            claims.Name = customer.Name;
+            claims.Email = customer.Email;
+            claims.Role = customer.Account.Role.Name;
+            claims.Phone = customer.Phone;
+            claims.Address = customer.Address;
+            claims.Birthday = customer.Birthday;
+
+            //for(int i = 0; i < 8; i++)
+            //{
+            //    string type = claimList[i].Type;
+            //    type = type.Substring(type.IndexOf("claims/") + 7);
+
+            //    switch (type)
+            //    {
+            //        case "nameidentifier":
+            //            claims.CustomerId = claimList[i].Value;
+            //            break;
+            //        case "name":
+            //            claims.Name = claimList[i].Value;
+            //            break;
+            //        case "emailaddress":
+            //            claims.Email = claimList[i].Value;
+            //            break;
+            //        case "streetaddress":
+            //            claims.Address = claimList[i].Value;
+            //            break;
+            //        case "mobilephone":
+            //            claims.Phone = claimList[i].Value;
+            //            break;
+            //        case "dateofbirth":
+            //            claims.Birthday = DateTime.Parse(claimList[i].Value);
+            //            break;
+            //        case "role":
+            //            claims.Role = claimList[i].Value;
+            //            break;
+            //        case "primarysid":
+            //            claims.AccountId = claimList[i].Value;
+            //            break;
+            //        default:
+            //            claims.Phone = claimList[i].Value;
+            //            break;
+            //    }
+            //}
 
             return claims;
         }

@@ -86,6 +86,7 @@ namespace Repositories
 
             cus.Name = customer.Name;
             cus.Birthday = customer.Birthday;
+            cus.Email = customer.Email;
             cus.Phone = customer.Phone;
             cus.GenderId = customer.GenderId;
             cus.Address = customer.Address;

@@ -4,17 +4,22 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 // eslint-disable-next-line no-unused-vars
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 // import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+// eslint-disable-next-line no-unused-vars
 import { base, firebaseApp } from '../base';
 import firebase from "firebase";
 //SweetAlert2
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { getDefaultWatermarks } from 'istanbul-lib-report';
 const MySwal = withReactContent(Swal)
   
 class Login extends React.Component{
     state = {
         token: '',
-        isLoggedIn: false
+        isLoggedIn: false,
+        fullName: '',
+        email: '',
+        id: ''
     }
 
     checkLoggedIn = () => {
@@ -30,32 +35,52 @@ class Login extends React.Component{
         }
     }
 
-    checkExisted = (username, password) => {
-        fetch('https://localhost:44376/api/customer/account/getAccountByUsername', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                Username: username
-            })
-        })
-        .then(res => res.text())
+    checkExisted = (username) => {
+        //check account availability
+        let accountAvailability = false;
+        fetch(`https://localhost:44376/api/customer/account/checkAvailability?username=${username}`)
+        .then(res => res.json())
         .then(res => {
-            if(res === "") {
-                this.createUser(username, password);
+            accountAvailability = res;
+        }).then(() => {
+            if(accountAvailability === false) {
+                fetch('https://localhost:44376/api/customer/account/authenticateAccount', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Username: this.state.id,
+                        Password: this.state.id
+                    })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if(res === "") {
+                        MySwal.fire({
+                            title: 'Thông báo',
+                            width: 300,
+                            padding: '2em',
+                            html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Sai thông tin tài khoản</p>"
+                        })
+                    }
+                    else {
+                        localStorage.setItem("authenticatedToken", res);
+                        this.props.history.push("/");
+                    }
+                })
+                .catch(error =>{
+                    console.log(error)
+                })
             }
             else {
-                let user = JSON.parse(res);
-                localStorage.setItem('id', user.accountId);
-                this.checkInformation();
-                // this.props.history.push("/home");
+                this.createAccount();
             }
         })
         .catch(error =>{
             console.log(error)
-        })
+        });
     }
 
     checkInformation = () => {
@@ -74,24 +99,62 @@ class Login extends React.Component{
         })
     }
 
-    createUser = (username, password) => {
-        fetch('https://localhost:44376/api/customer/account/createAccount', {
+    createAccount = () => {
+        let date = new Date();
+        date = `${date.getFullYear()}-${(date.getMonth() + 1) < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1}-${date.getDate() < 10 ? "0" + date.getDate() : date.getDate()}`;
+
+        fetch('https://localhost:44376/api/customer/account/createCustomerAccountAndCustomer', {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                Username: username,
-                Password: password
+                username: this.state.id,
+                password: this.state.id,
+                name: this.state.fullName,
+                genderId: '00000000-0000-0000-0000-000000000000',
+                birthday: date,
+                address: '',
+                email: this.state.email === "" ? '' : this.state.email,
+                phone: ''
             })
         })
         .then(res => res.json())
         .then(res => {
-            alert("Login succesfully");
-            localStorage.setItem('id', res.accountId);
-            this.checkInformation();
-            // this.props.history.push("/home");
+            if(res === true) {
+                fetch('https://localhost:44376/api/customer/account/authenticateAccount', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        Username: this.state.id,
+                        Password: this.state.id
+                    })
+                })
+                .then(res => res.json())
+                .then(res => {
+                    if(res === "") {
+                        MySwal.fire({
+                            title: 'Thông báo',
+                            width: 300,
+                            padding: '2em',
+                            html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Sai thông tin tài khoản</p>"
+                        })
+                    }
+                    else {
+                        localStorage.setItem("authenticatedToken", res);
+                        this.props.history.push("/");
+                    }
+                })
+                .catch(error =>{
+                    console.log(error)
+                })
+            } else {
+                console.log(`Error: ${res}`);
+            }
         })
         .catch(error =>{
             console.log(error)
@@ -100,19 +163,48 @@ class Login extends React.Component{
 
     authenticate = (provider) => {
         const authProvider = new firebase.auth[`${provider}AuthProvider`]();
-        firebaseApp.auth()
-                   .signInWithPopup(authProvider)
-                   .then(this.authHandler);
+
+        switch(provider) {
+            case "Facebook":
+                firebaseApp.auth()
+                .signInWithPopup(authProvider)
+                .then(this.authHandlerFacebook);
+                break;
+            case "Google":
+                firebaseApp.auth()
+                .signInWithPopup(authProvider)
+                .then(this.authHandlerGoogle);
+                break;
+            default:
+                console.log(`Error: Login with ${provider}`);
+                break;
+        }
     };
      
     //  # xử lý sau khi xác thực
-    authHandler = async (authData) => {
-        // this.checkExisted("testusera");
-        console.log("auth");
-        console.log(authData);
-        // const userid = authData.user.providerData[0].uid;
-        // const provider = authData.additionalUserInfo.providerId;
-        // this.checkExisted(userid, userid);
+    authHandlerGoogle = async (authData) => {
+        let fullName = authData.additionalUserInfo.profile.name;
+        let email = authData.user.email;
+        let id = authData.additionalUserInfo.profile.id;
+        this.setState({
+            fullName: fullName,
+            email: email,
+            id: id
+        }, () => {
+            this.checkExisted(id);
+        });
+    };
+
+    //  # xử lý sau khi xác thực
+    authHandlerFacebook = async (authData) => {
+        let fullName = authData.additionalUserInfo.profile.name;
+        let id = authData.additionalUserInfo.profile.id;
+        this.setState({
+            fullName: fullName,
+            id: id
+        }, () => {
+            this.checkExisted(id);
+        });
     };
 
     validateInput() {
@@ -173,16 +265,6 @@ class Login extends React.Component{
                 localStorage.setItem("authenticatedToken", res);
                 this.props.history.push("/");
             }
-            
-            // console.log(res);
-            // console.log(res === "")
-            // if (res.isValidated === false)
-            //     alert('Invalid User');
-            // else {
-            //     alert('Success');
-            //     localStorage.setItem('id', res.accountId);
-            //     this.props.history.push("/home");
-            // }
         })
         .catch(error =>{
             console.log(error)
@@ -267,10 +349,10 @@ class Login extends React.Component{
                                         <input className="input--style-3" type="password" placeholder="Mật khẩu" id="password" name="Password" ref="password"/>
                                     </div>
                                     <div className="input-group"style={{ width: "60px", height: "20px" }}>
-                                        {/* // eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                         <a onClick={() => this.authenticate("Facebook")}><FontAwesomeIcon size="lg" icon={['fab', 'facebook']}></FontAwesomeIcon></a>
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                        {/* // eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                                        {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                         <a onClick={() => this.authenticate("Google")}><FontAwesomeIcon size="lg" icon={['fab', 'google']}></FontAwesomeIcon></a>
                                     </div>
                                     <div className="p-t-10">
