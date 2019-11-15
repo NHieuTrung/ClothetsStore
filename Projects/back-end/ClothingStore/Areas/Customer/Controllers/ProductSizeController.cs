@@ -19,9 +19,9 @@ namespace ClothingStore.Areas.Customer.Controllers
         //select color, size
         [HttpGet]
         [Route("getQuatityBySelect")]
-        public async Task<IActionResult> GetQuatityBySelect(Guid colorId, Guid sizeId)
+        public async Task<IActionResult> GetQuatityBySelect(Guid colorId, Guid sizeId, Guid productId)
         {
-            return Ok(await productSizeService.GetQuatityBySelect(colorId, sizeId));
+            return Ok(await productSizeService.GetQuatityBySelect(colorId, sizeId, productId));
         }
 
 

@@ -87,7 +87,7 @@ class ProductInfo extends React.Component{
     getSelectSize=()=>{
         if(this.state.colorId !== '00000000-0000-0000-0000-000000000000' && this.state.sizeId !== '00000000-0000-0000-0000-000000000000')
         {
-            fetch(`https://localhost:44376/api/customer/productsize/getQuatityBySelect?colorId=${this.state.colorId}&sizeId=${this.state.sizeId}`)
+            fetch(`https://localhost:44376/api/customer/productsize/getQuatityBySelect?colorId=${this.state.colorId}&sizeId=${this.state.sizeId}&productId=${this.state.productId}`)
             .then(res => res.json())
             .then(
                 (res) => {

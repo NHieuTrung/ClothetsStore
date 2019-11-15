@@ -38,9 +38,9 @@ namespace Repositories
             await ctx.SaveChangesAsync();
 
         }
-        public async Task<int> GetQuatityBySelect(Guid colorId, Guid sizeId)
+        public async Task<int> GetQuatityBySelect(Guid colorId, Guid sizeId, Guid productId)
         {
-            int SL = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId)
+            int SL = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId && p.ProductId == productId)
                                          .CountAsync();
             return SL;
         }
