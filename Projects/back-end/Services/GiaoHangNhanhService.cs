@@ -113,7 +113,7 @@ namespace Services
         {
             List<GHNLocations> locations = await GetLocations();
 
-            District district = locations.Where(l => l.ProvinceName == provinceName && l.DistrictName == districtName)
+            District district = locations.Where(l => l.ProvinceName == provinceName && l.DistrictName.Contains(districtName))
                                           .Select(l => new District
                                           {
                                               DistrictId = l.DistrictId,
@@ -145,6 +145,89 @@ namespace Services
             }
 
             return provinces;
+        }
+
+        public async Task<Province> GetProvinceByProvinceId(int provinceId)
+        {
+            List<GHNLocations> locations = await GetLocations();
+
+            Province province = locations.Where(l => l.ProvinceId == provinceId)
+                                         .Select(l => new Province
+                                         {
+                                             ProvinceId = l.ProvinceId,
+                                             ProvinceName = l.ProvinceName
+                                         })
+                                         .FirstOrDefault();
+
+            return province;
+        }
+
+        public async Task<Province> GetProvinceByProvinceName(string provinceName)
+        {
+            List<GHNLocations> locations = await GetLocations();
+
+            Province province = locations.Where(l => l.ProvinceName.Contains(provinceName))
+                                         .Select(l => new Province
+                                         {
+                                             ProvinceId = l.ProvinceId,
+                                             ProvinceName = l.ProvinceName
+                                         })
+                                         .FirstOrDefault();
+
+            return province;
+        }
+
+        public async Task<List<GHNWards>> GetGHNWards()
+        {
+            //Khai báo
+            string baseUrl = "https://console.ghn.vn/api/v1/apiv3/GetWards";
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            List<GHNWards> wards = new List<GHNWards>();
+
+            //Cái này là POST
+            TokenGHN token = new TokenGHN();
+            token.Token = "5dce3e3f0ad5df75487e7654";
+            var json = JsonConvert.SerializeObject(token);
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Post;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+            httpRequestMessage.Headers.Add("Accept", "application/json");
+            httpRequestMessage.Headers.Add("Accept", "application/json");
+
+            HttpContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            HttpClient _Client = new HttpClient();
+            HttpResponseMessage res = await _Client.SendAsync(httpRequestMessage);
+            using (HttpContent content = res.Content)
+            {
+                string data = await content.ReadAsStringAsync();
+                if (data != null)
+                {
+                    //code || msg || data
+                    JObject result = JObject.Parse(data);
+                    var wardsArray = result["data"]["Wards"].Value<JArray>();
+                    wards = wardsArray.ToObject<List<GHNWards>>();
+                }
+            }
+
+            return wards;
+        }
+
+        public async Task<List<Ward>> GetWards(int provinceId, int districtId)
+        {
+            List<GHNWards> ghnWards = await GetGHNWards();
+
+            List<Ward> wards = ghnWards.Where(l => l.ProvinceId == provinceId && l.DistrictId == districtId)
+                                       .Select(l => new Ward
+                                       {
+                                           WardCode = l.WardCode,
+                                           WardName = l.WardName
+                                       })
+                                       .ToList();
+
+            return wards;
         }
 
         public async Task<Fee> GetFee(int districtId, int numberOfProducts)

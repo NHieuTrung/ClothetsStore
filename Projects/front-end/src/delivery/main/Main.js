@@ -280,13 +280,6 @@ class Main extends React.Component{
             
             return districts;
         }
-        // if(this.state.provinces.length !== 0) {
-        //     const provinces = this.state.provinces.map((item, idx) =>
-        //         <option key={idx} value={item.provinceId}>{item.provinceName}</option>
-        //     );
-
-        //     return provinces;
-        // }
     }
    
     componentDidMount=()=>{

@@ -11,8 +11,15 @@ class Information extends React.Component {
     state = {
         gender: [],
         information: [],
+        address: '',
         token: '',
-        isLoggedIn: false
+        isLoggedIn: false,
+        provinces: [],
+        provinceId: 0,
+        districts: [],
+        districtId: 0,
+        wards: [],
+        wardCode: ''
     }
 
     checkLoggedIn = () => {
@@ -38,6 +45,82 @@ class Information extends React.Component {
         }
 
         return items;
+    }
+
+    getDistrictsByProvinceId = () => {
+        if(this.state.provinceId !== null) {
+            fetch(`https://localhost:44376/api/customer/delivery/getDistrictsByProvinceId?provinceId=${this.state.provinceId}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    districts: res
+                },() => {
+                    if(this.state.districtId === 0) {
+                        let address = this.state.address;
+                        if(address !== "blank") {
+                            let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
+                            let districtName = address.substring(address.lastIndexOf("QH.") + 3, address.lastIndexOf("TT.") - 1);
+    
+                            fetch(`https://localhost:44376/api/customer/delivery/getDistrictByProvinceAndDistrictName?provinceName=${provinceName}&districtName=${districtName}`)
+                            .then(res => res.json())
+                            .then(res => {this.setState({
+                                    districtId: res.districtId
+                                }, () => {
+                                    window.$("#district").val(this.state.districtId);
+                                    this.onChangeDistrict();
+                                });
+                            })
+                            .catch(error =>{
+                                console.log(error)
+                            })
+                        }
+                    }
+                });
+            })
+            .catch(error =>{
+                console.log(error)
+            })
+        }
+    }
+
+    getProvinces = () => {
+        fetch(`https://localhost:44376/api/customer/delivery/getProvinces`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                provinces: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    getWards = () => {
+        fetch(`https://localhost:44376/api/customer/delivery/getWards?provinceId=${this.state.provinceId}&districtId=${this.state.districtId}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                wards: res
+            }, () => {
+                if(this.state.wardCode === '') {
+                    let address = this.state.address;
+                    if(address !== "blank") {
+                        let wardName = address.substring(address.lastIndexOf("PX.") + 3, address.lastIndexOf("QH.") - 1);
+                        let wards = this.state.wards;
+                        let wardCode = wards.find(w => w.wardName.includes(wardName)).wardCode;
+
+                        window.$("#ward").val(wardCode);
+                        this.setState({
+                            wardCode: wardCode
+                        })
+                    }
+                }
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
     }
 
     getGender = () => {
@@ -67,13 +150,96 @@ class Information extends React.Component {
         })
         .then(res => res.json())
         .then(res => {
+            let information = res;
+            let address = res.address;
+            information.address = information.address.substring(0, information.address.lastIndexOf("PX") - 1);
+
             this.setState({
-                information: res
+                information: information,
+                address: address
+            }, () => {
+                this.getProvinceToRender()
             });
         })
         .catch(error =>{
             console.log(error)
         })
+    }
+
+    getProvinceToRender = () => {
+        let address = this.state.address;
+        if(address !== "blank") {
+            let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
+            fetch(`https://localhost:44376/api/customer/delivery/getProvinceByProvinceName?provinceName=${provinceName}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    provinceId: res.provinceId
+                }, () => {
+                    window.$("#province").val(this.state.provinceId);
+                    // this.onChangeProvince();
+                    this.getDistrictsByProvinceId();
+                }, () => {
+                    console.log('úm')
+                });
+            })
+            .catch(error =>{
+                console.log(error)
+            })
+        }
+    }
+
+    onChangeProvince = () => {
+        let provinceId = window.$("#province").val();
+
+        this.setState({
+            provinceId: provinceId
+        }, () => {
+            window.$("#district").val("blank");
+            window.$("#ward").val("blank");
+            this.getDistrictsByProvinceId();
+        })
+    }
+
+    onChangeDistrict = () => {
+        let districtId = window.$("#district").val();
+
+        this.setState({
+            districtId: districtId
+        }, () => {
+            window.$("#ward").val("blank");
+            this.getWards();
+        });
+    }
+
+    renderProvinces = () => {
+        if(this.state.provinces.length !== 0) {
+            const provinces = this.state.provinces.map((item, idx) =>
+                <option key={idx} value={item.provinceId} style={{color: "black"}}>{item.provinceName}</option>
+            );
+
+            return provinces;
+        }
+    }
+
+    renderDistricts = () => {
+        if(this.state.districts.length !== 0) {
+            const districts = this.state.districts.map((item, idx) =>
+                <option key={idx} value={item.districtId} style={{color: "black"}}>{item.districtName}</option>
+            );
+            
+            return districts;
+        }
+    }
+
+    renderWards = () => {
+        if(this.state.wards.length !== 0) {
+            const districts = this.state.wards.map((item, idx) =>
+                <option key={idx} value={item.wardCode} style={{color: "black"}}>{item.wardName}</option>
+            );
+            
+            return districts;
+        }
     }
 
     renderGender = () => {
@@ -123,6 +289,46 @@ class Information extends React.Component {
             return;
         }
 
+        //check province
+        let provinceNameValidity = window.$("#province option:selected").val();
+        if(provinceNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn tỉnh thành</p>"
+            })
+
+            return;
+        }
+
+        //check district
+        let districtNameValidity = window.$("#district option:selected").val();
+        if(districtNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn quận huyện</p>"
+            })
+
+            return;
+        }
+
+        //check ward
+        let wardNameValidity = window.$("#ward option:selected").val();
+        if(wardNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn phường xã</p>"
+            })
+
+            return;
+        }
+
+        //check Email
         if(this.state.information.email === "blank") {
             //check email validity
             let emailAvailability = false;
@@ -146,8 +352,41 @@ class Information extends React.Component {
                 console.log(error)
             });
         }
+
+        //substring
+        let provinceName = window.$("#province option:selected").text();
+        let districtName = window.$("#district option:selected").text();
+        let wardName = window.$("#ward option:selected").text();
+
+        if(districtName.includes("Huyện")) {
+            districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+        }
+        if(districtName.includes("Thị xã")) {
+            districtName = districtName.substring(districtName.indexOf("Thị xã") + 7, districtName.length);
+        }
+        if(districtName.includes("Thành phố")) {
+            districtName = districtName.substring(districtName.indexOf("Thành phố") + 10, districtName.length);
+        }
+        if(districtName.includes("Quận")) {
+            districtName = districtName.substring(districtName.indexOf("Quận") + 5, districtName.length);
+        }
+        if(districtName.includes("Huyện")) {
+            districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+        }
+
+        if(wardName.includes("Phường")) {
+            wardName = wardName.substring(wardName.indexOf("Phường") + 7, wardName.length);
+        }
+        if(wardName.includes("Xã")) {
+            wardName = wardName.substring(wardName.indexOf("Xã") + 3, wardName.length);
+        }
+        if(wardName.includes("Thị trấn")) {
+            wardName = wardName.substring(wardName.indexOf("Thị trấn") + 9, wardName.length);
+        }
         
         //updateInformation
+        let address = this.refs.address.value;
+        address += ` PX.${wardName} QH.${districtName} TT.${provinceName}`
         fetch('https://localhost:44376/api/customer/customer/updateCustomerInformation', {
             method: 'POST',
             headers: {
@@ -160,7 +399,7 @@ class Information extends React.Component {
                 name: this.refs.name.value,
                 genderId: this.refs.gender.value,
                 birthday: this.refs.birthday.value,
-                address: this.refs.address.value,
+                address: address,
                 email: this.refs.email.value,
                 phone: this.refs.phone.value
             })
@@ -290,6 +529,7 @@ class Information extends React.Component {
     componentDidMount() {
         this.getGender();
         this.checkLoggedIn();
+        this.getProvinces();
     }
 
     render()
@@ -326,6 +566,24 @@ class Information extends React.Component {
                                     </div>
                                     <div className="input-group">
                                         <input className="input--style-3" type="text" placeholder="Địa chỉ" id="address" name="Address" ref="address" defaultValue={this.state.information.address === "blank" ? "" : this.state.information.address} required/>
+                                    </div>
+                                    <div className="input-group">
+                                        <select className="input--style-3" id="province" ref="province" defaultValue="blank" onChange={this.onChangeProvince} required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn tỉnh thành</option>
+                                            {this.renderProvinces()}
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
+                                        <select className="input--style-3" id="district" ref="district" defaultValue="blank" onChange={this.onChangeDistrict} required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn quận huyện</option>
+                                            {this.renderDistricts()}
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
+                                        <select className="input--style-3" id="ward" ref="ward" defaultValue="blank" required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn phường xã</option>
+                                            {this.renderWards()}
+                                        </select>
                                     </div>
                                     <div className="input-group">
                                         { this.state.information.email === "blank" ?

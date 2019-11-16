@@ -50,10 +50,38 @@ namespace ClothingStore.Areas.Customer.Controllers
         }
 
         [HttpGet]
+        [Route("getDistrictByProvinceAndDistrictName")]
+        public async Task<IActionResult> GetDistrictByProvinceAndDistrictName(string provinceName, string districtName)
+        {
+            return Ok(await ghnService.GetDistrictByProvinceAndDistrictName(provinceName, districtName));
+        }
+
+        [HttpGet]
         [Route("getProvinces")]
         public async Task<IActionResult> GetProvinces()
         {
             return Ok(await ghnService.GetProvinces());
+        }
+
+        [HttpGet]
+        [Route("getProvinceByProvinceId")]
+        public async Task<IActionResult> GetProvinceByProvinceId(int provinceId)
+        {
+            return Ok(await ghnService.GetProvinceByProvinceId(provinceId));
+        }
+
+        [HttpGet]
+        [Route("getProvinceByProvinceName")]
+        public async Task<IActionResult> GetProvinceByProvinceName(string provinceName)
+        {
+            return Ok(await ghnService.GetProvinceByProvinceName(provinceName));
+        }
+
+        [HttpGet]
+        [Route("getWards")]
+        public async Task<IActionResult> GetWards(int provinceId, int districtId)
+        {
+            return Ok(await ghnService.GetWards(provinceId, districtId));
         }
 
         [HttpGet]
