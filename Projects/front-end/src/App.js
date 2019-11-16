@@ -56,6 +56,7 @@ function App() {
                 <CartDetail></CartDetail>
                 <Footer></Footer>
             </Route>
+            
             {/*thanh toan*/}
             <Route path="/delivery">
                 <Header></Header>

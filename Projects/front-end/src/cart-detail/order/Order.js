@@ -2,6 +2,10 @@ import React from 'react';
 // eslint-disable-next-line no-unused-vars
 import { Link } from "react-router-dom";
 import NumberFormat from "react-number-format";
+//SweetAlert2
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+const MySwal = withReactContent(Swal)
 
 class Order extends React.Component{
     state={
@@ -9,7 +13,20 @@ class Order extends React.Component{
         sizeId:'00000000-0000-0000-0000-000000000000',
         colorId:'00000000-0000-0000-0000-000000000000',
         namesize:'',
-        namecolor:''
+        namecolor:'',
+        isLoggedIn: false,
+        token: ''
+    }
+
+    checkLoggedIn = () => {
+        let token = localStorage.getItem('authenticatedToken');
+
+        if(token) {
+            this.setState({
+                token: token,
+                isLoggedIn: true
+            });
+        }
     }
 
     renderCart = () => {
@@ -129,7 +146,21 @@ class Order extends React.Component{
         }
     }
 
+    checkOut = () => {
+        if(this.state.isLoggedIn === false) {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng đăng nhập để thanh toán</p>"
+            });
+        } else {
+            window.location.href = "/delivery";
+        }
+    }
+
     componentDidMount = () => {
+        this.checkLoggedIn();
         this.getAllProducts();
     }
 
@@ -177,7 +208,7 @@ class Order extends React.Component{
 						</tfoot>
                     </table>
                     <div className="pull-right">
-						{ cart.length === 0 ? <button className="primary-btn" disabled style={{backgroundColor: "grey"}}>Thanh toán</button> : <button className="primary-btn">Thanh toán</button> }
+						{ cart.length === 0 ? <button className="primary-btn" disabled style={{backgroundColor: "grey"}}>Thanh toán</button> : <button className="primary-btn" onClick={this.checkOut}>Thanh toán</button> }
 					</div>
                 </div>
             </div>

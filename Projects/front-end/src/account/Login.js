@@ -10,6 +10,7 @@ import firebase from "firebase";
 //SweetAlert2
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+// eslint-disable-next-line no-unused-vars
 import { getDefaultWatermarks } from 'istanbul-lib-report';
 const MySwal = withReactContent(Swal)
   

@@ -72,6 +72,8 @@ class ProductInfo extends React.Component{
 
         this.setState({
             colorId: colorId
+        }, () => {
+            this.getSelectSize();
         });
     }
 
@@ -81,6 +83,8 @@ class ProductInfo extends React.Component{
 
         this.setState({
             sizeId: sizeId
+        }, () => {
+            this.getSelectSize();
         });
     }
 
