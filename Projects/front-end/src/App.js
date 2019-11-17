@@ -11,6 +11,7 @@ import Login from './account/Login'
 import Information from './account/Information'
 import CartDetail from './cart-detail/Cart'
 import Delivery from './delivery/Deliverry'
+import Pay from './pay/Pay'
 //Font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
@@ -61,6 +62,12 @@ function App() {
             <Route path="/delivery">
                 <Header></Header>
                 <Delivery></Delivery>
+                <Footer></Footer>
+            </Route>
+
+            <Route path="/pay">
+                <Header></Header>
+                <Pay></Pay>
                 <Footer></Footer>
             </Route>
         </Router>

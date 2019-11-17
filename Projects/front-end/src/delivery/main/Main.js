@@ -355,8 +355,10 @@ class Main extends React.Component{
             let information = this.state.information;
             information.address = address;
 
+
+            
             return <Redirect to={{
-                            pathname: '/',
+                            pathname: '/pay',
                             state: { 
                                 information: information,
                                 provinceId: this.state.provinceId,
@@ -372,6 +374,8 @@ class Main extends React.Component{
         this.setState({
             redirect: true
         })
+        let districtId= this.state.districtId;
+            JSON.parse(localStorage.setItem('district', districtId));
     }
 
     renderFormDiaChi = () => {
@@ -415,7 +419,7 @@ class Main extends React.Component{
                                     </div>
                                 </div>
                                 <div className="action">
-                                    <button type="button" className="btn btn-default ok" id="btnOk" style={{marginRight: "1em"}} onClick={this.setRedirect}>Giao đến địa chỉ này</button>
+                                    <button type="button" className="btn btn-default ok" id="btnOk" style={{marginRight: "1em"}} onClick={this.setRedirect}> Giao đến địa chỉ này</button>
                                     <button type="button" className="btn btn-default huy" id="btnHuy" onClick={this.updateinfomation}>Sửa</button>
                                 </div>
                                 <span className="default">Mặc định</span>
