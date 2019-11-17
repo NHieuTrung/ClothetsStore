@@ -238,13 +238,14 @@ namespace Services
             string baseUrl = "https://console.ghn.vn/api/v1/apiv3/CalculateFee";
             Dictionary<string, string> headers = new Dictionary<string, string>();
             Fee fee = new Fee();
+            Service service = await GetService(districtId);
 
             //Cái này là POST
             FeeRequest feeRequest = new FeeRequest();
             feeRequest.Token = "5dce3e3f0ad5df75487e7654";
             feeRequest.FromDistrictId = district.DistrictId; //Quận 5
             feeRequest.ToDistrictId = districtId; //Test
-            feeRequest.ServiceId = 53320; //defaultService
+            feeRequest.ServiceId = service.ServiceId; //defaultService
             feeRequest.Weight = 300 * numberOfProducts; //Test
             var json = JsonConvert.SerializeObject(feeRequest);
 
@@ -272,6 +273,48 @@ namespace Services
             }
 
             return fee;
+        }
+
+        public async Task<Service> GetService(int districtId)
+        {
+            District district = await GetDistrictByProvinceAndDistrictName("Hồ Chí Minh", "Quận 5");
+
+            //Khai báo
+            string baseUrl = "https://console.ghn.vn/api/v1/apiv3/FindAvailableServices";
+            Dictionary<string, string> headers = new Dictionary<string, string>();
+            Service service = new Service();
+
+            //Cái này là POST
+            FeeRequest feeRequest = new FeeRequest();
+            feeRequest.Token = "5dce3e3f0ad5df75487e7654";
+            feeRequest.FromDistrictId = district.DistrictId; //Quận 5
+            feeRequest.ToDistrictId = districtId; //Test
+            var json = JsonConvert.SerializeObject(feeRequest);
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage();
+            httpRequestMessage.Method = HttpMethod.Post;
+            httpRequestMessage.RequestUri = new Uri(baseUrl);
+            httpRequestMessage.Headers.Add("Accept", "application/json");
+            httpRequestMessage.Headers.Add("Accept", "application/json");
+
+            HttpContent httpContent = new StringContent(json, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = httpContent;
+
+            HttpClient _Client = new HttpClient();
+            HttpResponseMessage res = await _Client.SendAsync(httpRequestMessage);
+            using (HttpContent content = res.Content)
+            {
+                string data = await content.ReadAsStringAsync();
+                if (data != null)
+                {
+                    //code || msg || data
+                    JObject result = JObject.Parse(data);
+                    var serviceId = result["data"][0]["ServiceID"].Value<JValue>();
+                    service.ServiceId = serviceId.ToObject<int>();
+                }
+            }
+
+            return service;
         }
     }
 }
