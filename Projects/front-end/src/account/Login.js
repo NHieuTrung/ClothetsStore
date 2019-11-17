@@ -339,7 +339,9 @@ class Login extends React.Component{
                 <div className="page-wrapper bg-gra-01 p-t-180 p-b-100 font-poppins">
                 <div className="wrapper wrapper--w780">
                     <div className="card card-3">
-                        <div className="card-heading"></div>
+                        <div className="card-heading">
+                            <a href="/"><img src="./assets/img/logo.png" alt="logo.png"></img></a>
+                        </div>
                             <div className="card-body">
                                 <h2 className="title"><center>Đăng nhập</center></h2>
                                 <form onSubmit={this.handleSubmit}>
@@ -349,15 +351,20 @@ class Login extends React.Component{
                                     <div className="input-group">
                                         <input className="input--style-3" type="password" placeholder="Mật khẩu" id="password" name="Password" ref="password"/>
                                     </div>
-                                    <div className="input-group"style={{ width: "60px", height: "20px" }}>
+                                    <div className="input-group" style={{ width: "60px", height: "20px" }}>
                                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                         <a onClick={() => this.authenticate("Facebook")}><FontAwesomeIcon size="lg" icon={['fab', 'facebook']}></FontAwesomeIcon></a>
                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
                                         {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
                                         <a onClick={() => this.authenticate("Google")}><FontAwesomeIcon size="lg" icon={['fab', 'google']}></FontAwesomeIcon></a>
                                     </div>
+                                    <div className="input-group">
+                                        <p style={{fontStyle: "italic"}}><span style={{color: "#ccc"}}>Chưa có tài khoản? Nhấn vào </span><a href="/register"><span style={{fontWeight: "bold"}}>đây</span></a></p>
+                                    </div>
                                     <div className="p-t-10">
-                                        <center><button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Đăng nhập</button></center>
+                                        <center>
+                                            <button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Đăng nhập</button>
+                                        </center>
                                     </div>
                                 </form>
                             </div>

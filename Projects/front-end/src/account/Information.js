@@ -179,8 +179,6 @@ class Information extends React.Component {
                     window.$("#province").val(this.state.provinceId);
                     // this.onChangeProvince();
                     this.getDistrictsByProvinceId();
-                }, () => {
-                    console.log('úm')
                 });
             })
             .catch(error =>{
@@ -234,11 +232,11 @@ class Information extends React.Component {
 
     renderWards = () => {
         if(this.state.wards.length !== 0) {
-            const districts = this.state.wards.map((item, idx) =>
+            const wards = this.state.wards.map((item, idx) =>
                 <option key={idx} value={item.wardCode} style={{color: "black"}}>{item.wardName}</option>
             );
             
-            return districts;
+            return wards;
         }
     }
 

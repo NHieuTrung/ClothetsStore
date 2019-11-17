@@ -10,7 +10,13 @@ const MySwal = withReactContent(Swal)
 class Register extends React.Component {
     state = {
         gender: [],
-        test: false
+        test: false,
+        provinces: [],
+        provinceId: 0,
+        districts: [],
+        districtId: 0,
+        wards: [],
+        wardCode: ''
     }
 
     renderSnowEffect = () => {
@@ -47,6 +53,100 @@ class Register extends React.Component {
         return listOption;
     }
 
+    getDistrictsByProvinceId = () => {
+        if(this.state.provinceId !== null) {
+            fetch(`https://localhost:44376/api/customer/delivery/getDistrictsByProvinceId?provinceId=${this.state.provinceId}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    districts: res
+                });
+            })
+            .catch(error =>{
+                console.log(error)
+            })
+        }
+    }
+
+    getProvinces = () => {
+        fetch(`https://localhost:44376/api/customer/delivery/getProvinces`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                provinces: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    getWards = () => {
+        fetch(`https://localhost:44376/api/customer/delivery/getWards?provinceId=${this.state.provinceId}&districtId=${this.state.districtId}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                wards: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    onChangeProvince = () => {
+        let provinceId = window.$("#province").val();
+
+        this.setState({
+            provinceId: provinceId
+        }, () => {
+            window.$("#district").val("blank");
+            window.$("#ward").val("blank");
+            this.getDistrictsByProvinceId();
+        })
+    }
+
+    onChangeDistrict = () => {
+        let districtId = window.$("#district").val();
+
+        this.setState({
+            districtId: districtId
+        }, () => {
+            window.$("#ward").val("blank");
+            this.getWards();
+        });
+    }
+
+    renderProvinces = () => {
+        if(this.state.provinces.length !== 0) {
+            const provinces = this.state.provinces.map((item, idx) =>
+                <option key={idx} value={item.provinceId} style={{color: "black"}}>{item.provinceName}</option>
+            );
+
+            return provinces;
+        }
+    }
+
+    renderDistricts = () => {
+        if(this.state.districts.length !== 0) {
+            const districts = this.state.districts.map((item, idx) =>
+                <option key={idx} value={item.districtId} style={{color: "black"}}>{item.districtName}</option>
+            );
+            
+            return districts;
+        }
+    }
+
+    renderWards = () => {
+        if(this.state.wards.length !== 0) {
+            const wards = this.state.wards.map((item, idx) =>
+                <option key={idx} value={item.wardCode} style={{color: "black"}}>{item.wardName}</option>
+            );
+            
+            return wards;
+        }
+    }
+
     handleSubmit = (event) => { 
         event.preventDefault();
 
@@ -77,6 +177,45 @@ class Register extends React.Component {
         //check password validity
         let passwordValidity = this.checkPasswordValidity(window.$("#password").val());
         if(passwordValidity === false) {
+            return;
+        }
+
+        //check province
+        let provinceNameValidity = window.$("#province option:selected").val();
+        if(provinceNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn tỉnh thành</p>"
+            })
+
+            return;
+        }
+
+        //check district
+        let districtNameValidity = window.$("#district option:selected").val();
+        if(districtNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn quận huyện</p>"
+            })
+
+            return;
+        }
+
+        //check ward
+        let wardNameValidity = window.$("#ward option:selected").val();
+        if(wardNameValidity === "blank") {
+            MySwal.fire({
+                title: 'Thông báo',
+                width: 300,
+                padding: '2em',
+                html: "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>Vui lòng chọn phường xã</p>"
+            })
+
             return;
         }
 
@@ -227,6 +366,40 @@ class Register extends React.Component {
     }
 
     createAccount = () => {
+        //substring
+        let provinceName = window.$("#province option:selected").text();
+        let districtName = window.$("#district option:selected").text();
+        let wardName = window.$("#ward option:selected").text();
+
+        if(districtName.includes("Huyện")) {
+            districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+        }
+        if(districtName.includes("Thị xã")) {
+            districtName = districtName.substring(districtName.indexOf("Thị xã") + 7, districtName.length);
+        }
+        if(districtName.includes("Thành phố")) {
+            districtName = districtName.substring(districtName.indexOf("Thành phố") + 10, districtName.length);
+        }
+        if(districtName.includes("Quận")) {
+            districtName = districtName.substring(districtName.indexOf("Quận") + 5, districtName.length);
+        }
+        if(districtName.includes("Huyện")) {
+            districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+        }
+
+        if(wardName.includes("Phường")) {
+            wardName = wardName.substring(wardName.indexOf("Phường") + 7, wardName.length);
+        }
+        if(wardName.includes("Xã")) {
+            wardName = wardName.substring(wardName.indexOf("Xã") + 3, wardName.length);
+        }
+        if(wardName.includes("Thị trấn")) {
+            wardName = wardName.substring(wardName.indexOf("Thị trấn") + 9, wardName.length);
+        }
+
+        let address = this.refs.address.value;
+        address += ` PX.${wardName} QH.${districtName} TT.${provinceName}`;
+
         fetch('https://localhost:44376/api/customer/account/createCustomerAccountAndCustomer', {
             method: 'POST',
             headers: {
@@ -239,7 +412,7 @@ class Register extends React.Component {
                 name: this.refs.name.value,
                 genderId: this.refs.gender.value,
                 birthday: this.refs.birthday.value,
-                address: this.refs.address.value,
+                address: address,
                 email: this.refs.email.value,
                 phone: this.refs.phone.value
             })
@@ -327,6 +500,7 @@ class Register extends React.Component {
 
     componentDidMount() {
         this.getGender();
+        this.getProvinces();
     }
 
     render()
@@ -341,7 +515,7 @@ class Register extends React.Component {
                                 <a href="/"><img src="./assets/img/logo.png" alt="logo.png"></img></a>
                             </div>
                             <div className="card-body">
-                                <h2 className="title"><center>Thông tin</center></h2>
+                                <h2 className="title"><center>Đăng ký</center></h2>
                                 <form onSubmit={this.handleSubmit}>
                                     <div className="input-group">
                                         <input className="input--style-3" type="text" placeholder="Tài khoản" id="username" name="Username" ref="username" required/>
@@ -370,7 +544,28 @@ class Register extends React.Component {
                                         <input className="input--style-3" type="text" placeholder="Địa chỉ" id="address" name="Address" ref="address" required/>
                                     </div>
                                     <div className="input-group">
+                                        <select className="input--style-3" id="province" ref="province" defaultValue="blank" onChange={this.onChangeProvince} required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn tỉnh thành</option>
+                                            {this.renderProvinces()}
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
+                                        <select className="input--style-3" id="district" ref="district" defaultValue="blank" onChange={this.onChangeDistrict} required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn quận huyện</option>
+                                            {this.renderDistricts()}
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
+                                        <select className="input--style-3" id="ward" ref="ward" defaultValue="blank" required>
+                                            <option value="blank" disabled style={{color: "black"}}>Vui lòng chọn phường xã</option>
+                                            {this.renderWards()}
+                                        </select>
+                                    </div>
+                                    <div className="input-group">
                                         <input className="input--style-3" type="text" placeholder="Email" id="email" name="email" ref="email" required/>
+                                    </div>
+                                    <div className="input-group">
+                                        <p style={{fontStyle: "italic"}}><span style={{color: "#ccc"}}>Đã có tài khoản? Nhấn vào </span><a href="/login"><span style={{fontWeight: "bold"}}>đây</span></a></p>
                                     </div>
                                     <div className="p-t-10">
                                         <center><button className="btn btn--pill btn--green" type="submit" onClick={this.validateInput}>Đăng ký</button></center>

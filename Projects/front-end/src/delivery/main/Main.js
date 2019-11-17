@@ -1,5 +1,7 @@
 import React from 'react';
 import './style.css';
+import Index from '../../index/Index'
+import { Redirect } from 'react-router-dom'
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 const MySwal= withReactContent(Swal);
@@ -16,7 +18,10 @@ class Main extends React.Component{
         provinces: [],
         provinceId: 0,
         districts: [],
-        districtId: 0
+        districtId: 0,
+        wards: [],
+        wardCode: '',
+        redirect: false
     }
 
     checkLoggedIn = () => {
@@ -43,12 +48,55 @@ class Main extends React.Component{
         }
     }
 
+    getProvinceToRender = () => {
+        let address = this.state.address;
+        if(address !== "blank") {
+            let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
+            fetch(`https://localhost:44376/api/customer/delivery/getProvinceByProvinceName?provinceName=${provinceName}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    provinceId: res.provinceId
+                }, () => {
+                    window.$("#province").val(this.state.provinceId);
+                    // this.onChangeProvince();
+                    this.getDistrictsByProvinceId();
+                });
+            })
+            .catch(error =>{
+                console.log(error)
+            })
+        }
+    }
+
     getDistrictsByProvinceId = () => {
         fetch(`https://localhost:44376/api/customer/delivery/getDistrictsByProvinceId?provinceId=${this.state.provinceId}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
                 districts: res
+            },() => {
+                if(this.state.districtId === 0) {
+                    let address = this.state.address;
+                    if(address !== "blank") {
+                        let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
+                        let districtName = address.substring(address.lastIndexOf("QH.") + 3, address.lastIndexOf("TT.") - 1);
+
+                        fetch(`https://localhost:44376/api/customer/delivery/getDistrictByProvinceAndDistrictName?provinceName=${provinceName}&districtName=${districtName}`)
+                        .then(res => res.json())
+                        .then(res => {
+                            this.setState({
+                                districtId: res.districtId
+                            }, () => {
+                                window.$("#district").val(this.state.districtId);
+                                this.onChangeDistrict();
+                            });
+                        })
+                        .catch(error =>{
+                            console.log(error)
+                        })
+                    }
+                }
             });
         })
         .catch(error =>{
@@ -62,6 +110,36 @@ class Main extends React.Component{
         .then(res => {
             this.setState({
                 provinces: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
+    }
+
+    getWards = () => {
+        fetch(`https://localhost:44376/api/customer/delivery/getWards?provinceId=${this.state.provinceId}&districtId=${this.state.districtId}`)
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                wards: res
+            }, () => {
+                if(this.state.wardCode === '') {
+                    let address = this.state.address;
+                    if(address !== "blank") {
+                        let wardName = address.substring(address.lastIndexOf("PX.") + 3, address.lastIndexOf("QH.") - 1);
+                        let wards = this.state.wards;
+                        let wardCode = wards.find(w => w.wardName.includes(wardName)).wardCode;
+
+                        window.$("#ward").val(wardCode);
+                        this.setState({
+                            wardCode: wardCode,
+                            address: this.state.information.address
+                        }, () => {
+                            this.onChangeInformation();
+                        })
+                    }
+                }
             });
         })
         .catch(error =>{
@@ -84,12 +162,17 @@ class Main extends React.Component{
         })
         .then(res => res.json())
         .then(res => {
+            let information = res;
+            let address = res.address;
+            information.address = information.address.substring(0, information.address.lastIndexOf("PX") - 1);
+
             this.setState({
-                information: res,
-                address: res.address,
+                information: information,
+                address: address,
                 phone: res.phone,
                 email: res.email
             }, () => {
+                this.getProvinceToRender();
                 this.onChangeInformation();
             });
         })
@@ -180,10 +263,11 @@ class Main extends React.Component{
         this.setState({
             provinceId: provinceId
         }, () => {
+            window.$("#district").val("blank");
+            window.$("#ward").val("blank");
             this.getDistrictsByProvinceId();
-        }, () => {
             this.onChangeInformation();
-        })
+        });
     }
 
     onChangeDistrict = () => {
@@ -192,6 +276,19 @@ class Main extends React.Component{
         this.setState({
             districtId: districtId
         }, () => {
+            window.$("#ward").val("blank");
+            this.getWards();
+            this.onChangeInformation();
+        });
+    }
+
+    onChangeWard = () => {
+        let wardCode = window.$("#ward").val();
+
+        this.setState({
+            wardCode: wardCode
+        }, () => {
+            // this.getWards();
             this.onChangeInformation();
         });
     }
@@ -202,12 +299,13 @@ class Main extends React.Component{
         let phone = window.$("#phone").val();
         let province = window.$("#province").val();
         let district = window.$("#district").val();
+        let ward = window.$("#ward").val();
 
         if(address !== this.state.address || email !== this.state.email || phone !== this.state.phone) {
             window.$("#btnHuy").prop("disabled", false);
             window.$("#btnOk").prop("disabled", true);
         } else {
-            if(province === null || district === null) {
+            if(province === null || district === null || ward === null || province === "blank" || district === "blank" || ward === "blank") {
                 window.$("#btnHuy").prop("disabled", true);
                 window.$("#btnOk").prop("disabled", true);
             }
@@ -218,6 +316,64 @@ class Main extends React.Component{
         }        
     }
 
+    renderRedirect = () => {
+        if(this.state.redirect) {
+            //substring
+            let provinceName = window.$("#province option:selected").text();
+            let districtName = window.$("#district option:selected").text();
+            let wardName = window.$("#ward option:selected").text();
+
+            if(districtName.includes("Huyện")) {
+                districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+            }
+            if(districtName.includes("Thị xã")) {
+                districtName = districtName.substring(districtName.indexOf("Thị xã") + 7, districtName.length);
+            }
+            if(districtName.includes("Thành phố")) {
+                districtName = districtName.substring(districtName.indexOf("Thành phố") + 10, districtName.length);
+            }
+            if(districtName.includes("Quận")) {
+                districtName = districtName.substring(districtName.indexOf("Quận") + 5, districtName.length);
+            }
+            if(districtName.includes("Huyện")) {
+                districtName = districtName.substring(districtName.indexOf("Huyện") + 6, districtName.length);
+            }
+
+            if(wardName.includes("Phường")) {
+                wardName = wardName.substring(wardName.indexOf("Phường") + 7, wardName.length);
+            }
+            if(wardName.includes("Xã")) {
+                wardName = wardName.substring(wardName.indexOf("Xã") + 3, wardName.length);
+            }
+            if(wardName.includes("Thị trấn")) {
+                wardName = wardName.substring(wardName.indexOf("Thị trấn") + 9, wardName.length);
+            }
+            
+            let address = this.refs.address.value;
+            address += ` PX.${wardName} QH.${districtName} TT.${provinceName}`
+
+            let information = this.state.information;
+            information.address = address;
+
+            return <Redirect to={{
+                            pathname: '/',
+                            state: { 
+                                information: information,
+                                provinceId: this.state.provinceId,
+                                districtId: this.state.districtId,
+                                wardCode: this.state.wardCode
+                            }
+                        }}
+                    />
+        }
+    }
+
+    setRedirect = () => {
+        this.setState({
+            redirect: true
+        })
+    }
+
     renderFormDiaChi = () => {
         if(this.state.information.length !== 0) {
             const listItems = <div className="panel-body">
@@ -225,7 +381,7 @@ class Main extends React.Component{
                                 <div className="form-group address">
                                     <label className="address-label">Địa chỉ: </label>
                                     <div>
-                                        <input className="input-address" id="address" defaultValue={this.state.information.address} onChange={this.onChangeInformation}></input>
+                                        <input className="input-address" id="address" ref="address" defaultValue={this.state.information.address} onChange={this.onChangeInformation}></input>
                                     </div>
                                     <div>
                                         <select className="input-address" id="province" ref="province" defaultValue="blank" onChange={this.onChangeProvince}>
@@ -237,6 +393,12 @@ class Main extends React.Component{
                                         <select className="input-address" id="district" ref="district" defaultValue="blank" onChange={this.onChangeDistrict}>
                                             <option value="blank" disabled>Vui lòng chọn quận huyện</option>
                                             {this.renderDistricts()}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select className="input-address" id="ward" ref="ward" defaultValue="blank" onChange={this.onChangeWard}>
+                                            <option value="blank" disabled>Vui lòng chọn phường xã</option>
+                                            {this.renderWards()}
                                         </select>
                                     </div>
                                 </div>
@@ -253,7 +415,7 @@ class Main extends React.Component{
                                     </div>
                                 </div>
                                 <div className="action">
-                                    <button type="button" className="btn btn-default ok" id="btnOk" style={{marginRight: "1em"}}>Giao đến địa chỉ này</button>
+                                    <button type="button" className="btn btn-default ok" id="btnOk" style={{marginRight: "1em"}} onClick={this.setRedirect}>Giao đến địa chỉ này</button>
                                     <button type="button" className="btn btn-default huy" id="btnHuy" onClick={this.updateinfomation}>Sửa</button>
                                 </div>
                                 <span className="default">Mặc định</span>
@@ -281,6 +443,16 @@ class Main extends React.Component{
             return districts;
         }
     }
+
+    renderWards = () => {
+        if(this.state.wards.length !== 0) {
+            const wards = this.state.wards.map((item, idx) =>
+                <option key={idx} value={item.wardCode} style={{color: "black"}}>{item.wardName}</option>
+            );
+            
+            return wards;
+        }
+    }
    
     componentDidMount=()=>{
         // this.checkPreviousUrl(); Khi nào xong thì gỡ comment
@@ -294,6 +466,7 @@ class Main extends React.Component{
             <div className="row-address-list">
                 <div className="col-lg-6 col-md-6 col-sm-6 item">
                     <div className="panel panel-default address-item">
+                        {this.renderRedirect()}
                         {this.renderFormDiaChi()}
                     </div>
                 </div>
