@@ -40,3 +40,20 @@ p{
     font-weight: 700;
     
 }
+.dc{
+    margin: 0;
+    font-size: 18px;
+}
+.content-address b{
+    padding-right: 30px;
+}
+.content-address h4{
+    float: left;
+    padding-right: 5-px;
+}
+.section-dc{
+    color:#F8694A
+}
+b, strong{
+    font-weight: bold;
+}

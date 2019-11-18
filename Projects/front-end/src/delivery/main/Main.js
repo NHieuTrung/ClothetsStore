@@ -165,7 +165,7 @@ class Main extends React.Component{
             let information = res;
             let address = res.address;
             information.address = information.address.substring(0, information.address.lastIndexOf("PX") - 1);
-
+            //localStorage.setItem("name",information.name);
             this.setState({
                 information: information,
                 address: address,
@@ -214,6 +214,8 @@ class Main extends React.Component{
                 this.onChangeInformation();
             });
         })
+       
+        
         // console.log(information.address)
         // localStorage.setItem("address",JSON.stringify(window.$("#address").val()));
         // localStorage.setItem("email",JSON.stringify(window.$("#email").val()));
@@ -301,6 +303,16 @@ class Main extends React.Component{
         let district = window.$("#district").val();
         let ward = window.$("#ward").val();
 
+        // //getinformation
+        // let informationdelivery={
+        //     name:this.state.information.name,
+        //     address: `${window.$("#address").val()},${window.$("#ward").val()}, ${window.$("#district").val()}, ${window.$("#province").val()}`,
+        //     email: window.$("#email").val(),
+        //     phone: window.$("#phone").val()
+        // }
+
+        //localStorage.setItem("Delivery",informationdelivery);
+
         if(address !== this.state.address || email !== this.state.email || phone !== this.state.phone) {
             window.$("#btnHuy").prop("disabled", false);
             window.$("#btnOk").prop("disabled", true);
@@ -375,7 +387,9 @@ class Main extends React.Component{
             redirect: true
         })
         let districtId= this.state.districtId;
-            JSON.parse(localStorage.setItem('district', districtId));
+            localStorage.setItem('district', districtId);
+            // let dc= `${this.state.information.address} PX.${this.state.wardName} QH.${this.state.districtName} TT.${this.state.provinceName}`;
+            // localStorage.setItem("address",dc);
     }
 
     renderFormDiaChi = () => {

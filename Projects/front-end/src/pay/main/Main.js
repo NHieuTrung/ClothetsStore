@@ -10,26 +10,32 @@ class Main extends React.Component{
         token:'',
         //isLoggedIn: false,
         information:[],
+        customerId:'00000000-0000-0000-0000-000000000000',
         cart:[],
         fee:0,
-        totalprice:0
+        totalState:0,
+        totalprice:0,
+        contactPhone:"",
+        deliveryName:"",
+        deliveryEmail:"",
+        deliveryAddress:""
 
     }
 
-    // checkLoggedIn = () => {
-    //     let token = localStorage.getItem('authenticatedToken');
+    checkLoggedIn = () => {
+        let token = localStorage.getItem('authenticatedToken');
 
-    //     if(token) {
-    //         this.setState({
-    //             token: token,
-    //             isLoggedIn: true
-    //         }, () => {
-    //             this.getInformation();
-    //         });
-    //     } else {
-    //         window.location.href = "/";
-    //     }
-    // }
+        if(token) {
+            this.setState({
+                token: token,
+                isLoggedIn: true
+            }, () => {
+                this.getUserInformation();
+            });
+        } else {
+            window.location.href = "/";
+        }
+    }
 
     checkPreviousUrl = () => {
         let url = document.referrer;
@@ -38,6 +44,29 @@ class Main extends React.Component{
         if(suffix !== "delivery") {
             window.location.href = "/";
         }
+    }
+
+    getUserInformation = () => {
+        fetch('https://localhost:44376/api/customer/account/validateToken', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + this.state.token
+            },
+            body: JSON.stringify({
+                tokenId: this.state.token
+            })
+        })
+        .then(res => res.json())
+        .then(res => {
+            this.setState({
+                information: res
+            });
+        })
+        .catch(error =>{
+            console.log(error)
+        })
     }
 
     getFee=()=>{
@@ -80,6 +109,35 @@ class Main extends React.Component{
             return sl;
         }
         
+    }
+
+    onSave=()=>{
+
+        // console.log("Sss")
+        // let tmp=this.state.fee;
+        // console.log(tmp);
+        fetch(`https://localhost:44376/api/customer/order/createOrder`,{
+            method:'POST',
+            headers:{
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                customerId:this.state.information.customerId,
+                totalprice:localStorage.getItem("totalState"),
+                contactPhone: this.state.information.phone,
+                deliveryName: this.state.information.name,
+                deliveryEmail:this.state.information.email,
+                deliveryAddress:this.state.information.address,
+                fee: this.state.fee
+            })
+        })
+        .then(res=>{
+            console.log(res);
+        })
+        .catch(e=>{
+            console.log(e)
+        })
     }
 
     renderCart = () => {
@@ -132,6 +190,7 @@ class Main extends React.Component{
                 total += item.discount === null ? item.price * item.quantity : (item.price - (item.price * item.discount / 100)) * item.quantity;
             })
             total=total+fee;
+            localStorage.setItem("totalState",total);
             return <NumberFormat value={total} displayType={'text'} thousandSeparator={true}/>;
         }
     }
@@ -141,6 +200,8 @@ class Main extends React.Component{
         fee=this.state.fee;
         return <NumberFormat value={fee} displayType={'text'} thousandSeparator={true}/>;
     }
+
+
     // rendertotal=()=>{
     //     let total=0;
     //     let fee=0;
@@ -172,49 +233,30 @@ class Main extends React.Component{
     //     )
     // }
 
-
     componentDidMount = () => {
-        //this.checkLoggedIn();
+        this.checkLoggedIn();
         this.getAllProducts();
         this.getQuantity();
         this.getFee();
 
     }
 
-
     render(){
         // const cart = this.state.cart;)
         return(
-            // <div className="col-md-12">
-            //     {/* <div className="panel-body">
-            //         <div className="infomation"></div>
-            //         <div className="cart_product"></div>
-            //     </div> */}
-            //     <div className=" panel panel-default cart">
-            //         <div>{this.renderTotalPrice()}</div>
-            //     </div>
-            //     {/* <div className="panel panel-default cart">
-            //         <div className="panel-body">
-            //             <div className="order">
-            //                 <span className="title">Đơn hàng</span>
-            //             </div>
-            //             <div className="product">
-            //                 {this.renderProduct()}
-            //             </div>
-            //         </div>
-            //     </div> */}
-            // </div>
             <div className="col-md-12">
                 <div className="order-summary clearfix">
-                    {/* <div className="section-title">
+                    <div className="section-dc">
                         <i className="fa fa-map-marker"></i>
-                        <h3 className="title">Địa chỉ nhận hàng</h3>
+                        <p className="dc">Địa chỉ nhận hàng</p>
                     </div>
                     <div className="content-address">
-                        <h3>
-                            <b></b>
-                        </h3>
-                    </div> */}
+                        <h4>
+                            <b>{localStorage.getItem("name")}
+                            {localStorage.getItem("address")}</b>
+                        </h4>
+                        <a href={'/delivery'}>Thay đổi</a>
+                    </div>
                     <table className="shopping-cart-table table">
                         <thead>
                             <tr>
@@ -264,7 +306,7 @@ class Main extends React.Component{
                         </div>
                     </div>
                     <div className="action">
-                    <button type="button" className="primary-btn" id="btnOk" >Đặt hàng</button>
+                    <button type="button" className="primary-btn" id="btnOk" onClick={this.onSave} >Đặt hàng</button>
                     </div>
                 </div>
             </div>
