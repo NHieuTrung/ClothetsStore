@@ -50,9 +50,23 @@ namespace Services
 
             return await productVMRepository.GetProductsForCart(cartVMs);
         }
+
         public async Task<IList<ProductVM>> GetBestSeller()
         {
             return await productVMRepository.GetBestSeller();
+        }
+
+        public async Task<List<CartVM>> CheckProductQuantity(string carts)
+        {
+            if(carts == "null")
+            {
+                List<CartVM> cart = new List<CartVM>();
+                return cart;
+            }
+
+            List<CartVM> cartVMs = JsonConvert.DeserializeObject<List<CartVM>>(carts);
+
+            return await productVMRepository.CheckProductQuantity(cartVMs);
         }
     }
 }

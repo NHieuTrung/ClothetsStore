@@ -372,5 +372,33 @@ namespace Repositories
             List<ProductVM> lists = list.Take(3).ToList();
             return lists;
         }
+
+        public async Task<List<CartVM>> CheckProductQuantity(List<CartVM> carts)
+        {
+            List<CartVM> cartTemp = new List<CartVM>();
+
+            foreach(CartVM item in carts)
+            {
+                ProductSize productSize = await ctx.ProductSize.Where(p => p.ProductId == item.ProductId && p.SizeId == item.SizeId && p.ColorId == item.ColorId)
+                                                               .FirstOrDefaultAsync();
+
+                if(productSize.InventoryQuantity < item.Quantity)
+                {
+                    cartTemp.Add(new CartVM
+                    {
+                        ProductId = item.ProductId,
+                        ColorId = item.ColorId,
+                        SizeId = item.SizeId,
+                        Quantity = -1
+                    });
+                }
+                else
+                {
+                    cartTemp.Add(item);
+                }
+            }
+
+            return cartTemp;
+        }
     }
 }

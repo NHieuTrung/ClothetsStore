@@ -363,22 +363,16 @@ class Main extends React.Component{
             
             let address = this.refs.address.value;
             address += ` PX.${wardName} QH.${districtName} TT.${provinceName}`
-
+            
             let information = this.state.information;
             information.address = address;
+            localStorage.setItem("information", JSON.stringify(information));
 
-
+            let districtId= this.state.districtId;
+            localStorage.setItem('district', districtId);
             
-            return <Redirect to={{
-                            pathname: '/pay',
-                            state: { 
-                                information: information,
-                                provinceId: this.state.provinceId,
-                                districtId: this.state.districtId,
-                                wardCode: this.state.wardCode
-                            }
-                        }}
-                    />
+            
+            return <Redirect to="/pay"/>
         }
     }
 
@@ -386,8 +380,7 @@ class Main extends React.Component{
         this.setState({
             redirect: true
         })
-        let districtId= this.state.districtId;
-            localStorage.setItem('district', districtId);
+        
             // let dc= `${this.state.information.address} PX.${this.state.wardName} QH.${this.state.districtName} TT.${this.state.provinceName}`;
             // localStorage.setItem("address",dc);
     }

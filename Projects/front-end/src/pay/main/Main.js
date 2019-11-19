@@ -47,25 +47,30 @@ class Main extends React.Component{
     }
 
     getUserInformation = () => {
-        fetch('https://localhost:44376/api/customer/account/validateToken', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + this.state.token
-            },
-            body: JSON.stringify({
-                tokenId: this.state.token
-            })
-        })
-        .then(res => res.json())
-        .then(res => {
-            this.setState({
-                information: res
-            });
-        })
-        .catch(error =>{
-            console.log(error)
+        // fetch('https://localhost:44376/api/customer/account/validateToken', {
+        //     method: 'POST',
+        //     headers: {
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json',
+        //         'Authorization': 'Bearer ' + this.state.token
+        //     },
+        //     body: JSON.stringify({
+        //         tokenId: this.state.token
+        //     })
+        // })
+        // .then(res => res.json())
+        // .then(res => {
+        //     this.setState({
+        //         information: res
+        //     });
+        // })
+        // .catch(error =>{
+        //     console.log(error)
+        // })
+        let information = JSON.parse(localStorage.getItem("information"));
+
+        this.setState({
+            information: information
         })
     }
 
@@ -111,33 +116,29 @@ class Main extends React.Component{
         
     }
 
-    onSave=()=>{
-
-        // console.log("Sss")
-        // let tmp=this.state.fee;
-        // console.log(tmp);
-        fetch(`https://localhost:44376/api/customer/order/createOrder`,{
-            method:'POST',
-            headers:{
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                customerId:this.state.information.customerId,
-                totalprice:localStorage.getItem("totalState"),
-                contactPhone: this.state.information.phone,
-                deliveryName: this.state.information.name,
-                deliveryEmail:this.state.information.email,
-                deliveryAddress:this.state.information.address,
-                fee: this.state.fee
-            })
-        })
-        .then(res=>{
-            console.log(res);
-        })
-        .catch(e=>{
-            console.log(e)
-        })
+    onSave = () => {
+        // fetch(`https://localhost:44376/api/customer/order/createOrder`,{
+        //     method:'POST',
+        //     headers:{
+        //         'Accept': 'application/json',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify({
+        //         customerId:this.state.information.customerId,
+        //         totalprice:localStorage.getItem("totalState"),
+        //         contactPhone: this.state.information.phone,
+        //         deliveryName: this.state.information.name,
+        //         deliveryEmail:this.state.information.email,
+        //         deliveryAddress:this.state.information.address,
+        //         fee: this.state.fee
+        //     })
+        // })
+        // .then(res=>{
+        //     console.log(res);
+        // })
+        // .catch(e=>{
+        //     console.log(e)
+        // })
     }
 
     renderCart = () => {
@@ -155,15 +156,29 @@ class Main extends React.Component{
                         </td>
                         
                     <td className="price text-center"><NumberFormat value={item.price} displayType={'text'} thousandSeparator={true}/></td>
-                    <td className="qty text-center"><input id={"txt" + idx} className="input" type="number" min="1" defaultValue={item.quantity} onChange={this.changeQuantity}/></td>
+                    {/* <td className="qty text-center"><input id={"txt" + idx} className="input" type="number" min="1" defaultValue={item.quantity} onChange={this.changeQuantity}/></td> */}
+                    <td className="qty text-center"><p id={"txt" + idx}>{item.quantity}</p></td>
                     
                     <td className="total text-center">{item.discount === null ? 0 : item.discount}</td>
                     <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100))*item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
-                    <td className="text-right"><button className="main-btn icon-btn" onClick={this.deleteProduct} id={"btn" + idx}><i className="fa fa-close"></i></button></td>
+                    {/* <td className="text-right"><button className="main-btn icon-btn" onClick={this.deleteProduct} id={"btn" + idx}><i className="fa fa-close"></i></button></td> */}
                 </tr>
             );
 
             return listItems;
+        }
+    }
+
+    renderInformation = () => {
+        let address = this.state.information.address;
+        if(address !== undefined) {
+            address = address.replace(" PX.", ", Phường xã ");
+            address = address.replace(" QH.", ", Quận huyện ");
+            address = address.replace(" TT.", ", ");
+    
+            return  <h4> 
+                        {this.state.information.name}: {address}
+                    </h4> 
         }
     }
 
@@ -196,8 +211,8 @@ class Main extends React.Component{
     }
 
     renderFee=()=>{
-        let fee=0;
-        fee=this.state.fee;
+        let fee = 0;
+        fee = this.state.fee;
         return <NumberFormat value={fee} displayType={'text'} thousandSeparator={true}/>;
     }
 
@@ -241,21 +256,16 @@ class Main extends React.Component{
 
     }
 
-    render(){
-        // const cart = this.state.cart;)
+    render() {
         return(
             <div className="col-md-12">
                 <div className="order-summary clearfix">
                     <div className="section-dc">
-                        <i className="fa fa-map-marker"></i>
-                        <p className="dc">Địa chỉ nhận hàng</p>
+                        <i className="fa fa-map-marker"></i> &nbsp;
+                        <span className="dc">Địa chỉ giao hàng</span> &nbsp; <a href={'/delivery'}>Thay đổi</a>
                     </div>
                     <div className="content-address">
-                        <h4>
-                            <b>{localStorage.getItem("name")}
-                            {localStorage.getItem("address")}</b>
-                        </h4>
-                        <a href={'/delivery'}>Thay đổi</a>
+                        {this.renderInformation()}
                     </div>
                     <table className="shopping-cart-table table">
                         <thead>
@@ -266,7 +276,6 @@ class Main extends React.Component{
                                 <th className="text-center">Số lượng</th>
                                 <th className="text-center">Giảm giá</th>
                                 <th className="text-center">Thành tiền</th>
-                                <th className="text-right"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -306,7 +315,7 @@ class Main extends React.Component{
                         </div>
                     </div>
                     <div className="action">
-                    <button type="button" className="primary-btn" id="btnOk" onClick={this.onSave} >Đặt hàng</button>
+                    <button type="button" className="primary-btn" id="btnOk" onClick={this.onSave} style={{float: "right"}}>Đặt hàng</button>
                     </div>
                 </div>
             </div>
