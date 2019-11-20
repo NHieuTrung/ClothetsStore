@@ -155,6 +155,8 @@ class Main extends React.Component{
                     })
                 } else {
                     //Đi tiếp
+                    console.log("a");
+                    console.log(this.state.cart)
                     fetch(`https://localhost:44376/api/customer/order/createOrder`,{
                         method:'POST',
                         headers:{
@@ -174,11 +176,20 @@ class Main extends React.Component{
                         })
                     })
                     .then(res=>{
+                        let html="<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>";
                         console.log(res);
+                        html+="<br/>Đã đặt hàng thành công</p>";
+                        
+                        MySwal.fire({
+                            title: 'Thông báo',
+                            width: 300,
+                            padding: '2em',
+                            html: html
+                        })
                     })
-                    .catch(e=>{
-                        console.log(e)
-                    })
+                    // .catch(e=>{
+                    //     console.log(e)
+                    // })
                 }
             },
             (err) => {
@@ -361,7 +372,7 @@ class Main extends React.Component{
                         </div>
                     </div>
                     <div className="action">
-                    <button type="button" className="primary-btn" id="btnOk" onClick={this.onSave} style={{float: "right"}}>Đặt hàng</button>
+                    <button type="button" className="primary-btn" id="btnOk" onClick={this.onSave} style={{float: "right"}} href={"/orderdetail"}>Đặt hàng</button>
                     </div>
                 </div>
             </div>
