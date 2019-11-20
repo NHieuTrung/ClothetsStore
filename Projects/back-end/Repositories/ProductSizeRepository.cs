@@ -42,6 +42,23 @@ namespace Repositories
             return productSize;
         }
 
+        public async Task<ExtendedProductSizeInfo> GetExtendedProductSizeInfoByAllId(Guid colorId, Guid sizeId, Guid productId)
+        {
+            ExtendedProductSizeInfo productSize = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId && p.ProductId == productId)
+                                                                       .Select(p => new ExtendedProductSizeInfo
+                                                                       {
+                                                                           ProductId = p.ProductId,
+                                                                           ProductName = p.ProductColor.Product.Name,
+                                                                           ColorId = p.ColorId,
+                                                                           ColorName = p.ProductColor.Color.Name,
+                                                                           SizeId = p.SizeId,
+                                                                           SizeName = p.Size.Name
+                                                                       })
+                                                                       .FirstOrDefaultAsync();
+
+            return productSize;
+        }
+
         public override async Task Create(ProductSize productSize)
         {
             ctx.ProductSize.Add(productSize);

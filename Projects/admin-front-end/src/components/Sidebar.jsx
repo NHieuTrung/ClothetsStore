@@ -67,6 +67,36 @@ const Sidebar = () => {
         </div>
       </li>
 
+      <li className="nav-item">
+        <a
+            className="nav-link collapsed"
+            href="/#"
+            data-toggle="collapse"
+            data-target="#collapseOrderSidebar"
+            aria-expanded="true"
+            aria-controls="collapseOrderSidebar"
+        >
+            <i className="fas fa-fw fa-cog"></i>
+            <span>Đơn hàng</span>
+        </a>
+        <div
+            id="collapseOrderSidebar"
+            className="collapse"
+            aria-labelledby="headingTwo"
+            data-parent="#accordionSidebar"
+        >
+          <div className="bg-white py-2 collapse-inner rounded">
+            <h6 className="collapse-header">Tính năng:</h6>
+            <a className="collapse-item" href="/order-page">
+                Danh sách đơn hàng
+            </a>
+            {/* <a className="collapse-item" href="/#">
+                Tạo đơn hàng
+            </a> */}
+          </div>
+        </div>
+      </li>
+
       {/* Nav Item - Utilities Collapse Menu */}
       <li className="nav-item">
         <a

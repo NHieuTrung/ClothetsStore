@@ -7,6 +7,7 @@ import Topbar from "./components/Topbar";
 import Home from "./components/Home";
 import ListProduct from "./components/product/ListProduct";
 import CreateProductPage from "./components/product/CreateProductPage";
+import Order from './components/order/Order';
 import ErrorPage404 from "./components/ErrorPage404";
 
 function App() {
@@ -34,6 +35,9 @@ function App() {
               </Route>
               <Route path="/error-404">
                 <ErrorPage404 />
+              </Route>
+              <Route path="/order-page">
+                  <Order></Order>
               </Route>
             </Switch>
             {/* /.container-fluid */}

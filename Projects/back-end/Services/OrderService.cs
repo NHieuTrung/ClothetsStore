@@ -1,4 +1,5 @@
 ﻿using Models;
+using Models.ViewModels;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,12 @@ namespace Services
     public class OrderService:BaseService<Order,OrderRepository >
     {
         OrderRepository orderRepository = new OrderRepository();
+
+        public async Task<List<ExtendedOrderVM>> GetAdminOrders()
+        {
+            return await orderRepository.GetAllAdminOrders();
+        }
+
         public async Task<bool> CreateOrder(Order order)
         {
             return await orderRepository.CreateOrder(order);

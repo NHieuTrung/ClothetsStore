@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Models;
+using Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,46 @@ namespace Repositories
         {
             this.ctx = new ClothetsStoreContext();
         }
+
         public OrderRepository(ClothetsStoreContext ctx)
         {
             this.ctx = ctx;
         }
+
+        public override async Task<IList<Order>> GetAll()
+        {
+            return await ctx.Order.ToListAsync();
+        }
+
+        public async Task<List<ExtendedOrderVM>> GetAllAdminOrders()
+        {
+            return await ctx.Order.Select(or => new ExtendedOrderVM
+                                         {
+                                             OrderId = or.OrderId,
+                                             CustomerId = or.CustomerId,
+                                             CustomerName = or.Customer.Name,
+                                             CreatedDate = or.CreatedDate,
+                                             TotalPrice = or.TotalPrice,
+                                             ContactPhone = or.ContactPhone,
+                                             DeliveryName = or.DeliveryName,
+                                             DeliveryEmail = or.DeliveryEmail,
+                                             DeliveryAddress = or.DeliveryAddress,
+                                             DeliveryPrice = or.DeliveryPrice,
+                                             DeliveryDate = or.DeliveryDate,
+                                             StatusId = or.StatusId,
+                                             StatusName = or.Status.Name
+                                         })
+                                  .ToListAsync();
+        }
+
+        public override async Task<Order> GetById(Guid id)
+        {
+            Order order = await ctx.Order.Where(p => p.OrderId == id)
+                                         .FirstOrDefaultAsync();
+
+            return order;
+        }
+
         public async Task<bool> CreateOrder(Order order)
         {
             //Order

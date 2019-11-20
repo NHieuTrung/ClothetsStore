@@ -37,7 +37,7 @@ class ListProduct extends Component {
       );
   }
   PushToServerPage = () => {
-    this.props;
+    // this.props;
   };
   componentDidMount() {
     if (this.state.isLoaded === false) {
