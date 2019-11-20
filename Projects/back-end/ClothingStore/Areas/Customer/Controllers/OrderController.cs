@@ -24,5 +24,11 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await orderService.CreateOrder(order));
         }
+        [HttpGet]
+        [Route("getDetailOrder")]
+        public async Task<IActionResult> getDetailOrder(Guid idcustomer)
+        {
+            return Ok(await orderService.getDetailOrder(idcustomer));
+        }
     }
 }

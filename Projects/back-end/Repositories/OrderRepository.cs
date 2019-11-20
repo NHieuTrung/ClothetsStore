@@ -62,12 +62,12 @@ namespace Repositories
         public async Task<bool> CreateOrder(Order order)
         {
             //Order
-            DateTime date = new DateTime();
+            //DateTime date = new DateTime();
 
             Order tempOrder = new Order();
             tempOrder.OrderId = Guid.NewGuid();
             tempOrder.CustomerId = order.CustomerId;
-            tempOrder.CreatedDate = date;
+            tempOrder.CreatedDate = DateTime.Now;
             tempOrder.TotalPrice = order.TotalPrice;
             tempOrder.ContactPhone = order.ContactPhone;
             tempOrder.DeliveryName = order.DeliveryName;
@@ -75,7 +75,7 @@ namespace Repositories
             tempOrder.DeliveryAddress = order.DeliveryAddress;
             tempOrder.TotalPrice = order.TotalPrice;
             tempOrder.DeliveryPrice = order.DeliveryPrice;
-            tempOrder.DeliveryDate = date;
+            tempOrder.DeliveryDate = DateTime.Now;
             tempOrder.StatusId = Guid.Parse("A1AD8DEF-626A-4A06-B39C-956B6255C37C"); //Chưa thanh toán
 
             ctx.Order.Add(tempOrder);
@@ -95,8 +95,9 @@ namespace Repositories
                 orderProductSize.ProductId = item.ProductId;
                 orderProductSize.ColorId = item.ColorId;
                 orderProductSize.Quantity = item.Quantity;
-                orderProductSize.Price = product.Discount == 0 ? product.Price * item.Quantity : (product.Price - (product.Price / 100 * (decimal)product.Discount)) * item.Quantity;
+                orderProductSize.Price = item.Price;
 
+                //product.Discount == 0 ? product.Price * item.Quantity : (product.Price - (product.Price / 100 * (decimal)product.Discount)) * item.Quantity
                 ctx.OrderProductSize.Add(orderProductSize);
                 await ctx.SaveChangesAsync();
 
@@ -110,6 +111,20 @@ namespace Repositories
             }
 
             return true;
+        }
+
+        public async Task<IList<OrderProductSize>> getDetailOrder(Guid idcustomer)
+        {
+            //List<Guid> id = ctx.Order.Where(s => s.CustomerId == idcustomer).ToListAsync();
+            //List<OrderProductSize> list= ctx.OrderProductSize.Where(s=>s.OrderId==)
+            List<OrderProductSize> list = new List<OrderProductSize>();
+            List<Guid> id = ctx.Order.Where(s => s.CustomerId == idcustomer).Select(s => s.OrderId).ToList();
+            foreach(Guid i in id)
+            {
+                OrderProductSize order = ctx.OrderProductSize.Where(s => s.OrderId == i).FirstOrDefault();
+                list.Add(order);
+            }
+            return list;
         }
     }
 }
