@@ -23,13 +23,23 @@ namespace Repositories
         {
             this.ctx = ctx;
         }
+
         public override async Task<IList<ProductSize>> GetAll()
         {
             return await ctx.ProductSize.Include(m => m.Size).ToListAsync();
         }
+
         public async Task<IList<ProductSize>> GetByProductId(Guid productId)
         {
             return await ctx.ProductSize.Where(m => m.ProductId == productId).Include(m => m.Size).ToListAsync();
+        }
+
+        public async Task<ProductSize> GetProductSizeByAllId(Guid colorId, Guid sizeId, Guid productId)
+        {
+            ProductSize productSize = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId && p.ProductId == productId)
+                                                           .FirstOrDefaultAsync();
+
+            return productSize;
         }
 
         public override async Task Create(ProductSize productSize)
@@ -38,6 +48,7 @@ namespace Repositories
             await ctx.SaveChangesAsync();
 
         }
+
         public async Task<int> GetQuatityBySelect(Guid colorId, Guid sizeId, Guid productId)
         {
             int SL = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId && p.ProductId == productId)

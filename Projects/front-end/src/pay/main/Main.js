@@ -117,28 +117,74 @@ class Main extends React.Component{
     }
 
     onSave = () => {
-        // fetch(`https://localhost:44376/api/customer/order/createOrder`,{
-        //     method:'POST',
-        //     headers:{
-        //         'Accept': 'application/json',
-        //         'Content-Type': 'application/json'
-        //     },
-        //     body: JSON.stringify({
-        //         customerId:this.state.information.customerId,
-        //         totalprice:localStorage.getItem("totalState"),
-        //         contactPhone: this.state.information.phone,
-        //         deliveryName: this.state.information.name,
-        //         deliveryEmail:this.state.information.email,
-        //         deliveryAddress:this.state.information.address,
-        //         fee: this.state.fee
-        //     })
-        // })
-        // .then(res=>{
-        //     console.log(res);
-        // })
-        // .catch(e=>{
-        //     console.log(e)
-        // })
+        //Kiểm tra nếu đủ số lượng
+        fetch(`https://localhost:44376/api/customer/product/checkProductQuantity?carts=${localStorage.getItem("cart")}`)
+        .then(res => res.json())
+        .then(
+            (res) => {
+                let tempCart = [];
+                let resCart = res;
+
+                resCart.forEach(item => {
+                    if(item.quantity === -1) {
+                        tempCart.push(item);
+                    }
+                })
+
+                tempCart.forEach(item => {
+                    let cart = this.state.cart;
+
+                    let found = cart.find(ele => ele.colorId === item.colorId && ele.productId === item.productId && ele.sizeId === item.sizeId);
+                    item.name = found.name;
+                })
+
+                if(tempCart.length !== 0) {
+                    let html = "<img src='./assets/img/error.gif' style='width: 250px'/><p style='font-size: 15px'>";
+
+                    tempCart.forEach(item => {
+                        html += "<b>" + item.name + "</b><br />"
+                    })
+
+                    html += "<br />Những sản phẩm này không đủ số lượng. Xin vui lòng kiểm tra lại</p>";
+
+                    MySwal.fire({
+                        title: 'Thông báo',
+                        width: 300,
+                        padding: '2em',
+                        html: html
+                    })
+                } else {
+                    //Đi tiếp
+                    fetch(`https://localhost:44376/api/customer/order/createOrder`,{
+                        method:'POST',
+                        headers:{
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            customerId:this.state.information.customerId,
+                            totalprice:localStorage.getItem("totalState"),
+                            contactPhone: this.state.information.phone,
+                            deliveryName: this.state.information.name,
+                            deliveryEmail:this.state.information.email,
+                            deliveryAddress:this.state.information.address,
+                            deliveryPrice: this.state.fee,
+                            OrderProductSize: this.state.cart
+                            // fee: this.state.fee
+                        })
+                    })
+                    .then(res=>{
+                        console.log(res);
+                    })
+                    .catch(e=>{
+                        console.log(e)
+                    })
+                }
+            },
+            (err) => {
+                console.log(err);
+            }
+        )
     }
 
     renderCart = () => {

@@ -10,7 +10,7 @@ import Register from './account/Register'
 import Login from './account/Login'
 import Information from './account/Information'
 import CartDetail from './cart-detail/Cart'
-import Delivery from './delivery/Deliverry'
+import Delivery from './delivery/Delivery'
 import Pay from './pay/Pay'
 //Font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core'

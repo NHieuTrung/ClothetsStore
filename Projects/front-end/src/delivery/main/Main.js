@@ -136,6 +136,7 @@ class Main extends React.Component{
                             wardCode: wardCode,
                             address: this.state.information.address
                         }, () => {
+                            window.$("#spinnerLoader").hide();
                             this.onChangeInformation();
                         })
                     }

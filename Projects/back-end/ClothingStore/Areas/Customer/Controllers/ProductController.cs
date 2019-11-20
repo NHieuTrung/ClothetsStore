@@ -72,7 +72,7 @@ namespace ClothingStore.Areas.Customer.Controllers
         }
 
         [HttpGet]
-        [Route("getBestSeller")]
+        [Route("checkProductQuantity")]
         public async Task<IActionResult> CheckProductQuantity(string carts)
         {
             return Ok(await productVMService.CheckProductQuantity(carts));
