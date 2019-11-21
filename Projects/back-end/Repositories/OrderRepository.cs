@@ -113,18 +113,44 @@ namespace Repositories
             return true;
         }
 
-        public async Task<IList<OrderProductSize>> getDetailOrder(Guid idcustomer)
+        public async Task<IList<OrderDetailVM>> getDetailOrder(Guid idcustomer)
         {
             //List<Guid> id = ctx.Order.Where(s => s.CustomerId == idcustomer).ToListAsync();
             //List<OrderProductSize> list= ctx.OrderProductSize.Where(s=>s.OrderId==)
-            List<OrderProductSize> list = new List<OrderProductSize>();
+            //List<OrderProductSize> list = new List<OrderProductSize>();
             List<Guid> id = ctx.Order.Where(s => s.CustomerId == idcustomer).Select(s => s.OrderId).ToList();
-            foreach(Guid i in id)
+
+            List<OrderDetailVM> list = new List<OrderDetailVM>();
+            foreach (Guid i in id)
             {
-                OrderProductSize order = ctx.OrderProductSize.Where(s => s.OrderId == i).FirstOrDefault();
-                list.Add(order);
+                //
+                List<OrderProductSize> order = ctx.OrderProductSize.Where(s => s.OrderId == i).ToList();
+                Order listorder = ctx.Order.Where(s => s.OrderId == i).FirstOrDefault();
+                foreach (OrderProductSize item in order)
+                {
+                    OrderDetailVM orderdetail = new OrderDetailVM();
+                    orderdetail.OrderId = item.OrderId;
+                    orderdetail.CreatedDate = listorder.CreatedDate;
+                    orderdetail.Name = ctx.Product.Where(s => s.ProductId == item.ProductId).Select(s => s.Name).FirstOrDefault();
+                    orderdetail.ImageUrl = ctx.ProductColor.Where(s => s.ProductId == item.ProductId).Select(s => s.ImageUrl).FirstOrDefault();
+                    orderdetail.Quantity = item.Quantity;
+                    orderdetail.Price = item.Price;
+                    orderdetail.TotalPrice = listorder.TotalPrice+listorder.DeliveryPrice;
+                    orderdetail.StatusName = ctx.Status.Where(s => s.StatusId == listorder.StatusId).Select(s => s.Name).FirstOrDefault();
+                    list.Add(orderdetail);
+                }
+                //orderdetail.OrderId = order.OrderId;
+                //orderdetail.CreatedDate = listorder.CreatedDate;
+                //orderdetail.Name = ctx.Product.Where(s => s.ProductId == order.ProductId).Select(s => s.Name).FirstOrDefault();
+                //orderdetail.ImageUrl = ctx.ProductColor.Where(s => s.ProductId == order.ProductId).Select(s => s.ImageUrl).FirstOrDefault();
+                //orderdetail.Quantity = order.Quantity;
+                //orderdetail.Price = order.Price;
+                //orderdetail.TotalPrice = listorder.TotalPrice;
+                //orderdetail.StatusName = ctx.Status.Where(s => s.StatusId == listorder.StatusId).Select(s => s.Name).FirstOrDefault();
+                //list.Add(orderdetail);
             }
             return list;
         }
+
     }
 }
