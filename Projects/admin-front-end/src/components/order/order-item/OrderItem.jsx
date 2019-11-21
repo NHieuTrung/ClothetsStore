@@ -40,13 +40,13 @@ class OrderItem extends Component {
                     <td>{this.renderDeliveryDate()}</td>
                     <td>{this.props.statusName}</td>
                     <td>
-                        <button
-                            className="btn btn-primary"
-                            data-toggle="modal"
-                            data-target={"#modal" + this.props.orderId}
-                        >
-                            Chi tiết
-                        </button>
+                        {this.props.statusName === "Chưa thanh toán" ? <button className="btn btn-danger" data-toggle="modal" data-target={"#deliveryModal" + this.props.orderId}> Giao hàng </button> : ""}
+                        {this.props.statusName === "Chưa thanh toán" ? <p> </p> : ""}
+                        {this.props.statusName === "Đang giao" ? <button className="btn btn-success" data-toggle="modal" data-target={"#confirmationModal" + this.props.orderId}> Xác nhận </button> : ""}
+                        {this.props.statusName === "Đang giao" ? <p> </p> : ""}
+                        {this.props.statusName === "Đang giao" ? <button className="btn btn-info" data-toggle="modal" data-target={"#editModal" + this.props.orderId}> Sửa </button> : ""}
+                        {this.props.statusName === "Đang giao" ? <p> </p> : ""}
+                        <button className="btn btn-primary" data-toggle="modal" data-target={"#modal" + this.props.orderId}> Chi tiết </button>
                     </td>
                 </tr>
             </React.Fragment>

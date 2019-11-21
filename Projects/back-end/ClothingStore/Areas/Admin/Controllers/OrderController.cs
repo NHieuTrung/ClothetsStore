@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Models;
+using Models.ViewModels;
 using Services;
 
 namespace ClothingStore.Areas.Admin.Controllers
@@ -33,6 +35,27 @@ namespace ClothingStore.Areas.Admin.Controllers
         public async Task<IActionResult> GetOrderById(Guid id)
         {
             return Ok(await orderService.GetById(id));
+        }
+
+        [HttpPost]
+        [Route("confirmDeliveryDate")]
+        public async Task<IActionResult> ConfirmDeliveryDate([FromBody] ExtendedOrderConfirmDeliveryDateVM orderConfirmation)
+        {
+            return Ok(await orderService.ConfirmDeliveryDate(orderConfirmation));
+        }
+
+        [HttpPost]
+        [Route("editDeliveryDate")]
+        public async Task<IActionResult> EditDeliveryDate([FromBody] ExtendedOrderConfirmDeliveryDateVM orderConfirmation)
+        {
+            return Ok(await orderService.EditDeliveryDate(orderConfirmation));
+        }
+
+        [HttpPost]
+        [Route("confirmOrder")]
+        public async Task<IActionResult> ConfirmOrder([FromBody] Order order)
+        {
+            return Ok(await orderService.ConfirmOrder(order));
         }
     }
 }

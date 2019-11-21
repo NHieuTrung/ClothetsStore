@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import OrderItem from './order-item/OrderItem';
 import OrderDetail from './order-item/order-detail/OrderDetail'
+import OrderDelivery from './order-item/order-delivery/OrderDelivery'
+import OrderConfirmation from './order-item/order-confirmation/OrderConfirmation'
+import OrderEdit from './order-item/order-edit/OrderEdit'
 import "./dataTables.bootstrap4.min.css";
 import './Order.css';
 
@@ -126,6 +129,15 @@ class Order extends Component {
                 <div>
                     {this.state.Orders.map((order, idx) => (
                         <OrderDetail key={idx} orderId={order.orderId}></OrderDetail>
+                    ))}
+                    {this.state.Orders.map((order, idx) => (
+                        <OrderDelivery key={idx} orderId={order.orderId}></OrderDelivery>
+                    ))}
+                    {this.state.Orders.map((order, idx) => (
+                        <OrderConfirmation key={idx} orderId={order.orderId}></OrderConfirmation>
+                    ))}
+                    {this.state.Orders.map((order, idx) => (
+                        <OrderEdit key={idx} orderId={order.orderId}></OrderEdit>
                     ))}
                 </div>
             </div>

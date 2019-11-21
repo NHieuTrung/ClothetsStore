@@ -52,6 +52,8 @@ class Main extends React.Component{
         let address = this.state.address;
         if(address !== "blank") {
             let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
+            console.log("Province")
+            console.log(provinceName);
             fetch(`https://localhost:44376/api/customer/delivery/getProvinceByProvinceName?provinceName=${provinceName}`)
             .then(res => res.json())
             .then(res => {
@@ -81,7 +83,9 @@ class Main extends React.Component{
                     if(address !== "blank") {
                         let provinceName = address.substring(address.lastIndexOf("TT.") + 3, address.length);
                         let districtName = address.substring(address.lastIndexOf("QH.") + 3, address.lastIndexOf("TT.") - 1);
-
+                        console.log("District")
+                        console.log(provinceName);
+                        console.log(districtName);
                         fetch(`https://localhost:44376/api/customer/delivery/getDistrictByProvinceAndDistrictName?provinceName=${provinceName}&districtName=${districtName}`)
                         .then(res => res.json())
                         .then(res => {
@@ -131,6 +135,8 @@ class Main extends React.Component{
                         let wards = this.state.wards;
                         let wardCode = wards.find(w => w.wardName.includes(wardName)).wardCode;
 
+                        console.log("District")
+                        console.log(wardCode);
                         window.$("#ward").val(wardCode);
                         this.setState({
                             wardCode: wardCode,

@@ -48,6 +48,7 @@ namespace Repositories
                                              StatusId = or.StatusId,
                                              StatusName = or.Status.Name
                                          })
+                                  .OrderByDescending(or => or.CreatedDate)
                                   .ToListAsync();
         }
 
@@ -62,12 +63,13 @@ namespace Repositories
         public async Task<bool> CreateOrder(Order order)
         {
             //Order
-            //DateTime date = new DateTime();
+            DateTime date = new DateTime();
+            date = DateTime.Now;            
 
             Order tempOrder = new Order();
             tempOrder.OrderId = Guid.NewGuid();
             tempOrder.CustomerId = order.CustomerId;
-            tempOrder.CreatedDate = DateTime.Now;
+            tempOrder.CreatedDate = date;
             tempOrder.TotalPrice = order.TotalPrice;
             tempOrder.ContactPhone = order.ContactPhone;
             tempOrder.DeliveryName = order.DeliveryName;
@@ -75,7 +77,7 @@ namespace Repositories
             tempOrder.DeliveryAddress = order.DeliveryAddress;
             tempOrder.TotalPrice = order.TotalPrice;
             tempOrder.DeliveryPrice = order.DeliveryPrice;
-            tempOrder.DeliveryDate = DateTime.Now;
+            tempOrder.DeliveryDate = date;
             tempOrder.StatusId = Guid.Parse("A1AD8DEF-626A-4A06-B39C-956B6255C37C"); //Chưa thanh toán
 
             ctx.Order.Add(tempOrder);
@@ -125,6 +127,41 @@ namespace Repositories
                 list.Add(order);
             }
             return list;
+        }
+
+        public async Task<bool> ConfirmDeliveryDate(ExtendedOrderConfirmDeliveryDateVM orderConfirmation)
+        {
+            Order order = await ctx.Order.Where(o => o.OrderId == orderConfirmation.OrderId)
+                                         .FirstOrDefaultAsync();
+
+            order.DeliveryDate = orderConfirmation.DeliveryDate;
+            order.StatusId = Guid.Parse("F4F13152-3B04-4EC0-BA8F-C722F30A479D"); //Đang giao
+            await ctx.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> EditDeliveryDate(ExtendedOrderConfirmDeliveryDateVM orderConfirmation)
+        {
+            Order order = await ctx.Order.Where(o => o.OrderId == orderConfirmation.OrderId)
+                                         .FirstOrDefaultAsync();
+
+            order.DeliveryDate = orderConfirmation.DeliveryDate;
+            await ctx.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> ConfirmOrder(Order order)
+        {
+            Order tempOrder = await ctx.Order.Where(o => o.OrderId == order.OrderId)
+                                             .FirstOrDefaultAsync();
+
+            tempOrder.DeliveryDate = DateTime.Now;
+            tempOrder.StatusId = Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA"); //Đã thanh toán
+            await ctx.SaveChangesAsync();
+
+            return true;
         }
     }
 }
