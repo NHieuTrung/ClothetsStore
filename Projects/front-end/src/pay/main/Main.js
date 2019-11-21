@@ -185,7 +185,7 @@ class Main extends React.Component{
                             localStorage.removeItem("district");
                             localStorage.removeItem("totalState");
 
-                            window.location.href = "/"; 
+                            window.location.href = "/orderdetail"; 
                         });
                     })
                     .catch(e=>{

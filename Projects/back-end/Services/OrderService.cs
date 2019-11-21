@@ -21,8 +21,7 @@ namespace Services
         {
             return await orderRepository.CreateOrder(order);
         }
-
-        public async Task<IList<OrderProductSize>> getDetailOrder(Guid idcustomer)
+        public async Task<IList<OrderDetailVM>> getDetailOrder(Guid idcustomer)
         {
             return await orderRepository.getDetailOrder(idcustomer);
         }
