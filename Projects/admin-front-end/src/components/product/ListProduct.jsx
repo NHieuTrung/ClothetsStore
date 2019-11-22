@@ -52,7 +52,9 @@ class ListProduct extends Component {
 
     document.body.appendChild(scriptBootstrapDatatable);
 
-    document.body.appendChild(scriptDemoDatatable);
+    setTimeout(function() {
+      document.body.appendChild(scriptDemoDatatable);
+    }, 4000);
   }
   render() {
     return (
@@ -71,9 +73,7 @@ class ListProduct extends Component {
         {/* DataTales Example */}
         <div className="card shadow mb-4">
           <div className="card-header py-3">
-            <h6 className="m-0 font-weight-bold text-primary">
-              DataTables Example
-            </h6>
+            <h6 className="m-0 font-weight-bold text-primary">List Products</h6>
           </div>
           <div className="card-body">
             <div className="table-responsive">
