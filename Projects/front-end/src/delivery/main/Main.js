@@ -1,5 +1,6 @@
 import React from 'react';
 import './style.css';
+// eslint-disable-next-line no-unused-vars
 import Index from '../../index/Index'
 import { Redirect } from 'react-router-dom'
 import Swal from 'sweetalert2';

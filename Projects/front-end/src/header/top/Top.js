@@ -8,15 +8,15 @@ class Top extends React.Component {
             <div id="top-header">
                 <div className="container">
                     <div className="pull-left">
-                        <span>Welcome to E-shop!</span>
+                        <span>Chào mừng đến với E-shop!</span>
                     </div>
-                    <div className="pull-right">
+                    {/* <div className="pull-right">
                         <ul className="header-top-links">
                             <li><a href="/#">Store</a></li>
                             <li><a href="/#">Newsletter</a></li>
                             <li><a href="/#">FAQ</a></li>
                         </ul>
-                    </div>
+                    </div> */}
                 </div>
             </div>
             // {/* <!-- /top Header --> */}

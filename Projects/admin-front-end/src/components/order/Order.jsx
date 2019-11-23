@@ -45,7 +45,11 @@ class Order extends Component {
         scriptDemoDatatable.src = "/js/demo/datatables-demo.js";
 
         document.body.appendChild(scriptBootstrapDatatable);
-        document.body.appendChild(scriptDemoDatatable);
+        // document.body.appendChild(scriptDemoDatatable);
+
+        setTimeout(function() {
+            document.body.appendChild(scriptDemoDatatable);
+          }, 3000);
     }
 
     componentWillMount = () => {

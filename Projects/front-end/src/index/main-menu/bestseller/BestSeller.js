@@ -60,9 +60,9 @@ class Deal extends React.Component {
                             <div className="banner banner-2">
                                 <img src="/assets/img/banner14.jpg" alt="" />
                                 <div className="banner-caption">
-                                    <h2 className="white-color">NEW<br />COLLECTION</h2>
+                                    <h2 className="white-color">BỘ SƯU TẬP<br />MỚI</h2>
                                     <Link to={`/productlist`}>
-                                        <button className="primary-btn">Shop Now</button>
+                                        <button className="primary-btn">Mua sắm ngay</button>
                                     </Link>
                                 </div>
                             </div>

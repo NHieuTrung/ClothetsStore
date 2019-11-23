@@ -158,7 +158,7 @@ class OrderEdit extends Component {
                         <div className="container">
                             <div className="input-group mb-3">
                                 <div className="input-group-prepend">
-        <span className="input-group-text" id="basic-addon1">Ngày giao hàng dự kiến {this.state.orderInformation.deliveryDate}</span>
+                                    <span className="input-group-text" id="basic-addon1">Ngày giao hàng dự kiến {this.state.orderInformation.deliveryDate}</span>
                                 </div>
                                 <input type="date" id={"dtExpectationDelivery" + this.props.orderId} className="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" ref="deliveryDate" readOnly/>
                             </div>

@@ -52,6 +52,68 @@ namespace Repositories
                                   .ToListAsync();
         }
 
+        public async Task<List<CustomerOrderVM>> GetAllCustomerOrders(Guid customerId)
+        {
+            List<CustomerOrderVM> customerOrder = await ctx.Order.Where(o => o.CustomerId == customerId)
+                                                                 .Select(o => new CustomerOrderVM
+                                                                 {
+                                                                     OrderId = o.OrderId,
+                                                                     CustomerId = o.CustomerId,
+                                                                     CreatedDate = o.CreatedDate,
+                                                                     TotalPrice = o.TotalPrice,
+                                                                     ContactPhone = o.ContactPhone,
+                                                                     DeliveryName = o.DeliveryName,
+                                                                     DeliveryEmail = o.DeliveryEmail,
+                                                                     DeliveryAddress = o.DeliveryAddress,
+                                                                     DeliveryPrice = o.DeliveryPrice,
+                                                                     DeliveryDate = o.DeliveryDate,
+                                                                     NumberOfProducts = o.OrderProductSize.Count,
+                                                                     StatusId = o.StatusId,
+                                                                     StatusName = o.Status.Name
+                                                                 })
+                                                                 .OrderByDescending(o => o.CreatedDate)
+                                                                 .ToListAsync();
+
+            List<Guid> orderIds = customerOrder.Select(o => o.OrderId)
+                                               .ToList();
+
+            foreach(Guid guid in orderIds)
+            {
+                OrderProductSize orderProductSize = await ctx.OrderProductSize.Where(o => o.OrderId == guid).FirstOrDefaultAsync();
+                CustomerOrderVM customerOrderVM = customerOrder.Where(o => o.OrderId == guid).FirstOrDefault();
+                customerOrderVM.FirstProductName = await ctx.ProductSize.Where(p => p.ColorId == orderProductSize.ColorId && p.ProductId == orderProductSize.ProductId && p.SizeId == orderProductSize.SizeId)
+                                                                        .Select(p => p.ProductColor.Product.Name)
+                                                                        .FirstOrDefaultAsync();
+            }
+
+            return customerOrder;
+        }
+
+        public async Task<CustomerOrderVM> GetCustomerOrderByOrderId(Guid orderId)
+        {
+            CustomerOrderVM customerOrder = await ctx.Order.Where(o => o.OrderId == orderId)
+                                                           .Select(o => new CustomerOrderVM
+                                                           {
+                                                               OrderId = o.OrderId,
+                                                               CustomerId = o.CustomerId,
+                                                               CreatedDate = o.CreatedDate,
+                                                               TotalPrice = o.TotalPrice,
+                                                               ContactPhone = o.ContactPhone,
+                                                               DeliveryName = o.DeliveryName,
+                                                               DeliveryEmail = o.DeliveryEmail,
+                                                               DeliveryAddress = o.DeliveryAddress,
+                                                               DeliveryPrice = o.DeliveryPrice,
+                                                               DeliveryDate = o.DeliveryDate,
+                                                               NumberOfProducts = o.OrderProductSize.Count,
+                                                               StatusId = o.StatusId,
+                                                               StatusName = o.Status.Name
+                                                           })
+                                                           .OrderByDescending(o => o.CreatedDate)
+                                                           .FirstOrDefaultAsync();
+
+            return customerOrder;
+        }
+
         public override async Task<Order> GetById(Guid id)
         {
             Order order = await ctx.Order.Where(p => p.OrderId == id)
@@ -127,7 +189,7 @@ namespace Repositories
             {
                 //
                 List<OrderProductSize> order = ctx.OrderProductSize.Where(s => s.OrderId == i).ToList();
-                Order listorder = ctx.Order.Where(s => s.OrderId == i).FirstOrDefault();
+                Order listorder = await ctx.Order.Where(s => s.OrderId == i).FirstOrDefaultAsync();
                 foreach (OrderProductSize item in order)
                 {
                     OrderDetailVM orderdetail = new OrderDetailVM();
@@ -184,6 +246,17 @@ namespace Repositories
 
             tempOrder.DeliveryDate = DateTime.Now;
             tempOrder.StatusId = Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA"); //Đã thanh toán
+            await ctx.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> CancelOrder(Order order)
+        {
+            Order tempOrder = await ctx.Order.Where(o => o.OrderId == order.OrderId)
+                                         .FirstOrDefaultAsync();
+
+            tempOrder.StatusId = Guid.Parse("c9137e0b-0e56-4f96-8916-5dbf76b15736"); //Đã huỷ
             await ctx.SaveChangesAsync();
 
             return true;

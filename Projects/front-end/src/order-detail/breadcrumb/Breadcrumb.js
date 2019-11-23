@@ -6,8 +6,13 @@ class Breadcrumb extends React.Component{
             <div id="breadcrumb">
                 <div className="container">
                     <ul className="breadcrumb">
-                    <li><a href="/">Trang chủ</a></li>
-                        <li className="active">Đơn hàng của tôi</li>
+                        <li>
+                            <a href="/">Trang chủ</a>
+                        </li>
+                        <li>
+                            <a href="/order">Đơn hàng</a>
+                        </li>
+                        <li className="active">Chi tiết đơn hàng</li>
                     </ul>
                 </div>
             </div>

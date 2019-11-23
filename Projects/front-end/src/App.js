@@ -12,11 +12,13 @@ import Information from './account/Information'
 import CartDetail from './cart-detail/Cart'
 import Delivery from './delivery/Delivery'
 import Pay from './pay/Pay'
+import Order from './order/Order'
 import OrderDetail from './order-detail/OrderDetail'
 //Font-awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { faCheckSquare, faCoffee } from '@fortawesome/free-solid-svg-icons'
+// import OrderDetail from './order-detail/OrderDetail';
 library.add(fab, faCheckSquare, faCoffee)
 
 function App() {
@@ -69,6 +71,12 @@ function App() {
             <Route path="/pay">
                 <Header></Header>
                 <Pay></Pay>
+                <Footer></Footer>
+            </Route>
+
+            <Route path="/order">
+                <Header></Header>
+                <Order></Order>
                 <Footer></Footer>
             </Route>
 

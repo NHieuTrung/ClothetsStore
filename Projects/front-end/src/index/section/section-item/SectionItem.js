@@ -9,7 +9,7 @@ class SectionItem extends React.Component {
                 <a className="banner banner-1" href=" #">
                     <img src={ imgUrl } alt="" />
                     <div className="banner-caption text-center">
-                        <h2 className="white-color">NEW COLLECTION</h2>
+                        <h2 className="white-color">THỜI TRANG MỚI</h2>
                     </div>
                 </a>
             </div>

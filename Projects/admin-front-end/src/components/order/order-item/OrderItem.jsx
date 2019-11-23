@@ -1,7 +1,27 @@
 import React, { Component } from "react";
 import NumberFormat from 'react-number-format';
+import { Redirect } from 'react-router-dom'
+import Download from './download/Download'
 
 class OrderItem extends Component {
+    state = {
+        redirect: false,
+        orderdetail: []
+    }
+
+    getOrderDetails = () => {
+        fetch(`https://localhost:44376/api/admin/orderdetail/getCustomerOrderDetails?orderId=${this.props.orderId}`)
+        .then(res=>res.json())
+        .then(res=>{
+            this.setState({
+                orderdetail: res
+            });
+        })
+        .catch(e=>{
+            console.log(e);
+        })
+    }
+
     renderDeliveryDate = () => {
         let tempDate = new Date(this.props.deliveryDate);
         
@@ -22,6 +42,16 @@ class OrderItem extends Component {
 
         let fullDate = `${dd}-${mm}-${yyyy}`;
         return fullDate;
+    }
+
+    renderRedirect = () => {
+        if (this.state.redirect) {
+          return <Redirect to='/target' />
+        }
+    }
+
+    componentWillMount = () => {
+        this.getOrderDetails();
     }
 
     render() {
@@ -47,6 +77,21 @@ class OrderItem extends Component {
                         {this.props.statusName === "Đang giao" ? <button className="btn btn-info" data-toggle="modal" data-target={"#editModal" + this.props.orderId}> Sửa </button> : ""}
                         {this.props.statusName === "Đang giao" ? <p> </p> : ""}
                         <button className="btn btn-primary" data-toggle="modal" data-target={"#modal" + this.props.orderId}> Chi tiết </button>
+                        <p> </p>
+                        <Download
+                            orderId={this.props.orderId}
+                            deliveryName={this.props.deliveryName}
+                            deliveryPhone={this.props.deliveryPhone}
+                            deliveryAddress={this.props.deliveryAddress}
+                            deliveryEmail={this.props.deliveryEmail}
+                            contactPhone={this.props.contactPhone}
+                            createdDate={this.props.createdDate}
+                            deliveryDate={this.props.deliveryDate}
+                            deliveryPrice={this.props.deliveryPrice}
+                            totalPrice={this.props.totalPrice}
+                            orderDetail={this.state.orderdetail}
+                        >
+                        </Download>
                     </td>
                 </tr>
             </React.Fragment>

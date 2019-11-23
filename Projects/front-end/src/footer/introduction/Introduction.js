@@ -15,7 +15,8 @@ class Introduction extends React.Component {
                     </div>
                     {/* <!-- /footer logo --> */}
 
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p>
+                    <h4>THEO DÕI E-SHOP TRÊN</h4>
+                    {/* <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna</p> */}
 
                     {/* <!-- footer social --> */}
                     <ul className="footer-social">

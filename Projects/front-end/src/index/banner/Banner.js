@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+    // BrowserRouter as Router,
+    // Switch,
+    // Route,
+    Link
+} from "react-router-dom";
 
 class Banner extends React.Component {
     componentDidMount() {
@@ -19,9 +25,11 @@ class Banner extends React.Component {
                             <div className="banner banner-1">
                                 <img src="/assets/img/banner01.jpg" alt="" />
                                 <div className="banner-caption text-center">
-                                    <h1>Bags sale</h1>
-                                    <h3 className="white-color font-weak">Up to 50% Discount</h3>
-                                    <button className="primary-btn">Shop Now</button>
+                                    <h1>Giảm giá</h1>
+                                    <h3 className="white-color font-weak">Lên đến 50%</h3>
+                                    <Link to={`/productlist`}>
+                                        <button className="primary-btn">Mua sắm ngay</button>
+                                    </Link>
                                 </div>
                             </div>
                             {/* <!-- /banner --> */}
@@ -30,8 +38,8 @@ class Banner extends React.Component {
                             <div className="banner banner-1">
                                 <img src="/assets/img/banner02.jpg" alt="" />
                                 <div className="banner-caption">
-                                    <h1 className="primary-color">HOT DEAL<br /><span className="white-color font-weak">Up to 50% OFF</span></h1>
-                                    <button className="primary-btn">Shop Now</button>
+                                    <h1 className="primary-color">HOT DEAL<br /><span className="white-color font-weak">Lên đến 50%</span></h1>
+                                    <button className="primary-btn">Mua sắm ngay</button>
                                 </div>
                             </div>
                             {/* <!-- /banner --> */}
@@ -40,8 +48,10 @@ class Banner extends React.Component {
                             <div className="banner banner-1">
                                 <img src="/assets/img/banner03.jpg" alt="" />
                                 <div className="banner-caption">
-                                    <h1 className="white-color">New Product <span>Collection</span></h1>
-                                    <button className="primary-btn">Shop Now</button>
+                                    <h1 className="white-color">Sản phẩm <span>mới</span></h1>
+                                    <Link to={`/productlist`}>
+                                        <button className="primary-btn">Mua sắm ngay</button>
+                                    </Link>
                                 </div>
                             </div>
                             {/* <!-- /banner --> */}
