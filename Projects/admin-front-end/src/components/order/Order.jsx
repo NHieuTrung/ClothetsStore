@@ -4,6 +4,7 @@ import OrderDetail from './order-item/order-detail/OrderDetail'
 import OrderDelivery from './order-item/order-delivery/OrderDelivery'
 import OrderConfirmation from './order-item/order-confirmation/OrderConfirmation'
 import OrderEdit from './order-item/order-edit/OrderEdit'
+import OrderCancellation from './order-item/order-cancellation/OrderCancellation'
 import "./dataTables.bootstrap4.min.css";
 import './Order.css';
 
@@ -142,6 +143,9 @@ class Order extends Component {
                     ))}
                     {this.state.Orders.map((order, idx) => (
                         <OrderEdit key={idx} orderId={order.orderId}></OrderEdit>
+                    ))}
+                    {this.state.Orders.map((order, idx) => (
+                        <OrderCancellation key={idx} orderId={order.orderId}></OrderCancellation>
                     ))}
                 </div>
             </div>

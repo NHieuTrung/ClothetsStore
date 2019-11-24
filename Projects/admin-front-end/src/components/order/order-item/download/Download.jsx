@@ -26,7 +26,7 @@ class Download extends React.Component {
         const orderDetail = this.props.orderDetail;
 
         return (
-            <ExcelFile filename={'Đơn hàng ' + this.props.orderId} element={<button className="btn btn-warning">In</button>}>
+            <ExcelFile filename={'Đơn hàng ' + this.props.orderId} element={<button className="btn btn-secondary">In</button>}>
                 <ExcelSheet data={order} name="Đơn hàng">
                     <ExcelColumn label="ID" value="id"/>
                     <ExcelColumn label="Ngày mua" value="createdDate"/>

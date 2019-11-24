@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import OrderConfirmationItem from './order-confirmation-item/OrderConfirmationItem'
+import OrderCancellationItem from './order-cancellation-item/OrderCancellationItem'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 const MySwal = withReactContent(Swal)
 
-class OrderConfirmation extends Component {
+class OrderCancellation extends Component {
     state = {
         orderDetails: []
     }
@@ -25,38 +25,26 @@ class OrderConfirmation extends Component {
     renderOrderDetails = () => {
         if(this.state.orderDetails.length !== 0) {
             const details = this.state.orderDetails.map((order, idx) => 
-                <OrderConfirmationItem key={idx} index={idx} colorId={order.colorId} productId={order.productId} sizeId={order.sizeId} quantity={order.quantity} price={order.price}></OrderConfirmationItem>
+                <OrderCancellationItem key={idx} index={idx} colorId={order.colorId} productId={order.productId} sizeId={order.sizeId} quantity={order.quantity} price={order.price}></OrderCancellationItem>
             );
 
             return details;
         }
     }
 
-    dateValidation = () => {
-        var now = new Date();
-
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
-
-        var today = now.getFullYear() + "-" + (month) + "-" + (day);
-
-        window.$('#dtDelivery').val(today);
-        window.$('#dtDelivery').attr('min', today);
-    }
-
     confirm = () => {
         Swal.fire({
             title: 'Thông báo',
-            text: "Bạn có chắc chắn đơn hàng đã vận chuyển thành công?",
+            text: "Bạn có chắc chắn muốn huỷ đơn hàng?",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#1cc88a',
+            confirmButtonColor: '#e74a3b',
             cancelButtonColor: '#858796',
             confirmButtonText: 'Xác nhận',
             cancelButtonText: 'Huỷ'
         }).then((result) => {
             if (result.value) {
-                fetch('https://localhost:44376/api/admin/order/confirmOrder', {
+                fetch('https://localhost:44376/api/admin/order/cancelOrder', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -74,7 +62,7 @@ class OrderConfirmation extends Component {
                             width: 300,
                             padding: '2em',
                             icon: 'success',
-                            html: "<p style='font-size: 15px'>Xác nhận đơn hàng thành công</p>"
+                            html: "<p style='font-size: 15px'>Đơn hàng đã được huỷ</p>"
                         }).then((res) => {
                         window.location.href = "/order-page"; 
                         });
@@ -98,15 +86,11 @@ class OrderConfirmation extends Component {
         this.getOrderDetails();
     }
 
-    componentDidMount = () => {
-        this.dateValidation();
-    }
-
     render() {
         return (
         <div
             className="modal fade bd-example-modal-lg"
-            id={"confirmationModal" + this.props.orderId}
+            id={"cancelModal" + this.props.orderId}
             tabIndex="-1"
             role="dialog"
             aria-labelledby="exampleModalCenterTitle"
@@ -140,7 +124,7 @@ class OrderConfirmation extends Component {
                         </table>                 
                     </div>
                     <div className="modal-footer">
-                        <button type="button" className="btn btn-success" onClick={this.confirm}> Xác nhận </button>
+                        <button type="button" className="btn btn-danger" onClick={this.confirm}> Huỷ </button>
                         <button type="button" className="btn btn-secondary" data-dismiss="modal"> Đóng </button>
                     </div>
                 </div>
@@ -150,4 +134,4 @@ class OrderConfirmation extends Component {
     }
 }
 
-export default OrderConfirmation;
+export default OrderCancellation;

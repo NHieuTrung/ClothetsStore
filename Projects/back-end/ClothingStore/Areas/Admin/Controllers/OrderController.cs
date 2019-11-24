@@ -57,5 +57,12 @@ namespace ClothingStore.Areas.Admin.Controllers
         {
             return Ok(await orderService.ConfirmOrder(order));
         }
+
+        [HttpPost]
+        [Route("cancelOrder")]
+        public async Task<IActionResult> CancelOrder([FromBody] Order order)
+        {
+            return Ok(await orderService.CancelOrder(order));
+        }
     }
 }
