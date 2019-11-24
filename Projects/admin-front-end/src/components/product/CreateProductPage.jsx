@@ -24,7 +24,7 @@ class CreateProductPage extends Component {
         },
         imageUrl: "",
         imageData: "",
-        listProductSize: []
+        listProductSizes: []
       },
       extendedProduct: {
         productId: "",
@@ -49,7 +49,14 @@ class CreateProductPage extends Component {
         listProductColor: []
       }
     };
+    this.handleSizeChange = this.handleSizeChange.bind(this);
+    this.handleInventoryQuantityChange = this.handleInventoryQuantityChange.bind(
+      this
+    );
     this.handleAvatarDataChange = this.handleAvatarDataChange.bind(this);
+    this.handleSubmitModalProductSize = this.handleSubmitModalProductSize.bind(
+      this
+    );
   }
   componentWillMount() {
     fetch("https://localhost:44376/api/customer/size/getSizes")
@@ -120,19 +127,56 @@ class CreateProductPage extends Component {
   }
   handleAvatarDataChange(event) {
     const { productColor } = this.state;
-    const urlImage = document.getElementById("inputProductImage").file[0];
+    const imageData = document.getElementById("inputProductImage").files[0];
     let reader = new FileReader();
     reader.onload = () => {
       this.setState({
         productColor: {
           color: productColor.color,
           imageUrl: reader.result,
-          imageData: urlImage,
-          listProductSize: productColor.listProductSize
+          imageData: imageData,
+          listProductSizes: productColor.listProductSizes
         }
       });
     };
     reader.readAsDataURL(event.target.files[0]);
+  }
+  handleSizeChange(event) {
+    this.setState({
+      productSize: {
+        size: {
+          sizeId: event.target.value,
+          name: event.target.options[event.target.selectedIndex].text
+        },
+        inventoryQuantity: this.state.productSize.inventoryQuantity
+      }
+    });
+  }
+  handleInventoryQuantityChange(event) {
+    this.setState({
+      productSize: {
+        size: this.state.productSize.size,
+        inventoryQuantity: event.target.value
+      }
+    });
+  }
+  handleSubmitModalProductSize(event) {
+    event.preventDefault();
+    const productSize = this.state.productSize;
+    const { productColor } = this.state;
+    let listProductSizesTemp = [];
+    if (productColor.listProductSizes.length > 0) {
+      listProductSizesTemp = [...productColor.listProductSizes];
+    }
+    listProductSizesTemp.push(productSize);
+    this.setState({
+      productColor: {
+        color: productColor.color,
+        imageUrl: productColor.imageUrl,
+        imageData: productColor.imageData,
+        listProductSizes: [...listProductSizesTemp]
+      }
+    });
   }
   render() {
     const productObj = this.state;
@@ -233,7 +277,7 @@ class CreateProductPage extends Component {
         <div
           className="modal fade"
           id="modalProductColor"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="modalProductColorTitle"
           aria-hidden="true"
@@ -273,7 +317,7 @@ class CreateProductPage extends Component {
                   </div>
 
                   <div className="form-group">
-                    <label for="inputColor">Color</label>
+                    <label htmlFor="inputColor">Color</label>
                     <select id="inputColor" className="form-control">
                       <option defaultValue="">Choose...</option>
                       {productObj.colors.map(color => (
@@ -283,22 +327,35 @@ class CreateProductPage extends Component {
                       ))}
                     </select>
                   </div>
-                  <div className="form-group">
-                    {productObj.colors.map(color => (
-                      <option key={color.colorId} value={color.colorId}>
-                        {color.name}
-                      </option>
+                  <div className="form-row">
+                    {productObj.productColor.listProductSizes.map(item => (
+                      <div key={item.size.sizeId} className="col-sm-6">
+                        <input
+                          type="text"
+                          readOnly
+                          className="form-control"
+                          id={item.size.sizeId}
+                          value={
+                            "Size: " +
+                            item.size.name +
+                            " | " +
+                            "Quantity: " +
+                            item.inventoryQuantity
+                          }
+                        />
+                      </div>
                     ))}
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-toggle="modal"
-                      data-target="#modalProductSize"
-                    >
-                      Add Product Size
-                    </button>
+                    <div className="col-sm-6">
+                      <button
+                        type="button"
+                        className="btn btn-secondary"
+                        data-toggle="modal"
+                        data-target="#modalProductSize"
+                      >
+                        Add Product Size
+                      </button>
+                    </div>
                   </div>
-
                   <button type="reset" className="btn btn-success">
                     Add Product Color
                   </button>
@@ -322,7 +379,7 @@ class CreateProductPage extends Component {
         <div
           className="modal fade"
           id="modalProductSize"
-          tabindex="-1"
+          tabIndex="-1"
           role="dialog"
           aria-labelledby="modalProductSizeTitle"
           aria-hidden="true"
@@ -342,11 +399,15 @@ class CreateProductPage extends Component {
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body">
-                <form>
+              <div className="modal-body bg-dark">
+                <form onSubmit={this.handleSubmitModalProductSize}>
                   <div className="form-group">
-                    <label for="inputSize">Size</label>
-                    <select id="inputSize" className="form-control">
+                    <label htmlFor="inputSize">Size</label>
+                    <select
+                      id="inputSize"
+                      className="form-control"
+                      onChange={this.handleSizeChange}
+                    >
                       <option defaultValue="">Choose...</option>
                       {productObj.sizes.map(size => (
                         <option key={size.sizeId} value={size.sizeId}>
@@ -356,16 +417,17 @@ class CreateProductPage extends Component {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label for="inputInventory">Iventory Quantity</label>
+                    <label htmlFor="inputInventory">Iventory Quantity</label>
                     <input
-                      type="email"
+                      type="number"
                       className="form-control"
                       id="inputInventory"
                       placeholder="Iventory Quantity"
+                      onChange={this.handleInventoryQuantityChange}
                     />
                   </div>
 
-                  <button type="reset" className="btn btn-success">
+                  <button type="submit" className="btn btn-success">
                     Add Product Size
                   </button>
                 </form>

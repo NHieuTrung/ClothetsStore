@@ -16,7 +16,7 @@ class ProductColor extends Component {
           <img
             className="mx-auto d-block"
             src={domainServer + this.props.imageUrl}
-            height="200"
+            height={this.props.heightImg}
             alt="Product"
             readOnly
           />

@@ -38,6 +38,7 @@ class ListProductColor extends Component {
                   color={productColor.color}
                   imageUrl={productColor.imageUrl}
                   listProductSize={productColor.listProductSize}
+                  heightImg={200}
                 />
               ))}
             </div>
