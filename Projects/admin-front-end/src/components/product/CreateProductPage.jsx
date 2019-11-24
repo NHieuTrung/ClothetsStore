@@ -24,7 +24,7 @@ class CreateProductPage extends Component {
         },
         imageUrl: "",
         imageData: "",
-        listProductSizes: []
+        listProductSize: []
       },
       extendedProduct: {
         productId: "",
@@ -49,6 +49,7 @@ class CreateProductPage extends Component {
         listProductColor: []
       }
     };
+    this.handleColorChange = this.handleColorChange.bind(this);
     this.handleSizeChange = this.handleSizeChange.bind(this);
     this.handleInventoryQuantityChange = this.handleInventoryQuantityChange.bind(
       this
@@ -57,8 +58,11 @@ class CreateProductPage extends Component {
     this.handleSubmitModalProductSize = this.handleSubmitModalProductSize.bind(
       this
     );
+    this.handleSubmitModalProductColor = this.handleSubmitModalProductColor.bind(
+      this
+    );
   }
-  componentWillMount() {
+  componentDidMount() {
     fetch("https://localhost:44376/api/customer/size/getSizes")
       .then(res => res.json())
       .then(
@@ -135,7 +139,7 @@ class CreateProductPage extends Component {
           color: productColor.color,
           imageUrl: reader.result,
           imageData: imageData,
-          listProductSizes: productColor.listProductSizes
+          listProductSize: productColor.listProductSize
         }
       });
     };
@@ -152,6 +156,24 @@ class CreateProductPage extends Component {
       }
     });
   }
+  handleColorChange(event) {
+    const { productColor } = this.state;
+    const arr = event.target.options[event.target.selectedIndex].text.split(
+      " "
+    );
+    this.setState({
+      productColor: {
+        color: {
+          colorId: event.target.value,
+          colorValue: arr[1],
+          name: arr[0]
+        },
+        imageUrl: productColor.imageUrl,
+        imageData: productColor.imageData,
+        listProductSize: productColor.listProductSize
+      }
+    });
+  }
   handleInventoryQuantityChange(event) {
     this.setState({
       productSize: {
@@ -164,22 +186,48 @@ class CreateProductPage extends Component {
     event.preventDefault();
     const productSize = this.state.productSize;
     const { productColor } = this.state;
-    let listProductSizesTemp = [];
-    if (productColor.listProductSizes.length > 0) {
-      listProductSizesTemp = [...productColor.listProductSizes];
+    let listProductSizeTemp = [];
+    if (productColor.listProductSize.length > 0) {
+      listProductSizeTemp = [...productColor.listProductSize];
     }
-    listProductSizesTemp.push(productSize);
+    listProductSizeTemp.push(productSize);
     this.setState({
       productColor: {
         color: productColor.color,
         imageUrl: productColor.imageUrl,
         imageData: productColor.imageData,
-        listProductSizes: [...listProductSizesTemp]
+        listProductSize: [...listProductSizeTemp]
+      }
+    });
+  }
+  handleSubmitModalProductColor(event) {
+    event.preventDefault();
+    const { productColor } = this.state;
+    const { extendedProduct } = this.state;
+    let listProductColorTemp = [];
+    if (this.state.extendedProduct.listProductColor.length > 0) {
+      listProductColorTemp = [...extendedProduct.listProductColor];
+    }
+    listProductColorTemp.push(productColor);
+    this.setState({
+      extendedProduct: {
+        productId: extendedProduct.productId,
+        code: extendedProduct.code,
+        name: extendedProduct.name,
+        typeProduct: extendedProduct.typeProduct,
+        price: extendedProduct.price,
+        detail: extendedProduct.detail,
+        discount: extendedProduct.discount,
+        createdDate: extendedProduct.createdDate,
+        brand: extendedProduct.brandId,
+        status: extendedProduct.status,
+        listProductColor: [...listProductColorTemp]
       }
     });
   }
   render() {
     const productObj = this.state;
+    const { extendedProduct } = this.state;
     return (
       <div className="container">
         <form action="">
@@ -217,8 +265,8 @@ class CreateProductPage extends Component {
               </div>
               <div className="form-group col-md-6">
                 <label htmlFor="inputTypeProduct">Type Product</label>
-                <select id="inputTypeProduct" className="form-control">
-                  <option defaultValue="">Choose Type Product</option>
+                <select id="inputTypeProduct" className="form-control" required>
+                  <option value="">Choose Type Product</option>
                   {productObj.productTypes.map(productType => (
                     <option
                       key={productType.typeProductId}
@@ -233,8 +281,8 @@ class CreateProductPage extends Component {
             <div className="form-row">
               <div className="form-group col-md-6">
                 <label htmlFor="inputBrand">Brand</label>
-                <select id="inputBrand" className="form-control">
-                  <option defaultValue="">Choose Brand</option>
+                <select id="inputBrand" className="form-control" required>
+                  <option value="">Choose Brand</option>
                   {productObj.brands.map(brand => (
                     <option key={brand.brandId} value={brand.brandId}>
                       {brand.name}
@@ -245,7 +293,9 @@ class CreateProductPage extends Component {
               <div className="form-group col-md-6">
                 <label htmlFor="inputStatus">Status</label>
                 <select id="inputStatus" className="form-control">
-                  <option defaultValue="">Choose Status</option>
+                  <option value="" required>
+                    Choose Status
+                  </option>
                   {productObj.statuses.map(status => (
                     <option key={status.statusId} value={status.statusId}>
                       {status.name}
@@ -254,6 +304,7 @@ class CreateProductPage extends Component {
                 </select>
               </div>
             </div>
+
             <div className="form-group">
               <label htmlFor="detailTextArea">Detail</label>
               <textarea
@@ -262,15 +313,31 @@ class CreateProductPage extends Component {
                 rows="3"
               ></textarea>
             </div>
-            <div className="form-group">
-              <button
-                type="button"
-                className="btn btn-success"
-                data-toggle="modal"
-                data-target="#modalProductColor"
-              >
-                Add Product Color
-              </button>
+            <div className="form-row">
+              <div className="col-sm-12">
+                <label>List Color</label>
+              </div>
+              {extendedProduct.listProductColor.map(productColor => (
+                <div className="col-sm-4" key={productColor.color.colorId}>
+                  <ProductColor
+                    color={productColor.color}
+                    imageUrl={productColor.imageUrl}
+                    listProductSize={productColor.listProductSize}
+                    heightImg={100}
+                    isBase64Url={true}
+                  />
+                </div>
+              ))}
+              <div className="col-sm-4">
+                <button
+                  type="button"
+                  className="btn btn-success"
+                  data-toggle="modal"
+                  data-target="#modalProductColor"
+                >
+                  Add Product Color
+                </button>
+              </div>
             </div>
           </div>
         </form>
@@ -298,7 +365,7 @@ class CreateProductPage extends Component {
                 </button>
               </div>
               <div className="modal-body">
-                <form>
+                <form onSubmit={this.handleSubmitModalProductColor}>
                   <div className="form-group">
                     <img
                       src={productObj.productColor.imageUrl}
@@ -313,22 +380,28 @@ class CreateProductPage extends Component {
                       id="inputProductImage"
                       accept="image/*"
                       onChange={this.handleAvatarDataChange}
+                      required
                     />
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="inputColor">Color</label>
-                    <select id="inputColor" className="form-control">
+                    <select
+                      id="inputColor"
+                      className="form-control"
+                      onChange={this.handleColorChange}
+                      required
+                    >
                       <option defaultValue="">Choose...</option>
                       {productObj.colors.map(color => (
                         <option key={color.colorId} value={color.colorId}>
-                          {color.name}
+                          {color.name + " " + color.colorValue}
                         </option>
                       ))}
                     </select>
                   </div>
                   <div className="form-row">
-                    {productObj.productColor.listProductSizes.map(item => (
+                    {productObj.productColor.listProductSize.map(item => (
                       <div key={item.size.sizeId} className="col-sm-6">
                         <input
                           type="text"
@@ -356,7 +429,7 @@ class CreateProductPage extends Component {
                       </button>
                     </div>
                   </div>
-                  <button type="reset" className="btn btn-success">
+                  <button type="submit" className="btn btn-success">
                     Add Product Color
                   </button>
                 </form>
@@ -399,7 +472,7 @@ class CreateProductPage extends Component {
                   <span aria-hidden="true">&times;</span>
                 </button>
               </div>
-              <div className="modal-body bg-dark">
+              <div className="modal-body">
                 <form onSubmit={this.handleSubmitModalProductSize}>
                   <div className="form-group">
                     <label htmlFor="inputSize">Size</label>
@@ -407,8 +480,9 @@ class CreateProductPage extends Component {
                       id="inputSize"
                       className="form-control"
                       onChange={this.handleSizeChange}
+                      required
                     >
-                      <option defaultValue="">Choose...</option>
+                      <option value="">Choose...</option>
                       {productObj.sizes.map(size => (
                         <option key={size.sizeId} value={size.sizeId}>
                           {size.name}
@@ -424,6 +498,7 @@ class CreateProductPage extends Component {
                       id="inputInventory"
                       placeholder="Iventory Quantity"
                       onChange={this.handleInventoryQuantityChange}
+                      required
                     />
                   </div>
 

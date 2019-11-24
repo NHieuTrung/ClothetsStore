@@ -9,7 +9,10 @@ class ProductColor extends Component {
   render() {
     const { listProductSize } = this.props;
     const { color } = this.props;
-    const domainServer = "https://localhost:44376/";
+    const domainServer = "";
+    if (!this.props.isBase64Url) {
+      domainServer = "https://localhost:44376/";
+    }
     return (
       <div className="card">
         <div className="card-img-top">
@@ -26,7 +29,7 @@ class ProductColor extends Component {
             Màu {color.name}{" "}
             <input type="color" value={color.colorValue} readOnly />
           </h5>
-          <form action="">
+          <div>
             {listProductSize.map(productSize => (
               <ProductSize
                 key={productSize.size.sizeId}
@@ -35,7 +38,7 @@ class ProductColor extends Component {
                 isEdit={productSize.isEdit}
               />
             ))}
-          </form>
+          </div>
         </div>
       </div>
     );
