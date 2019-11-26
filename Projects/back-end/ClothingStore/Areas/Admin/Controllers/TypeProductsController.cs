@@ -11,7 +11,7 @@ using Services;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/admin/[controller]")]
     [ApiController]
     public class TypeProductsController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             List<TypeProductVM> typeProductVMs = new List<TypeProductVM>();
             foreach (var item in typeProducts)
             {
-                typeProductVMs.Add(new TypeProductVM() { Name = item.Name, TypeProductId = item.TypeProductId });
+                typeProductVMs.Add(new TypeProductVM() { Name = item.Name, TypeProductId = item.TypeProductId, ProductGenderId = item.ProductGenderId });
             }
             return Ok(typeProductVMs);
         }

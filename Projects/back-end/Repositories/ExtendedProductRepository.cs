@@ -45,11 +45,14 @@ namespace Repositories
                     extendedProductVM.ProductId = product.ProductId;
                     foreach (var item in extendedProductVM.ListProductColor)
                     {
-                        var productColor = new ProductColor() { ColorId = item.Color.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "", StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992") };
+                        var productColor = new ProductColor() { ColorId = item.Color.ColorId, ProductId = extendedProductVM.ProductId, ImageUrl = "images/products/" + extendedProductVM.ProductId.ToString() + "/" + item.Color.ColorId.ToString() + ".jpg", StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992") };
+                        ctx.ProductColor.Add(productColor);
                         await ctx.SaveChangesAsync();
                         foreach (var itemProductSize in item.ListProductSize)
                         {
-                            var productSize = new ProductSize() { ColorId = productColor.ColorId, SizeId = itemProductSize.Size.SizeId, InventoryQuantity = itemProductSize.InventoryQuantity };
+                            var productSize = new ProductSize() { ColorId = productColor.ColorId, SizeId = itemProductSize.Size.SizeId, ProductId = extendedProductVM.ProductId, InventoryQuantity = itemProductSize.InventoryQuantity };
+                            ctx.ProductSize.Add(productSize);
+                            await ctx.SaveChangesAsync();
                         }
                     }
                     // Commit transaction if all commands succeed, transaction will auto-rollback

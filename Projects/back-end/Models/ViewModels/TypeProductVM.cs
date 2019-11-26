@@ -8,5 +8,6 @@ namespace Models.ViewModels
     {
         public Guid TypeProductId { get; set; }
         public string Name { get; set; }
+        public Guid ProductGenderId { get; set; }
     }
 }

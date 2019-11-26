@@ -47,7 +47,7 @@ const Sidebar = () => {
           aria-controls="collapseTwo"
         >
           <i className="fas fa-fw fa-cog"></i>
-          <span>Product</span>
+          <span>Sản phẩm</span>
         </a>
         <div
           id="collapseTwo"
@@ -58,10 +58,10 @@ const Sidebar = () => {
           <div className="bg-white py-2 collapse-inner rounded">
             <h6 className="collapse-header">Product Function:</h6>
             <a className="collapse-item" href="product-page">
-              View Products
+              Danh sách sản phẩm
             </a>
             <a className="collapse-item" href="create-product-page">
-              Create Product
+              Tạo sản phẩm mới
             </a>
           </div>
         </div>
@@ -69,26 +69,26 @@ const Sidebar = () => {
 
       <li className="nav-item">
         <a
-            className="nav-link collapsed"
-            href="/#"
-            data-toggle="collapse"
-            data-target="#collapseOrderSidebar"
-            aria-expanded="true"
-            aria-controls="collapseOrderSidebar"
+          className="nav-link collapsed"
+          href="/#"
+          data-toggle="collapse"
+          data-target="#collapseOrderSidebar"
+          aria-expanded="true"
+          aria-controls="collapseOrderSidebar"
         >
-            <i className="fas fa-fw fa-cog"></i>
-            <span>Đơn hàng</span>
+          <i className="fas fa-fw fa-cog"></i>
+          <span>Đơn hàng</span>
         </a>
         <div
-            id="collapseOrderSidebar"
-            className="collapse"
-            aria-labelledby="headingTwo"
-            data-parent="#accordionSidebar"
+          id="collapseOrderSidebar"
+          className="collapse"
+          aria-labelledby="headingTwo"
+          data-parent="#accordionSidebar"
         >
           <div className="bg-white py-2 collapse-inner rounded">
             <h6 className="collapse-header">Tính năng:</h6>
             <a className="collapse-item" href="/order-page">
-                Danh sách đơn hàng
+              Danh sách đơn hàng
             </a>
             {/* <a className="collapse-item" href="/#">
                 Tạo đơn hàng
