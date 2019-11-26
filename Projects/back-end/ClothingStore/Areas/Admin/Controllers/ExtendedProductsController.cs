@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 using Models.ViewModels;
 using Services;
+using System.IO;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
@@ -15,10 +17,15 @@ namespace ClothingStore.Areas.Admin.Controllers
     [ApiController]
     public class ExtendedProductsController : ControllerBase
     {
+        private readonly IHostingEnvironment _env;
         ProductService productService = new ProductService();
         ProductColorService productColorService = new ProductColorService();
         ProductSizeService productSizeService = new ProductSizeService();
         ExtendedProductService extendedProductService = new ExtendedProductService();
+        public ExtendedProductsController(IHostingEnvironment env)
+        {
+            _env = env;
+        }
         [HttpGet]
         public async Task<IActionResult> GetExtendedProduct()
         {
@@ -43,7 +50,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                     ProductId = product.ProductId,
                     Code = product.Code,
                     Name = product.Name,
-                    TypeProduct = new TypeProductVM() { Name = product.Name, TypeProductId = product.TypeProductId },
+                    TypeProduct = new TypeProductVM() { Name = product.TypeProduct.Name, TypeProductId = product.TypeProductId },
                     Price = product.Price,
                     Detail = product.Detail,
                     Discount = product.Discount,
@@ -54,6 +61,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                 };
                 listExtendedProduct.Add(extendedProduct);
             }
+            listExtendedProduct.OrderByDescending(m => m.CreatedDate);
 
             return Ok(listExtendedProduct);
         }
@@ -98,13 +106,30 @@ namespace ClothingStore.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ExtendedProductVM>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
+        [Route("uploadImageProductColor")]
+        public async Task<ActionResult<string>> UploadImageProduct([FromForm]Guid productId, [FromForm]Guid colorId, [FromForm(Name = "imageData")]IFormFile imageData)
         {
+            if (string.IsNullOrWhiteSpace(_env.WebRootPath))
+            {
+                _env.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+            }
             try
             {
-                await extendedProductService.Create(extendedProductVM);
+                Admin.Helper.AdminService adminService = new Helper.AdminService();
+                var imageUrl = await adminService.UploadImageProduct(_env.WebRootPath, imageData, productId, colorId);
+                return imageUrl;
             }
-            catch (Exception)
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ExtendedProductVM>> PostExtendedProduct(ExtendedProductVM extendedProductVM)
+        {
+            await extendedProductService.Create(extendedProductVM);
+            if (extendedProductVM.ProductId == null)
             {
                 return BadRequest();
             }

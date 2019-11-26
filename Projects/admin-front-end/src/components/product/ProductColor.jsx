@@ -9,7 +9,7 @@ class ProductColor extends Component {
   render() {
     const { listProductSize } = this.props;
     const { color } = this.props;
-    const domainServer = "";
+    let domainServer = "";
     if (!this.props.isBase64Url) {
       domainServer = "https://localhost:44376/";
     }

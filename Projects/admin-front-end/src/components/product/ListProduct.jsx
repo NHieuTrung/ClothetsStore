@@ -26,6 +26,7 @@ class ListProduct extends Component {
             });
           } else {
             console.log("Something wrong when get products");
+            this.PushToServerPage();
           }
         },
         // Note: it's important to handle errors here
@@ -37,12 +38,9 @@ class ListProduct extends Component {
       );
   }
   PushToServerPage = () => {
-    // this.props;
+    window.location.assign("http://localhost:3000/error-server");
   };
   componentDidMount() {
-    if (this.state.isLoaded === false) {
-      this.PushToServerPage();
-    }
     const scriptBootstrapDatatable = document.createElement("script");
     const scriptDemoDatatable = document.createElement("script");
 
