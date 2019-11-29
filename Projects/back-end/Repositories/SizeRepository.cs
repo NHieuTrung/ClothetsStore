@@ -27,6 +27,11 @@ namespace Repositories
             return await ctx.Size.ToListAsync();
         }
 
+        public async Task<IList<Size>> GetSizesByTypeSizeId(Guid typeSizeId)
+        {
+            return await ctx.Size.Where(m => m.TypeSizeId == typeSizeId).ToListAsync();
+        }
+
         public async Task<IList<string>> GetDistinctSizes()
         {
             return await ctx.Size.Select(s => s.Name)
@@ -65,5 +70,6 @@ namespace Repositories
                                         .FirstOrDefaultAsync();
             return name;
         }
+
     }
 }

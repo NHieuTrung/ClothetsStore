@@ -10,9 +10,12 @@ using Models;
 using Models.ViewModels;
 using Services;
 using System.IO;
+using Microsoft.AspNetCore.Authorization;
+using ClothingStore.Areas.Admin.Helper;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
+    [Authorize(Roles = Constrain.CustomRoles.Administrator + "," + Constrain.CustomRoles.NhapKho)]
     [Route("api/admin/[controller]")]
     [ApiController]
     public class ExtendedProductsController : ControllerBase
@@ -26,14 +29,16 @@ namespace ClothingStore.Areas.Admin.Controllers
         {
             _env = env;
         }
+
         [HttpGet]
         public async Task<IActionResult> GetExtendedProduct()
         {
             var listProduct = await productService.GetAll();
             var listProductColor = await productColorService.GetAll();
             var listProductSize = await productSizeService.GetAll();
+            Guid statusIdKhoa = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
             List<ExtendedProductVM> listExtendedProduct = new List<ExtendedProductVM>();
-            foreach (var product in listProduct)
+            foreach (var product in listProduct.Where(m => m.StatusId != statusIdKhoa))
             {
                 IList<ProductColorVM> listProductColorVM = listProductColor
                     .Where(m => m.ProductId == product.ProductId)
@@ -61,10 +66,25 @@ namespace ClothingStore.Areas.Admin.Controllers
                 };
                 listExtendedProduct.Add(extendedProduct);
             }
-            listExtendedProduct.OrderByDescending(m => m.CreatedDate);
+            listExtendedProduct = listExtendedProduct.OrderByDescending(m => m.CreatedDate).ToList();
 
             return Ok(listExtendedProduct);
         }
+        [HttpPost]
+        [Route("changeStatus")]
+        public async Task<ActionResult> ChangeStatus(Product product)
+        {
+            var statusIdChange = productService.ChangeStatus(product.ProductId, product.StatusId);
+            if (statusIdChange.ToString() == product.StatusId.ToString())
+            {
+                return NoContent();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ExtendedProductVM>> GetExtendedProduct(Guid id)
         {

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ClothingStore.Areas.Admin.Helper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -10,6 +12,7 @@ using Services;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
+    [Authorize(Roles = Constrain.CustomRoles.Administrator + "," + Constrain.CustomRoles.XuatKho)]
     [Route("api/admin/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase

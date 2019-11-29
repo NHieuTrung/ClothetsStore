@@ -53,7 +53,13 @@ namespace Repositories
 
             return size;
         }
-
+        public Guid ChangeStatus(Guid id, Guid statusId)
+        {
+            var product = ctx.Product.Find(id);
+            product.StatusId = statusId;
+            ctx.SaveChanges();
+            return ctx.Product.Find(id).StatusId;
+        }
         public override async Task Create(Product product)
         {
             ctx.Product.Add(product);

@@ -135,11 +135,22 @@ namespace Repositories
         {
             string token = Authenticate(account, appSettings);
 
-            if(token == null)
+            if (token == null)
             {
                 return "";
             }
-            
+
+            return token;
+        }
+        public async Task<string> AuthenticateAccountEmployee(Account account, AppSettings appSettings)
+        {
+            string token = AuthenticateEmployee(account, appSettings);
+
+            if (token == null)
+            {
+                return "";
+            }
+
             return token;
         }
 
@@ -174,6 +185,46 @@ namespace Repositories
                         //new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
                         //new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
                         new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //customerId
+                        new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
+                    }),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                };
+                SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
+                return tokenHandler.WriteToken(token);
+            }
+        }
+        public string AuthenticateEmployee(Account account, AppSettings appSettings)
+        {
+            Account accountAuthenticated = ctx.Account.Where(a => a.Username == account.Username && a.Password == account.Password)
+                                                      .Include(a => a.Role)
+                                                      .FirstOrDefault();
+
+            // return null if user not found
+            if (accountAuthenticated == null)
+            {
+                return null;
+            }
+
+            else
+            {
+                Employee employee = ctx.Employee.Where(c => c.AccountId == accountAuthenticated.AccountId).FirstOrDefault();
+
+                // authentication successful so generate jwt token
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+                //var key = Encoding.ASCII.GetBytes("a");
+                var tokenDescriptor = new SecurityTokenDescriptor
+                {
+                    Subject = new ClaimsIdentity(new Claim[]
+                    {
+                        //new Claim(ClaimTypes.Name, customer.Name),
+                        //new Claim(ClaimTypes.Email, customer.Email),
+                        //new Claim(ClaimTypes.MobilePhone, customer.Phone),
+                        //new Claim(ClaimTypes.StreetAddress, customer.Address),
+                        //new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
+                        //new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
+                        new Claim(ClaimTypes.NameIdentifier, employee.EmployeeId.ToString()), //customerId
                         new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),

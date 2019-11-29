@@ -10,10 +10,26 @@ class ListProduct extends Component {
       isLoaded: false
     };
   }
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
+    if (localStorage.getItem("authenticatedTokenAdmin") === null) {
+      window.location.href = "/login";
+    }
+  }
+  PushToServerPage = () => {
+    window.location.href = "/error-server";
+  };
+  PushTo404Page = () => {
+    window.location.href = "/not-found";
+  };
+
+  componentDidMount() {
     const urlGender = "https://localhost:44376/api/admin/extendedproducts";
     const optionsGender = {
-      method: "GET" // *GET, POST, PUT, DELETE, etc.
+      method: "GET",
+      headers: {
+        Authorization:
+          "Bearer " + localStorage.getItem("authenticatedTokenAdmin").toString()
+      }
     };
     fetch(urlGender, optionsGender)
       .then(res => res.json())
@@ -26,7 +42,7 @@ class ListProduct extends Component {
             });
           } else {
             console.log("Something wrong when get products");
-            this.PushToServerPage();
+            this.PushTo404Page();
           }
         },
         // Note: it's important to handle errors here
@@ -34,13 +50,9 @@ class ListProduct extends Component {
         // exceptions from actual bugs in components.
         error => {
           console.log("Server interupt");
+          this.PushToServerPage();
         }
       );
-  }
-  PushToServerPage = () => {
-    window.location.assign("http://localhost:3000/error-server");
-  };
-  componentDidMount() {
     const scriptBootstrapDatatable = document.createElement("script");
     const scriptDemoDatatable = document.createElement("script");
 
@@ -92,6 +104,7 @@ class ListProduct extends Component {
                     <th>Nhãn hiệu</th>
                     <th>Trạng thái</th>
                     <th>Chủng loại</th>
+                    <th>Đổi trạng thái</th>
                   </tr>
                 </thead>
                 <tfoot>
@@ -105,6 +118,7 @@ class ListProduct extends Component {
                     <th>Nhãn hiệu</th>
                     <th>Trạng thái</th>
                     <th>Chủng loại</th>
+                    <th>Đổi trạng thái</th>
                   </tr>
                 </tfoot>
                 <tbody>
@@ -131,6 +145,7 @@ class ListProduct extends Component {
           <ListProductColor
             key={index}
             productId={product.productId}
+            productName={product.name}
             listProductColor={product.listProductColor}
           />
         ))}

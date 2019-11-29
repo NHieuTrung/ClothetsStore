@@ -17,7 +17,7 @@ namespace Services
         }
         public async Task<IList<Size>> GetSizesByProductId(Guid id)
         {
-            if(id == Guid.Empty)
+            if (id == Guid.Empty)
             {
                 List<Size> sizes = new List<Size>();
                 return sizes;
@@ -34,6 +34,10 @@ namespace Services
             }
 
             return await sizeRepository.GetSizeById(sizeId);
+        }
+        public async Task<IList<Size>> GetSizesByTypeSizeId(Guid typeSizeId)
+        {
+            return await sizeRepository.GetSizesByTypeSizeId(typeSizeId);
         }
     }
 }

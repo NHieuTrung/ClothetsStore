@@ -20,7 +20,7 @@ class ListProductColor extends Component {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title" id="exampleModalCenterTitle">
-                Product Name
+                {this.props.productName}
               </h5>
               <button
                 type="button"

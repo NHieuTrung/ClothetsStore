@@ -1,11 +1,19 @@
 import React, { Component } from "react";
 
-const Home = () => {
-  return (
-    <div id="container-fluid">
-      <h1>Go Home Homie</h1>
-    </div>
-  );
-};
+class Home extends Component {
+  state = {};
+  UNSAFE_componentWillMount() {
+    if (localStorage.getItem("authenticatedTokenAdmin") === null) {
+      window.location.href = "/login";
+    }
+  }
+  render() {
+    return (
+      <div className="container-fluid">
+        <h1>Home</h1>
+      </div>
+    );
+  }
+}
 
 export default Home;

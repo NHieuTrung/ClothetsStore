@@ -23,14 +23,14 @@ namespace Services
             this.context = context;
             this.appSettings = appSettings.Value;
         }
-        
+
         public string Authenticate(Account account)
         {
             return "";
         }
-            public async Task<Account> GetAccountByUsername(string username)
+        public async Task<Account> GetAccountByUsername(string username)
         {
-            if(username == "")
+            if (username == "")
             {
                 Account account = new Account();
                 return account;
@@ -41,7 +41,7 @@ namespace Services
 
         public async Task<bool> CheckAvailability(string username)
         {
-            if(username == "")
+            if (username == "")
             {
                 return false;
             }
@@ -51,7 +51,7 @@ namespace Services
 
         public async Task<bool> CheckEmailAvailability(string email)
         {
-            if(email == "")
+            if (email == "")
             {
                 return false;
             }
@@ -86,7 +86,7 @@ namespace Services
         public async Task<bool> ChangePasswordByUsername(ValidationAccountVM validationAccount)
         {
             Account account = await accountRepository.GetAccountByUsername(validationAccount.Username);
-            if(account == null)
+            if (account == null)
             {
                 return false;
             }
@@ -112,6 +112,13 @@ namespace Services
             account.Password = HashPassword(account.Password);
             return await accountRepository.AuthenticateAccount(account, this.appSettings);
         }
+
+        public async Task<string> AuthenticateAccountEmployee(Account account)
+        {
+            account.Password = HashPassword(account.Password);
+            return await accountRepository.AuthenticateAccountEmployee(account, this.appSettings);
+        }
+
 
         public async Task<JWTClaims> ValidateToken(Token token)
         {

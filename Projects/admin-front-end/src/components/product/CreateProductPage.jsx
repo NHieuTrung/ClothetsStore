@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import ProductColor from "./ProductColor";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 class CreateProductPage extends Component {
   constructor(props) {
     super(props);
@@ -8,6 +11,8 @@ class CreateProductPage extends Component {
       brands: [],
       statuses: [],
       sizes: [],
+      typeSizes: [],
+      typeSizeId: "",
       colors: [],
       productSize: {
         size: {
@@ -58,6 +63,7 @@ class CreateProductPage extends Component {
 
     this.handleColorChange = this.handleColorChange.bind(this);
     this.handleSizeChange = this.handleSizeChange.bind(this);
+    this.handleTypeSizeChange = this.handleTypeSizeChange.bind(this);
     this.handleInventoryQuantityChange = this.handleInventoryQuantityChange.bind(
       this
     );
@@ -66,27 +72,17 @@ class CreateProductPage extends Component {
     this.handleSubmitModalProductSize = this.handleSubmitModalProductSize.bind(
       this
     );
+    this.handleAddMoreColorClick = this.handleAddMoreColorClick.bind(this);
     this.handleSubmitModalProductColor = this.handleSubmitModalProductColor.bind(
       this
     );
   }
-  loadSizes() {
-    fetch("https://localhost:44376/api/customer/size/getSizes")
-      .then(res => res.json())
-      .then(
-        result => {
-          this.setState({
-            sizes: [...result]
-          });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {}
-      );
+  UNSAFE_componentWillMount() {
+    if (localStorage.getItem("authenticatedTokenAdmin") === null) {
+      window.location.href = "/login";
+    }
   }
   componentDidMount() {
-    this.loadSizes();
     fetch("https://localhost:44376/api/customer/brand/getBrands")
       .then(res => res.json())
       .then(
@@ -98,7 +94,9 @@ class CreateProductPage extends Component {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        error => {}
+        error => {
+          this.PushToServerPage();
+        }
       );
     fetch("https://localhost:44376/api/admin/typeProducts")
       .then(res => res.json())
@@ -111,20 +109,29 @@ class CreateProductPage extends Component {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        error => {}
+        error => {
+          this.PushToServerPage();
+        }
       );
     fetch("https://localhost:44376/api/admin/status/getStatuses")
       .then(res => res.json())
       .then(
         result => {
           this.setState({
-            statuses: [...result]
+            statuses: [
+              ...result.filter(
+                status =>
+                  status.name === "Sắp về hàng" || status.name === "Hoạt động"
+              )
+            ]
           });
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        error => {}
+        error => {
+          this.PushToServerPage();
+        }
       );
     fetch("https://localhost:44376/api/customer/color/getColors")
       .then(res => res.json())
@@ -137,7 +144,24 @@ class CreateProductPage extends Component {
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
-        error => {}
+        error => {
+          this.PushToServerPage();
+        }
+      );
+    fetch("https://localhost:44376/api/customer/typesize/getTypeSizes")
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            typeSizes: [...result]
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          this.PushToServerPage();
+        }
       );
   }
   handleCodeChange(event) {
@@ -157,6 +181,32 @@ class CreateProductPage extends Component {
       }
     });
   }
+  loadSizesByTypeSizeloadSizes() {
+    const typeSizeId = this.state.typeSizeId;
+    if (typeSizeId === "") {
+      alert("Không lấy được size");
+    }
+    fetch(
+      `https://localhost:44376/api/customer/size/getSizebyTypeSize?typeSizeId=${typeSizeId}`
+    )
+      .then(res => res.json())
+      .then(
+        result => {
+          this.setState({
+            sizes: [...result]
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        error => {
+          this.PushToServerPage();
+        }
+      );
+  }
+  PushToServerPage = () => {
+    window.location.href = "/error-server";
+  };
   handleNameChange(event) {
     const { extendedProduct } = this.state;
     this.setState({
@@ -173,6 +223,16 @@ class CreateProductPage extends Component {
         listProductColor: extendedProduct.listProductColor
       }
     });
+  }
+  handleTypeSizeChange(event) {
+    this.setState(
+      {
+        typeSizeId: event.target.value
+      },
+      () => {
+        this.loadSizesByTypeSizeloadSizes();
+      }
+    );
   }
   handleTypeProductChange(event) {
     const { extendedProduct } = this.state;
@@ -261,7 +321,7 @@ class CreateProductPage extends Component {
         typeProduct: extendedProduct.typeProduct,
         price: extendedProduct.price,
         detail: extendedProduct.detail,
-        discount: extendedProduct.detail,
+        discount: extendedProduct.discount,
 
         brand: {
           brandId: event.target.value,
@@ -281,7 +341,7 @@ class CreateProductPage extends Component {
         typeProduct: extendedProduct.typeProduct,
         price: extendedProduct.price,
         detail: extendedProduct.detail,
-        discount: extendedProduct.detail,
+        discount: extendedProduct.discount,
 
         brand: extendedProduct.brand,
         status: {
@@ -373,6 +433,11 @@ class CreateProductPage extends Component {
       }
     });
   }
+  handleAddMoreColorClick(event) {
+    if (this.state.typeSizeId === "") {
+      alert("Vui lòng chọn loại size cho sản phẩm trước khi thêm màu!!!");
+    }
+  }
   handleSubmitModalProductColor(event) {
     event.preventDefault();
     const { productColor } = this.state;
@@ -408,7 +473,7 @@ class CreateProductPage extends Component {
           listProductColor: [...listProductColorTemp]
         }
       });
-      this.loadSizes();
+      this.loadSizesByTypeSizeloadSizes();
     } else {
       alert("Xin lựa chọn các Size có trong màu này!!!");
     }
@@ -420,8 +485,10 @@ class CreateProductPage extends Component {
       const options = {
         method: "POST", // *GET, POST, PUT, DELETE, etc.
         headers: {
-          "Content-Type": "application/json"
-          // 'Content-Type': 'application/x-www-form-urlencoded',
+          "Content-Type": "application/json",
+          Authorization:
+            "Bearer " +
+            localStorage.getItem("authenticatedTokenAdmin").toString()
         },
         body: JSON.stringify(this.state.extendedProduct) // body data type must match "Content-Type" header
       };
@@ -438,7 +505,12 @@ class CreateProductPage extends Component {
                 "https://localhost:44376/api/admin/extendedproducts/uploadImageProductColor";
               const options = {
                 method: "POST", // *GET, POST, PUT, DELETE, etc.
-                body: imageFormData // body data type must match "Content-Type" header
+                body: imageFormData,
+                headers: {
+                  Authorization:
+                    "Bearer " +
+                    localStorage.getItem("authenticatedTokenAdmin").toString()
+                }
               };
               fetch(url, options)
                 .then(res => {
@@ -446,8 +518,17 @@ class CreateProductPage extends Component {
                 })
                 .catch(err => {
                   alert("Lỗi khi upload ảnh lên server: " + err);
+                  window.location.reload();
                 });
             });
+            MySwal.fire({
+              position: "center",
+              icon: "success",
+              title: "Your work has been saved",
+              showConfirmButton: false,
+              timer: 1500
+            });
+            window.location.href = "/product-page";
           },
           // Note: it's important to handle errors here
           // instead of a catch() block so that we don't swallow
@@ -457,10 +538,14 @@ class CreateProductPage extends Component {
             isSubmitted: true,
             error
           });*/
-            alert("Tao san pham that bai");
+            MySwal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Có gì đó sai. Tạo sản phẩm thất bại!",
+              footer: "<a href>Why do I have this issue?</a>"
+            });
           }
         );
-      window.location.reload();
     } else {
       alert("Xin chọn màu cho sản phẩm này");
     }
@@ -512,6 +597,21 @@ class CreateProductPage extends Component {
                 />
               </div>
               <div className="form-group col-md-6">
+                <label htmlFor="inputDiscount">% Giá Giảm</label>
+                <input
+                  type="number"
+                  className="form-control"
+                  id="inputDiscount"
+                  placeholder="Iventory Quantity"
+                  onChange={this.handleDiscountChange}
+                  min="0"
+                  max="100"
+                  required
+                />
+              </div>
+            </div>
+            <div className="form-row">
+              <div className="form-group col-md-6">
                 <label htmlFor="inputTypeProduct">Loại sản phẩm</label>
                 <select
                   id="inputTypeProduct"
@@ -526,6 +626,22 @@ class CreateProductPage extends Component {
                       value={typeProduct.typeProductId}
                     >
                       {typeProduct.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group col-md-6">
+                <label htmlFor="inputTypeProduct">Loại size</label>
+                <select
+                  id="inputTypeProduct"
+                  className="form-control"
+                  required
+                  onChange={this.handleTypeSizeChange}
+                >
+                  <option value="">Chọn loại size</option>
+                  {this.state.typeSizes.map(typeSize => (
+                    <option key={typeSize.id} value={typeSize.id}>
+                      {typeSize.name}
                     </option>
                   ))}
                 </select>
@@ -595,6 +711,7 @@ class CreateProductPage extends Component {
                 <button
                   type="button"
                   className="btn btn-secondary"
+                  onClick={this.handleAddMoreColorClick}
                   data-toggle="modal"
                   data-target="#modalProductColor"
                 >
@@ -771,6 +888,7 @@ class CreateProductPage extends Component {
                       placeholder="Iventory Quantity"
                       onChange={this.handleInventoryQuantityChange}
                       value={this.state.productSize.inventoryQuantity}
+                      min="0"
                       required
                     />
                   </div>
