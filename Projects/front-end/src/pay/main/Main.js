@@ -154,6 +154,19 @@ class Main extends React.Component{
                         html: html
                     })
                 } else {
+                    //
+                    // this.state.cart = this.state.cart.map(ele => ele.price = (ele.price - (ele.price * (ele.discount === null || ele.discount === 0 ? 0 : ele.discount) / 100)) * ele.quantity)
+                    let cart = this.state.cart;
+                    console.log("CART")
+                    console.log(this.state.cart);
+                    cart.forEach(ele => {
+                        let cart = this.state.cart;
+    
+                        // let found = cart.find(ele => ele.colorId === item.colorId && ele.productId === item.productId && ele.sizeId === item.sizeId);
+                        // item.name = found.name;
+                        ele.price = ele.discount === null || ele.discount === 0 ? ele.price * ele.quantity : (ele.price - (ele.price / 100 * ele.discount)) * ele.quantity;
+                        // ele.price = ele.price - (ele.price * (ele.discount === null || ele.discount === 0 ? 0 : ele.discount) / 100) * ele.quantity;
+                    })
                     //Đi tiếp
                     fetch(`https://localhost:44376/api/customer/order/createOrder`,{
                         method:'POST',
@@ -169,7 +182,7 @@ class Main extends React.Component{
                             deliveryEmail:this.state.information.email,
                             deliveryAddress:this.state.information.address,
                             deliveryPrice: this.state.fee,
-                            OrderProductSize: this.state.cart
+                            OrderProductSize: cart
                         })
                     })
                     .then(res=>{
@@ -218,7 +231,7 @@ class Main extends React.Component{
                     <td className="qty text-center"><p id={"txt" + idx}>{item.quantity}</p></td>
                     
                     <td className="total text-center">{item.discount === null ? 0 : item.discount}</td>
-                    <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100))*item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
+                    <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100)) * item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
                     {/* <td className="text-right"><button className="main-btn icon-btn" onClick={this.deleteProduct} id={"btn" + idx}><i className="fa fa-close"></i></button></td> */}
                 </tr>
             );
@@ -246,6 +259,7 @@ class Main extends React.Component{
             let totalPrice = 0;
             // eslint-disable-next-line
             this.state.cart.map((item) => {
+                // totalPrice += item.price * item.quantity;
                 totalPrice += item.discount === null ? item.price * item.quantity : (item.price - (item.price * item.discount / 100)) * item.quantity;
             })
             this.setState.totalprice=totalPrice;
@@ -260,6 +274,7 @@ class Main extends React.Component{
             let fee= this.state.fee;
             // eslint-disable-next-line
             this.state.cart.map((item) => {
+                // total += item.price * item.quantity;
                 total += item.discount === null ? item.price * item.quantity : (item.price - (item.price * item.discount / 100)) * item.quantity;
             })
             total=total+fee;

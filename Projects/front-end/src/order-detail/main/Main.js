@@ -256,9 +256,9 @@ class Main extends React.Component{
                             <div>
                                 <span className="dc">ID: {this.state.order.orderId}</span>
                                 <br></br>
-                                <span className="dc">Ngày giao: {this.renderCreatedDate(this.state.order.createdDate)}</span>
+                                <span className="dc">Ngày đặt: {this.renderCreatedDate(this.state.order.createdDate)}</span>
                                 <br></br>
-                                <span className="dc">Ngày nhận: {this.renderDeliveryDate(this.state.order.deliveryDate, this.state.order.statusName)}</span>
+                                <span className="dc">Ngày giao: {this.renderDeliveryDate(this.state.order.deliveryDate, this.state.order.statusName)}</span>
                                 <br></br>
                                 <span className="dc">Tình trạng: {this.state.order.statusName}</span>
                             </div>
@@ -274,7 +274,7 @@ class Main extends React.Component{
                             <tr>
                                 <th>Sản phẩm</th>
                                 <th></th>
-                                <th className="text-center">Đơn giá</th>
+                                <th className="text-center">Tổng tiền</th>
                                 <th className="text-center">Số lượng</th>
 								<th className="text-right"></th>
                             </tr>

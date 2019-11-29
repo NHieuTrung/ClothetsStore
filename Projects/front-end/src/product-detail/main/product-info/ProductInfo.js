@@ -91,10 +91,12 @@ class ProductInfo extends React.Component{
     getSelectSize=()=>{
         if(this.state.colorId !== '00000000-0000-0000-0000-000000000000' && this.state.sizeId !== '00000000-0000-0000-0000-000000000000')
         {
+            console.log(`https://localhost:44376/api/customer/productsize/getQuatityBySelect?colorId=${this.state.colorId}&sizeId=${this.state.sizeId}&productId=${this.state.productId}`);
             fetch(`https://localhost:44376/api/customer/productsize/getQuatityBySelect?colorId=${this.state.colorId}&sizeId=${this.state.sizeId}&productId=${this.state.productId}`)
             .then(res => res.json())
             .then(
                 (res) => {
+                    console.log(res);
                     this.setState({
                         quantity: res
                     });
@@ -196,7 +198,7 @@ class ProductInfo extends React.Component{
                 <div className="product-body">
                     <div className="product-label">
                         {/* <span>New</span> */}
-                        { this.props.itemDiscount === null ? '' : <span className="sale">{ this.props.itemDiscount }</span>}
+                        { this.props.itemDiscount === null || this.props.itemDiscount === 0 ? '' : <span className="sale">-{ this.props.itemDiscount }%</span>}
                     </div>
                     <h2 className="product-name">{this.props.itemName}</h2>
                     { 

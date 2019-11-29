@@ -69,7 +69,8 @@ namespace Repositories
         public async Task<int> GetQuatityBySelect(Guid colorId, Guid sizeId, Guid productId)
         {
             int SL = await ctx.ProductSize.Where(p => p.ColorId == colorId && p.SizeId == sizeId && p.ProductId == productId)
-                                         .CountAsync();
+                                         .Select(p => p.InventoryQuantity)
+                                         .FirstOrDefaultAsync();
             return SL;
         }
     }

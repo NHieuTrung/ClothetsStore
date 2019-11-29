@@ -46,8 +46,8 @@ class Order extends React.Component{
                     <td className="price text-center"><NumberFormat value={item.price} displayType={'text'} thousandSeparator={true}/></td>
                     <td className="qty text-center"><input id={"txt" + idx} className="input" type="number" min="1" defaultValue={item.quantity} onChange={this.changeQuantity}/></td>
                     
-                    <td className="total text-center">{item.discount === null ? 0 : item.discount}</td>
-                    <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100))*item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
+                    <td className="total text-center">{item.discount === null ? 0 : item.discount}%</td>
+                    <td className="total text-center"><strong className="primary-color"><NumberFormat value={(item.price - (item.price * item.discount / 100)) * item.quantity} displayType={'text'} thousandSeparator={true}/></strong></td>
                     <td className="text-right"><button className="main-btn icon-btn" onClick={this.deleteProduct} id={"btn" + idx}><i className="fa fa-close"></i></button></td>
                 </tr>
             );
@@ -62,6 +62,7 @@ class Order extends React.Component{
             let totalPrice = 0;
             // eslint-disable-next-line
             this.state.cart.map((item) => {
+                // totalPrice += item.price * item.quantity;
                 totalPrice += item.discount === null ? item.price * item.quantity : (item.price - (item.price * item.discount / 100)) * item.quantity;
             })
 

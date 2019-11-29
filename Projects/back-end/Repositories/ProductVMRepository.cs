@@ -322,6 +322,7 @@ namespace Repositories
                                                          Name = p.ProductColor.Product.Name,
                                                          ColorName = p.ProductColor.Color.Name,
                                                          SizeName = p.Size.Name,
+                                                         //Price = p.ProductColor.Product.Price - (p.ProductColor.Product.Price / 100 * decimal.Parse(p.ProductColor.Product.Discount.ToString())),
                                                          Price = p.ProductColor.Product.Price,
                                                          Discount = p.ProductColor.Product.Discount,
                                                          ImageUrl = p.ProductColor.ImageUrl

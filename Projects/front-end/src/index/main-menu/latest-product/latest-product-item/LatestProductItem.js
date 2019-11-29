@@ -9,16 +9,16 @@ class LatestProductItem extends React.Component{
                     <div className="product-thumb">
                         <div className="product-label">
                             <span>Mới</span>
-                            { this.props.itemDiscount === null ? '' : <span className="sale">{ this.props.itemDiscount }</span>}
+                            { this.props.itemDiscount === null || this.props.itemDiscount === 0 ? '' : <span className="sale">{ this.props.itemDiscount }%</span>}
                         </div>
                         <button className="main-btn quick-view"><i className="fa fa-search-plus"></i><a href={`/product?id=${this.props.itemId}`}>Chi tiết</a></button>
                         <img src={ imgUrl } alt="" style={{width: '260px', height: '350px'}}/>
                     </div>
                     <div className="product-body">
                         { 
-                            this.props.itemDiscount === null ?
+                            this.props.itemDiscount === null || this.props.itemDiscount === 0 ?
                             <h3 className="product-price"><NumberFormat value={this.props.itemPrice} displayType={'text'} thousandSeparator={true}/></h3> :
-                            <h3 className="product-price">{this.props.itemPrice - (this.props.itemPrice * this.props.itemDiscount / 100)} <del className="product-old-price">${this.props.itemPrice}</del></h3>
+                            <h3 className="product-price"><NumberFormat value={this.props.itemPrice - (this.props.itemPrice * this.props.itemDiscount / 100)} displayType={'text'} thousandSeparator={true}/> <del className="product-old-price"><NumberFormat value={this.props.itemPrice} displayType={'text'} thousandSeparator={true}/></del></h3>
                         }
                         <div className="product-rating">
                             <i className="fa fa-star"></i>

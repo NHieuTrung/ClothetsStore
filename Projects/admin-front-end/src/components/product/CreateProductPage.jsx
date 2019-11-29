@@ -517,8 +517,8 @@ class CreateProductPage extends Component {
                   return res;
                 })
                 .catch(err => {
-                  alert("Lỗi khi upload ảnh lên server: " + err);
-                  window.location.reload();
+                  console.log("Lỗi khi upload ảnh lên server: " + err);
+                  // window.location.reload();
                 });
             });
             MySwal.fire({
@@ -602,7 +602,7 @@ class CreateProductPage extends Component {
                   type="number"
                   className="form-control"
                   id="inputDiscount"
-                  placeholder="Iventory Quantity"
+                  placeholder="Giá giảm"
                   onChange={this.handleDiscountChange}
                   min="0"
                   max="100"
@@ -885,7 +885,7 @@ class CreateProductPage extends Component {
                       type="number"
                       className="form-control"
                       id="inputInventory"
-                      placeholder="Iventory Quantity"
+                      placeholder="Số lượng"
                       onChange={this.handleInventoryQuantityChange}
                       value={this.state.productSize.inventoryQuantity}
                       min="0"
