@@ -23,7 +23,7 @@ namespace ClothingStore.Areas.Customer.Controllers
 
         [HttpGet]
         [Route("getProductTypeById")]
-        public async Task<IActionResult> getProductTypeById(Guid id)
+        public async Task<IActionResult> GetProductTypeById(Guid id)
         {
             return Ok(await productTypeService.GetById(id));
         }

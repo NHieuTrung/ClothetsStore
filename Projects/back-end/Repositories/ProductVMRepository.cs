@@ -117,7 +117,10 @@ namespace Repositories
             productSizes = productSizes.Where(p => p.ProductColor.Product.Price >= minPrice && p.ProductColor.Product.Price <= maxPrice).ToList();
 
             //Filter by productType
-            productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
+            if (productTypeId != Guid.Empty)
+            {
+                productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
+            }
 
             //Get distinct products (group by -> distinct)
             List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
@@ -294,7 +297,10 @@ namespace Repositories
             productSizes = productSizes.Where(p => p.ProductColor.Product.Price >= minPrice && p.ProductColor.Product.Price <= maxPrice).ToList();
 
             //Filter by productType
-            productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
+            if (productTypeId != Guid.Empty)
+            {
+                productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
+            }
 
             List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
                                                    .Distinct()

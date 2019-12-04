@@ -12,7 +12,8 @@ class Filter extends React.Component {
         filterByColor: '00000000-0000-0000-0000-000000000000',
         filterBySize: '',
         filterByBrand: '00000000-0000-0000-0000-000000000000',
-        filterByProductGender: '00000000-0000-0000-0000-000000000000'
+        filterByProductGender: '00000000-0000-0000-0000-000000000000',
+        filterByProductType: '00000000-0000-0000-0000-000000000000'
     }
 
     getSearchAndFilter = () => {
@@ -30,7 +31,7 @@ class Filter extends React.Component {
     getNumberOfPages = () => {
         let search = this.getSearchAndFilter();
 
-        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${search}`)
+        fetch(`https://localhost:44376/api/customer/product/getNumberOfPages?pageSize=${this.state.pageSize}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${search}&productTypeId=${this.state.filterByProductType}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -98,7 +99,8 @@ class Filter extends React.Component {
             filterBySize: nextProps.size,
             filterByBrand: nextProps.brand,
             filterByProductGender: nextProps.productGender,
-            search: nextProps.search
+            search: nextProps.search,
+            filterByProductType: nextProps.productType
         }, () => {
             this.getNumberOfPages();
         }, () => {

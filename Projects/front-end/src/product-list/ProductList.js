@@ -130,6 +130,12 @@ class ProductList extends React.Component {
         });
     }
 
+    filterByProductType = (productTypeId) => {
+        this.setState({
+            filterByProductType: productTypeId
+        });
+    }
+
     componentDidMount = () => {
         this.getUrl();
     }
@@ -147,7 +153,7 @@ class ProductList extends React.Component {
                     <div className="container">
                         {/* <!-- row --> */}
                         <div className="row">
-                            <Aside filterByProductGender={this.filterByProductGender} filterByBrand={this.filterByBrand} filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
+                            <Aside productGender={this.state.filterByProductGender} productType={this.state.filterByProductType} filterByProductType={this.filterByProductType} filterByProductGender={this.filterByProductGender} filterByBrand={this.filterByBrand} filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
                             <Main productType={this.state.filterByProductType} search={this.state.search} productGender={this.state.filterByProductGender} brand={this.state.filterByBrand} size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
                         </div>
                         {/* <!-- /row --> */}

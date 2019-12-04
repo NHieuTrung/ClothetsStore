@@ -11,7 +11,9 @@ class Filter extends React.Component {
         filterByBrand: '00000000-0000-0000-0000-000000000000',
         brand: [],
         filterByProductGender: '00000000-0000-0000-0000-000000000000',
-        productGender: []
+        productGender: [],
+        filterByProductType: '00000000-0000-0000-0000-000000000000',
+        productType: []
     }
 
     getColor = () => {
@@ -51,6 +53,21 @@ class Filter extends React.Component {
             .then(res => {
                 this.setState({
                     productGender: res
+                });
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        }
+    }
+
+    getProductType = () => {
+        if(this.state.filterByProductType !== '00000000-0000-0000-0000-000000000000') {
+            fetch(`https://localhost:44376/api/customer/producttype/getProductTypeById?id=${this.state.filterByProductType}`)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    productType: res
                 });
             })
             .catch(error => {
@@ -101,12 +118,21 @@ class Filter extends React.Component {
         })
     }
 
+    resetProductType = () => {
+        this.props.filterByProductType('00000000-0000-0000-0000-000000000000');
+
+        this.setState({
+            filterByProductType: '00000000-0000-0000-0000-000000000000'
+        })
+    }
+
     resetAll = () => {
         this.props.filterByPrice(0, 0);
         this.props.filterByColor('00000000-0000-0000-0000-000000000000');
         this.props.filterBySize('');
         this.props.filterByBrand('00000000-0000-0000-0000-000000000000');
         this.props.filterByProductGender('00000000-0000-0000-0000-000000000000');
+        this.props.filterByProductType('00000000-0000-0000-0000-000000000000');
 
         this.setState({
             filterByMinPrice: 0,
@@ -115,7 +141,8 @@ class Filter extends React.Component {
             color: [],
             filterBySize: '',
             filterByBrand: '00000000-0000-0000-0000-000000000000',
-            filterByProductGender: '00000000-0000-0000-0000-000000000000'
+            filterByProductGender: '00000000-0000-0000-0000-000000000000',
+            filterByProductType: '00000000-0000-0000-0000-000000000000'
         })
     }
 
@@ -185,6 +212,19 @@ class Filter extends React.Component {
         return productGender;
     }
 
+    renderProductType = () => {
+        let productType;
+
+        if(this.state.filterByProductType !== '00000000-0000-0000-0000-000000000000') {
+            productType = <ul className="filter-list">
+                                <li><span className="text-uppercase">Loại:</span></li>
+                                <li><a href=" #" onClick={this.resetProductType} style={{ border: "1px solid #F8694A" }}>{this.state.productType.name}</a></li>
+                            </ul>
+        }
+
+        return productType;
+    }
+
     UNSAFE_componentWillReceiveProps = (nextProps) => {
         this.setState({
             filterByMinPrice: nextProps.minPrice,
@@ -192,11 +232,13 @@ class Filter extends React.Component {
             filterByColor: nextProps.color,
             filterBySize: nextProps.size,
             filterByBrand: nextProps.brand,
-            filterByProductGender: nextProps.productGender
+            filterByProductGender: nextProps.productGender,
+            filterByProductType: nextProps.productType
         }, () => {
             this.getColor();
             this.getBrand();
             this.getProductGender();
+            this.getProductType();
         });
     }
 
@@ -211,6 +253,7 @@ class Filter extends React.Component {
                 {this.renderSize()}
                 {this.renderBrand()}
                 {this.renderProductGender()}
+                {this.renderProductType()}
 
                 <button className="primary-btn" onClick={this.resetAll}>Xoá tất cả</button>
             </div>

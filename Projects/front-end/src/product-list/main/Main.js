@@ -82,7 +82,7 @@ class Main extends React.Component {
         return (
             // {/* <!-- MAIN --> */}
             <div id="main" className="col-md-9">
-                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} search={this.state.search} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor} size={this.state.filterBySize} brand={this.state.filterByBrand} productGender={this.state.filterByProductGender}></Filter>
+                <Filter changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder} productType={this.state.filterByProductType} search={this.state.search} pageSize={this.state.pageSize} currentPageNumber={this.state.pageNumber} orderBy={this.state.orderBy} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} color={this.state.filterByColor} size={this.state.filterBySize} brand={this.state.filterByBrand} productGender={this.state.filterByProductGender}></Filter>
                 <List items={this.state.items}></List>
             </div>
             // {/* <!-- /MAIN --> */}
