@@ -49,7 +49,9 @@ class HomeNavigation extends React.Component {
 
     renderMaleCategories = () => {
         const maleCategories = this.state.maleCategories.map((item, idx) => 
-            <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+            // <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+            <li key={idx}><a href={"/productlist?productTypeId=" + item.typeProductId} id={item.typeProductId}>{item.name}</a></li>
+            // href="/productlist?productGenderId=D0BBA5FE-BD96-4A29-87F2-A3D4E63F974A"
         )
 
         return maleCategories;
@@ -65,7 +67,7 @@ class HomeNavigation extends React.Component {
 
     renderAllCategories = () => {
         const categories = this.state.categories.map((item, idx) => 
-            <li key={idx}><a href="/#" id={item.typeProductId}>{item.name}</a></li>
+            <li key={idx}><a href={"/productlist?productTypeId=" + item.typeProductId} id={item.typeProductId}>{item.name}</a></li>
         )
 
         return categories;

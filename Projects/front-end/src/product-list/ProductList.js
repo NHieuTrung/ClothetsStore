@@ -15,7 +15,8 @@ class ProductList extends React.Component {
         filterByColor: '00000000-0000-0000-0000-000000000000',
         filterBySize: '',
         filterByBrand: '00000000-0000-0000-0000-000000000000',
-        filterByProductGender: '00000000-0000-0000-0000-000000000000'
+        filterByProductGender: '00000000-0000-0000-0000-000000000000',
+        filterByProductType: '00000000-0000-0000-0000-000000000000'
     }
 
     getUrl = () => {
@@ -24,6 +25,7 @@ class ProductList extends React.Component {
         let orderByTemp, orderBy = 'new';
         let searchTemp = '', search = '';
         let productGenderTemp = '', productGender = '';
+        let productTypeTemp = '', productType = '';
         let url = window.location.href;
         
         //pageSize
@@ -52,19 +54,30 @@ class ProductList extends React.Component {
 
         //productGender
         if(url.indexOf('productGenderId') !== -1) {
-            productGenderTemp = url.substring(url.indexOf('search'), url.length);
+            productGenderTemp = url.substring(url.indexOf('productGenderId'), url.length);
             productGender = productGenderTemp.substr(productGenderTemp.indexOf('=') + 1, productGenderTemp.indexOf('&') === -1 ? productGenderTemp.length - productGenderTemp.indexOf('=') : productGenderTemp.indexOf('&') - productGenderTemp.indexOf('=') - 1);
         }
         else {
             productGender = '00000000-0000-0000-0000-000000000000';
         }
 
+        //productType
+        if(url.indexOf('productTypeId') !== -1) {
+            productTypeTemp = url.substring(url.indexOf('productTypeId'), url.length);
+            productType = productTypeTemp.substr(productTypeTemp.indexOf('=') + 1, productTypeTemp.indexOf('&') === -1 ? productTypeTemp.length - productTypeTemp.indexOf('=') : productTypeTemp.indexOf('&') - productTypeTemp.indexOf('=') - 1);
+        }
+        else {
+            productType = '00000000-0000-0000-0000-000000000000';
+        }
+        
+
         this.setState({
             pageSize: pageSize,
             pageNumber: pageNumber,
             orderBy: orderBy,
             search: search,
-            filterByProductGender: productGender
+            filterByProductGender: productGender,
+            filterByProductType: productType
         });
     }
 
@@ -135,7 +148,7 @@ class ProductList extends React.Component {
                         {/* <!-- row --> */}
                         <div className="row">
                             <Aside filterByProductGender={this.filterByProductGender} filterByBrand={this.filterByBrand} filterBySize={this.filterBySize} filterByPrice={this.filterByPrice} filterByColor={this.filterByColor}></Aside>
-                            <Main search={this.state.search} productGender={this.state.filterByProductGender} brand={this.state.filterByBrand} size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
+                            <Main productType={this.state.filterByProductType} search={this.state.search} productGender={this.state.filterByProductGender} brand={this.state.filterByBrand} size={this.state.filterBySize} color={this.state.filterByColor} minPrice={this.state.filterByMinPrice} maxPrice={this.state.filterByMaxPrice} pageSize={this.state.pageSize} pageNumber={this.state.pageNumber} orderBy={this.state.orderBy} changeSize={this.changeSize} changePage={this.changePage} changeOrder={this.changeOrder}></Main>
                         </div>
                         {/* <!-- /row --> */}
                     </div>

@@ -14,7 +14,8 @@ class Main extends React.Component {
         filterByColor: '00000000-0000-0000-0000-000000000000',
         filterBySize: '',
         filterByBrand: '00000000-0000-0000-0000-000000000000',
-        filterByProductGender: '00000000-0000-0000-0000-000000000000'
+        filterByProductGender: '00000000-0000-0000-0000-000000000000',
+        filterByProductType: '00000000-0000-0000-0000-000000000000'
     }
 
     changeSize = (size) => {
@@ -48,7 +49,7 @@ class Main extends React.Component {
     }
 
     getProducts = () => {
-        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${this.state.search}`)
+        fetch(`https://localhost:44376/api/customer/product/getProductVMs?pageSize=${this.state.pageSize}&pageNumber=${this.state.pageNumber}&orderBy=${this.state.orderBy}&minPrice=${this.state.filterByMinPrice}&maxPrice=${this.state.filterByMaxPrice}&colorId=${this.state.filterByColor}&sizeName=${this.state.filterBySize}&brandId=${this.state.filterByBrand}&productGenderId=${this.state.filterByProductGender}&search=${this.state.search}&productTypeId=${this.state.filterByProductType}`)
         .then(res => res.json())
         .then(res => {
             this.setState({
@@ -70,7 +71,8 @@ class Main extends React.Component {
             filterByColor: nextProps.color,
             filterBySize: nextProps.size,
             filterByBrand: nextProps.brand,
-            filterByProductGender: nextProps.productGender
+            filterByProductGender: nextProps.productGender,
+            filterByProductType: nextProps.productType
         }, () => {
             this.getProducts();
         });
