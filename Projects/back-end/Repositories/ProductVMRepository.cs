@@ -122,6 +122,9 @@ namespace Repositories
                 productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
             }
 
+            //Remove locked products
+            productSizes = productSizes.Where(p => p.ProductColor.Product.StatusId != Guid.Parse("1C55F3C2-D7ED-4B82-8F18-480062D092A1")).ToList();
+
             //Get distinct products (group by -> distinct)
             List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
                                                    .Distinct()
@@ -302,6 +305,9 @@ namespace Repositories
                 productSizes = productSizes.Where(p => p.ProductColor.Product.TypeProductId == productTypeId).ToList();
             }
 
+            //Remove locked products
+            productSizes = productSizes.Where(p => p.ProductColor.Product.StatusId != Guid.Parse("1C55F3C2-D7ED-4B82-8F18-480062D092A1")).ToList();
+
             List<Guid> productIdList = productSizes.GroupBy(p => p.ProductId)
                                                    .Distinct()
                                                    .Select(p => p.Key)
@@ -412,6 +418,21 @@ namespace Repositories
             }
 
             return cartTemp;
+        }
+
+        public async Task<ProductStatusVM> GetProductStatus(Guid productId)
+        {
+            ProductStatusVM product = await ctx.Product.Where(p => p.ProductId == productId)
+                                                       .Select(p => new ProductStatusVM
+                                                       {
+                                                           ProductId = p.ProductId,
+                                                           Name = p.Name,
+                                                           StatusId = p.StatusId,
+                                                           StatusName = p.Status.Name
+                                                       })
+                                                       .FirstOrDefaultAsync();
+
+            return product;
         }
     }
 }

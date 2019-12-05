@@ -9,7 +9,25 @@ class ProductInfo extends React.Component{
         size:[],
         sizeId: '00000000-0000-0000-0000-000000000000',
         quantity: 0,
-        thongbao: ''
+        thongbao: '',
+        productStatus: ''
+    }
+
+    getProductStatus = () => {
+        console.log(`https://localhost:44376/api/customer/product/getProductStatus?productId=${this.state.productId}`);
+        fetch(`https://localhost:44376/api/customer/product/getProductStatus?productId=${this.state.productId}`)
+        .then(res => res.json())
+        .then(
+            (res) => {
+                console.log(res);
+                this.setState({
+                    productStatus: res
+                });
+            },
+            (err) => {
+                console.log(err);
+            }
+        )
     }
 
     getProductColors = () => {
@@ -185,6 +203,8 @@ class ProductInfo extends React.Component{
             this.getProductSizes();
 
             this.getSelectSize();
+
+            this.getProductStatus();
         });
     }
 
@@ -242,7 +262,11 @@ class ProductInfo extends React.Component{
                             <span className="text-uppercase"><b>Số lượng mua: </b></span>
                             <input className="input" id="txtsl" type="number" defaultValue="1" min="1"/>
                         </div>
-                        <button className="primary-btn add-to-cart" onClick={this.addToCart}><i className="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                        { this.state.productStatus.statusName === "Khoá" ?
+                            <button className="primary-btn add-to-cart" onClick={this.addToCart} disabled style={{background: "#808080"}}><i className="fa fa-shopping-cart"></i> Sản phẩm đã bỏ mẫu</button> :
+                            <button className="primary-btn add-to-cart" onClick={this.addToCart}><i className="fa fa-shopping-cart"></i> Thêm vào giỏ hàng</button>
+                        }
+                        
                         {/* <div className="pull-right">
                             <button className="main-btn icon-btn"><i className="fa fa-heart"></i></button>
                             <button className="main-btn icon-btn"><i className="fa fa-exchange"></i></button>

@@ -77,5 +77,12 @@ namespace ClothingStore.Areas.Customer.Controllers
         {
             return Ok(await productVMService.CheckProductQuantity(carts));
         }
+
+        [HttpGet]
+        [Route("getProductStatus")]
+        public async Task<IActionResult> GetProductStatus(Guid productId)
+        {
+            return Ok(await productVMService.GetProductStatus(productId));
+        }
     }
 }

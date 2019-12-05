@@ -68,5 +68,10 @@ namespace Services
 
             return await productVMRepository.CheckProductQuantity(cartVMs);
         }
+
+        public async Task<ProductStatusVM> GetProductStatus(Guid productId)
+        {
+            return await productVMRepository.GetProductStatus(productId);
+        }
     }
 }
