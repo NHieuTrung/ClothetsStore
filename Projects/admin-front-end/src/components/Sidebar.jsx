@@ -88,6 +88,41 @@ class Sidebar extends Component {
             </div>
           </div>
         </li>
+        <li className="nav-item">
+          <a
+            className="nav-link collapsed"
+            href="/#"
+            data-toggle="collapse"
+            data-target="#collapseAttProductSidebar"
+            aria-expanded="true"
+            aria-controls="collapseOrderSidebar"
+          >
+            <i className="fas fa-fw fa-cog"></i>
+            <span>Thuộc tính sản phẩm</span>
+          </a>
+          <div
+            id="collapseAttProductSidebar"
+            className="collapse"
+            aria-labelledby="headingTwo"
+            data-parent="#accordionSidebar"
+          >
+            <div className="bg-white py-2 collapse-inner rounded">
+              <h6 className="collapse-header">Tính năng:</h6>
+              <a className="collapse-item" href="/brand-page">
+                Danh sách thương hiệu
+              </a>
+              <a className="collapse-item" href="/color-page">
+                Danh sách màu
+              </a>
+              <a className="collapse-item" href="/product-type-page">
+                Danh sách loại sản phẩm
+              </a>
+              {/* <a className="collapse-item" href="/#">
+              Tạo đơn hàng
+          </a> */}
+            </div>
+          </div>
+        </li>
       </React.Fragment>
     );
   };

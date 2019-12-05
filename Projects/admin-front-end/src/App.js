@@ -8,6 +8,7 @@ import Home from "./components/Home";
 import ListProduct from "./components/product/ListProduct";
 import CreateProductPage from "./components/product/CreateProductPage";
 import Order from "./components/order/Order";
+import ListBrand from "./components/brand/ListBrand";
 import ErrorPage404 from "./components/ErrorPage404";
 import ErrorPageServer from "./components/ErrorPageServer";
 import Login from "./components/account/Login";
@@ -40,6 +41,9 @@ function App() {
               </Route>
               <Route path="/order-page">
                 <Order></Order>
+              </Route>
+              <Route path="/brand-page">
+                <ListBrand></ListBrand>
               </Route>
               <Route path="/error-server">
                 <ErrorPageServer />

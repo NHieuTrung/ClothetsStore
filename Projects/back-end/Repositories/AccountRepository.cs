@@ -160,7 +160,7 @@ namespace Repositories
                                                       .Include(a => a.Role)
                                                       .FirstOrDefault();
 
-            // return null if user not found
+            // return null if account of user not found
             if (accountAuthenticated == null)
             {
                 return null;
@@ -178,14 +178,8 @@ namespace Repositories
                 {
                     Subject = new ClaimsIdentity(new Claim[]
                     {
-                        //new Claim(ClaimTypes.Name, customer.Name),
-                        //new Claim(ClaimTypes.Email, customer.Email),
-                        //new Claim(ClaimTypes.MobilePhone, customer.Phone),
-                        //new Claim(ClaimTypes.StreetAddress, customer.Address),
-                        //new Claim(ClaimTypes.DateOfBirth, customer.Birthday.ToString()),
-                        //new Claim(ClaimTypes.PrimarySid, accountAuthenticated.AccountId.ToString().ToUpper()), //accountId
-                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //customerId
-                        new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name),
+                        new Claim(ClaimTypes.NameIdentifier, customer.CustomerId.ToString().ToUpper()), //claim user id
+                        new Claim(ClaimTypes.Role, accountAuthenticated.Role.Name) //claim role,
                     }),
                     Expires = DateTime.UtcNow.AddDays(7),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

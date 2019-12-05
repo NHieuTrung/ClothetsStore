@@ -32,14 +32,6 @@ namespace ClothingStore
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add Cors
-            services.AddCors(o => o.AddPolicy("MyPolicy", builder =>
-            {
-                builder.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader();
-            }));
-
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
             services.Configure<AppSettings>(appSettingsSection);
@@ -63,6 +55,13 @@ namespace ClothingStore
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            });
+
+            // Add Cors
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyPolicy",
+                builder => builder.WithOrigins("http://localhost:3000", "http://localhost:3001").AllowAnyHeader().AllowAnyMethod());
             });
 
             // configure DI for application services
