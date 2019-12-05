@@ -25,7 +25,7 @@ namespace ClothingStore.Areas.Admin.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("authenticateAccount")]
-        public async Task<IActionResult> AuthenticateAccount(Account account)
+        public async Task<IActionResult> AuthenticateAccount([FromBody]Account account)
         {
             return Ok(await accountService.AuthenticateAccountEmployee(account));
         }
