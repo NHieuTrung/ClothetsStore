@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import Brand from "./Brand";
-import CreateBrand from "./CreateBrand";
-class ListBrand extends Component {
+import Color from "./Color";
+import CreateColor from "./CreateColor";
+class ListColor extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      listBrand: []
+      listColor: []
     };
   }
   PushToServerPage = () => {
@@ -19,8 +19,8 @@ class ListBrand extends Component {
       window.location.href = "/login";
     }
   }
-  async componentDidMount() {
-    const url = "https://localhost:44376/api/admin/brands";
+  componentDidMount() {
+    const url = "https://localhost:44376/api/admin/colors";
     const options = {
       method: "GET",
       headers: {
@@ -34,7 +34,7 @@ class ListBrand extends Component {
         result => {
           if (result.status !== 404) {
             this.setState({
-              listBrand: [...result]
+              listColor: [...result]
             });
           } else {
             console.log("Something wrong when get products");
@@ -79,7 +79,7 @@ class ListBrand extends Component {
         {/* DataTales Example */}
         <div className="card shadow mb-4">
           <div className="card-header py-3">
-            <h6 className="m-0 font-weight-bold text-primary">List Brands</h6>
+            <h6 className="m-0 font-weight-bold text-primary">List Colors</h6>
           </div>
           <div className="card-body">
             <div className="table-responsive">
@@ -91,27 +91,27 @@ class ListBrand extends Component {
               >
                 <thead>
                   <tr>
-                    <th>Mã thương hiệu</th>
-                    <th>Tên thương hiệu</th>
-                    <th>Thuộc công ty</th>
+                    <th>Mã màu</th>
+                    <th>Tên màu</th>
+                    <th>Giá trị màu</th>
                     <th></th>
                   </tr>
                 </thead>
                 <tfoot>
                   <tr>
-                    <th>Mã thương hiệu</th>
-                    <th>Tên thương hiệu</th>
-                    <th>Thuộc công ty</th>
+                    <th>Mã màu</th>
+                    <th>Tên màu</th>
+                    <th>Giá trị màu</th>
                     <th></th>
                   </tr>
                 </tfoot>
                 <tbody>
-                  {this.state.listBrand.map(brand => (
-                    <Brand
-                      key={brand.brandId}
-                      brandId={brand.brandId}
-                      name={brand.name}
-                      companyName={brand.companyName}
+                  {this.state.listColor.map(color => (
+                    <Color
+                      key={color.colorId}
+                      colorId={color.colorId}
+                      name={color.name}
+                      colorValue={color.colorValue}
                     />
                   ))}
                 </tbody>
@@ -120,16 +120,16 @@ class ListBrand extends Component {
             <button
               className="btn btn-success"
               data-toggle="modal"
-              data-target="#modalCreateBrand"
+              data-target="#modalCreateColor"
             >
-              Tạo thương hiệu mới
+              Tạo màu mới
             </button>
           </div>
         </div>
-        <CreateBrand />
+        <CreateColor />
       </div>
     );
   }
 }
 
-export default ListBrand;
+export default ListColor;

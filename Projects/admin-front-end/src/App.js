@@ -9,6 +9,7 @@ import ListProduct from "./components/product/ListProduct";
 import CreateProductPage from "./components/product/CreateProductPage";
 import Order from "./components/order/Order";
 import ListBrand from "./components/brand/ListBrand";
+import ListColor from "./components/color/ListColor";
 import ErrorPage404 from "./components/ErrorPage404";
 import ErrorPageServer from "./components/ErrorPageServer";
 import Login from "./components/account/Login";
@@ -44,6 +45,9 @@ function App() {
               </Route>
               <Route path="/brand-page">
                 <ListBrand></ListBrand>
+              </Route>
+              <Route path="/color-page">
+                <ListColor></ListColor>
               </Route>
               <Route path="/error-server">
                 <ErrorPageServer />

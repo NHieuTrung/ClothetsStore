@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ClothingStore.Areas.Admin.Helper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,59 +9,58 @@ using Models;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
-    [Authorize(Roles = Constrain.CustomRoles.Administrator + "," + Constrain.CustomRoles.NhapKho)]
     [Route("api/admin/[controller]")]
     [ApiController]
-    public class BrandsController : ControllerBase
+    public class ColorsController : ControllerBase
     {
         private readonly ClothetsStoreContext _context;
 
-        public BrandsController(ClothetsStoreContext context)
+        public ColorsController(ClothetsStoreContext context)
         {
             _context = context;
         }
 
-        // GET: api/Brands
+        // GET: api/Colors
         [HttpGet]
-        public IEnumerable<Brand> GetBrand()
+        public IEnumerable<Color> GetColor()
         {
-            return _context.Brand;
+            return _context.Color;
         }
 
-        // GET: api/Brands/5
+        // GET: api/Colors/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetBrand([FromRoute] Guid id)
+        public async Task<IActionResult> GetColor([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var brand = await _context.Brand.FindAsync(id);
+            var color = await _context.Color.FindAsync(id);
 
-            if (brand == null)
+            if (color == null)
             {
                 return NotFound();
             }
 
-            return Ok(brand);
+            return Ok(color);
         }
 
-        // PUT: api/Brands/5
+        // PUT: api/Colors/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand([FromRoute] Guid id, [FromBody] Brand brand)
+        public async Task<IActionResult> PutColor([FromRoute] Guid id, [FromBody] Color color)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != brand.BrandId)
+            if (id != color.ColorId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(brand).State = EntityState.Modified;
+            _context.Entry(color).State = EntityState.Modified;
 
             try
             {
@@ -71,7 +68,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
+                if (!ColorExists(id))
                 {
                     return NotFound();
                 }
@@ -84,50 +81,49 @@ namespace ClothingStore.Areas.Admin.Controllers
             return NoContent();
         }
 
-        // POST: api/Brands
+        // POST: api/Colors
         [HttpPost]
-        public async Task<IActionResult> PostBrand([FromBody] Brand brand)
+        public async Task<IActionResult> PostColor([FromBody] Color color)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            if (_context.Brand.Where(m => m.Name == brand.Name).Count() > 0)
+            if (_context.Color.Where(m => m.ColorValue == color.ColorValue).Count() > 0)
             {
                 return BadRequest();
             }
-            brand.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
 
-            _context.Brand.Add(brand);
+            _context.Color.Add(color);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetBrand", new { id = brand.BrandId }, brand);
+            return CreatedAtAction("GetColor", new { id = color.ColorId }, color);
         }
 
-        // DELETE: api/Brands/5
+        // DELETE: api/Colors/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBrand([FromRoute] Guid id)
+        public async Task<IActionResult> DeleteColor([FromRoute] Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var brand = await _context.Brand.FindAsync(id);
-            if (brand == null)
+            var color = await _context.Color.FindAsync(id);
+            if (color == null)
             {
                 return NotFound();
             }
 
-            _context.Brand.Remove(brand);
+            _context.Color.Remove(color);
             await _context.SaveChangesAsync();
 
-            return Ok(brand);
+            return Ok(color);
         }
 
-        private bool BrandExists(Guid id)
+        private bool ColorExists(Guid id)
         {
-            return _context.Brand.Any(e => e.BrandId == id);
+            return _context.Color.Any(e => e.ColorId == id);
         }
     }
 }
