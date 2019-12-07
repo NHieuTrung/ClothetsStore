@@ -44,5 +44,12 @@ namespace ClothingStore.Areas.Admin.Controllers
         {
             return Ok(await statisticsService.GetPendingOrders());
         }
+
+        [HttpGet]
+        [Route("calculateIncomes")]
+        public async Task<IActionResult> CalculateIncomes(DateTime fromDate, DateTime toDate)
+        {
+            return Ok(await statisticsService.CalculateIncomes(fromDate, toDate));
+        }
     }
 }

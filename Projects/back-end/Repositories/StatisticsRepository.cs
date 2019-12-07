@@ -89,5 +89,89 @@ namespace Repositories
 
             return pendingOrdersVM;
         }
+
+        public async Task<IncomesVM> CalculateIncomes(DateTime fromDate, DateTime toDate)
+        {
+            IncomesVM incomesVM = new IncomesVM();
+
+            if (fromDate == DateTime.Parse("01/01/0001") || toDate == DateTime.Parse("01/01/0001"))
+            {
+                fromDate = await ctx.Order.Where(o => o.StatusId == Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA")) //Đã thanh toán
+                                          .OrderBy(o => o.DeliveryDate)
+                                          .Select(o => o.DeliveryDate)
+                                          .FirstOrDefaultAsync();
+
+                toDate = await ctx.Order.Where(o => o.StatusId == Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA")) //Đã thanh toán
+                                        .OrderByDescending(o => o.DeliveryDate)
+                                        .Select(o => o.DeliveryDate)
+                                        .FirstOrDefaultAsync();
+
+                
+                incomesVM.FromDate = fromDate;
+                incomesVM.ToDate = toDate;
+            }
+            else
+            {
+                incomesVM.FromDate = fromDate;
+                incomesVM.ToDate = toDate;
+            }
+
+            incomesVM.TotalIncomes = await ctx.Order.Where(o => o.StatusId == Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA")) //Đã thanh toán
+                                                    .Select(o => o.TotalPrice)
+                                                    .SumAsync();
+
+            if(incomesVM.FromDate.Month == incomesVM.ToDate.Month && incomesVM.FromDate.Year == incomesVM.ToDate.Year)
+            {
+                incomesVM.IncomesByDays = await CalculateIncomesByDays(incomesVM.FromDate, incomesVM.ToDate);
+            }
+            else
+            {
+                incomesVM.IncomesByMonths = await CalculateIncomesByMonths(incomesVM.FromDate, incomesVM.ToDate);
+            }
+
+            return incomesVM;
+        }
+
+        public async Task<List<Dictionary<DateTime, decimal>>> CalculateIncomesByMonths(DateTime fromDate, DateTime toDate)
+        {
+            List<Dictionary<DateTime, decimal>> listIncomes = new List<Dictionary<DateTime, decimal>>();
+
+            while(fromDate.Month != toDate.Month || fromDate.Year != toDate.Year)
+            {
+                decimal incomes = await ctx.Order.Where(o => o.StatusId == Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA") && o.DeliveryDate.Month == fromDate.Month && o.DeliveryDate.Year == fromDate.Year)
+                                                 .Select(o => o.TotalPrice)
+                                                 .SumAsync();
+
+                Dictionary<DateTime, decimal> keyValuePairs = new Dictionary<DateTime, decimal>();
+                keyValuePairs.Add(fromDate, incomes);
+
+                listIncomes.Add(keyValuePairs);
+
+                fromDate = fromDate.AddMonths(1);
+            }
+
+            return listIncomes;
+        }
+
+        public async Task<List<Dictionary<DateTime, decimal>>> CalculateIncomesByDays(DateTime fromDate, DateTime toDate)
+        {
+            List<Dictionary<DateTime, decimal>> listIncomes = new List<Dictionary<DateTime, decimal>>();
+
+            while (fromDate.Day != toDate.Day)
+            {
+                decimal incomes = await ctx.Order.Where(o => o.StatusId == Guid.Parse("F2983653-F040-43D8-BDE0-D80B2F8BA7AA") && o.DeliveryDate.Day == fromDate.Day && o.DeliveryDate.Month == fromDate.Month && o.DeliveryDate.Year == fromDate.Year)
+                                                 .Select(o => o.TotalPrice)
+                                                 .SumAsync();
+
+                Dictionary<DateTime, decimal> keyValuePairs = new Dictionary<DateTime, decimal>();
+                keyValuePairs.Add(fromDate, incomes);
+
+                listIncomes.Add(keyValuePairs);
+
+                fromDate = fromDate.AddDays(1);
+            }
+
+            return listIncomes;
+        }
     }
 }

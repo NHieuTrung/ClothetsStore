@@ -3,7 +3,7 @@ import MonthlyEarnings from './statistics/monthly-earnings/MonthlyEarnings';
 import YearlyEarnings from './statistics/yearly-earnings/YearlyEarnings';
 import CompletedPercentage from './statistics/completed-percentage/CompletedPercentage';
 import PendingOrder from './statistics/pending-order/PendingOrder';
-import OverviewChart from './statistics/overview-chart/OverviewChart';
+import IncomeChart from './statistics/income-chart/IncomeChart';
 
 class Home extends Component {
     state = {};
@@ -32,7 +32,7 @@ class Home extends Component {
                 </div>
                 <div className="row">
                     {/* <!-- Area Chart --> */}
-                    <OverviewChart></OverviewChart>
+                    <IncomeChart></IncomeChart>
                 </div>  
             </div>
         );

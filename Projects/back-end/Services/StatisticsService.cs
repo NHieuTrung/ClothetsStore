@@ -30,5 +30,10 @@ namespace Services
         {
             return await statisticsRepository.GetPendingOrders();
         }
+
+        public async Task<IncomesVM> CalculateIncomes(DateTime fromDate, DateTime toDate)
+        {
+            return await statisticsRepository.CalculateIncomes(fromDate, toDate);
+        }
     }
 }
