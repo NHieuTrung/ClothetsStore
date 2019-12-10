@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
+using Services;
 
 namespace ClothingStore.Areas.Admin.Controllers
 {
@@ -16,19 +17,14 @@ namespace ClothingStore.Areas.Admin.Controllers
     [ApiController]
     public class BrandsController : ControllerBase
     {
-        private readonly ClothetsStoreContext _context;
-
-        public BrandsController(ClothetsStoreContext context)
-        {
-            _context = context;
-        }
+        BrandService brandService = new BrandService();
 
         // GET: api/Brands
         [HttpGet]
         public IEnumerable<Brand> GetBrand()
         {
             Guid activeId = new Guid("87577063-322E-4901-98D2-FF519341D992");
-            return _context.Brand.Where(m => m.StatusId == activeId);
+            return brandService.GetAll().Result.Where(m => m.StatusId == activeId);
         }
 
         // GET: api/Brands/5
@@ -40,7 +36,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                 return BadRequest(ModelState);
             }
 
-            var brand = await _context.Brand.FindAsync(id);
+            var brand = await brandService.GetById(id);
 
             if (brand == null)
             {
@@ -63,22 +59,20 @@ namespace ClothingStore.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
-            string prevBrandName = _context.Brand.Where(m => m.BrandId == id).Select(m => m.Name).FirstOrDefault();
-            if (prevBrandName != brand.Name && _context.Brand.Where(m => m.Name == brand.Name).Count() > 0)
+            string prevBrandName = brandService.GetById(id).Result.Name;
+            if (prevBrandName != brand.Name && brandService.GetAll().Result.Where(m => m.Name == brand.Name).Count() > 0)
             {
                 return BadRequest();
             }
             brand.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
 
-            _context.Entry(brand).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                await brandService.EditBrand(brand);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
+                if (brandService.GetById(id).Result == null)
                 {
                     return NotFound();
                 }
@@ -99,14 +93,13 @@ namespace ClothingStore.Areas.Admin.Controllers
             {
                 return BadRequest(ModelState);
             }
-            if (_context.Brand.Where(m => m.Name == brand.Name).Count() > 0)
+            if (brandService.GetAll().Result.Where(m => m.Name == brand.Name).Count() > 0)
             {
                 return BadRequest();
             }
             brand.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
 
-            _context.Brand.Add(brand);
-            await _context.SaveChangesAsync();
+            await brandService.Create(brand);
 
             return CreatedAtAction("GetBrand", new { id = brand.BrandId }, brand);
         }
@@ -120,21 +113,15 @@ namespace ClothingStore.Areas.Admin.Controllers
                 return BadRequest(ModelState);
             }
 
-            var brand = await _context.Brand.FindAsync(id);
+            var brand = await brandService.GetById(id);
             if (brand == null)
             {
                 return NotFound();
             }
 
-            brand.StatusId = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
-            await _context.SaveChangesAsync();
+            await brandService.DeleteBrand(id);
 
             return Ok(brand);
-        }
-
-        private bool BrandExists(Guid id)
-        {
-            return _context.Brand.Any(e => e.BrandId == id);
         }
     }
 }

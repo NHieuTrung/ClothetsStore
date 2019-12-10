@@ -34,5 +34,16 @@ namespace Repositories
 
             return brand;
         }
+        public async Task EditBrand(Brand brand)
+        {
+            ctx.Entry(brand).State = EntityState.Modified;
+            await ctx.SaveChangesAsync();
+        }
+        public async Task DeleteBrand(Guid id)
+        {
+            Brand brand = await ctx.Brand.FindAsync(id);
+            brand.StatusId = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
+            await ctx.SaveChangesAsync();
+        }
     }
 }

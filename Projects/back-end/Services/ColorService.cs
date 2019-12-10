@@ -22,5 +22,13 @@ namespace Services
 
             return await colorRepository.GetColorByProductId(productId);
         }
+        public async Task EditColor(Color color)
+        {
+            await colorRepository.EditColor(color);
+        }
+        public async Task DeleteColor(Guid id)
+        {
+            await colorRepository.DeleteColor(id);
+        }
     }
 }

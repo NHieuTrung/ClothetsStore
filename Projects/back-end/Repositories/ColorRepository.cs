@@ -34,6 +34,11 @@ namespace Repositories
 
             return color;
         }
+        public override async Task Create(Color color)
+        {
+            ctx.Color.Add(color);
+            await ctx.SaveChangesAsync();
+        }
 
         public async Task<IList<Color>> GetColorByProductId(Guid productId)
         {
@@ -49,6 +54,17 @@ namespace Repositories
                                                        .ToListAsync();
 
             return colors;
+        }
+        public async Task EditColor(Color color)
+        {
+            ctx.Entry(color).State = EntityState.Modified;
+            await ctx.SaveChangesAsync();
+        }
+        public async Task DeleteColor(Guid id)
+        {
+            Color color = await ctx.Color.FindAsync(id);
+            color.StatusId = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
+            await ctx.SaveChangesAsync();
         }
     }
 }
