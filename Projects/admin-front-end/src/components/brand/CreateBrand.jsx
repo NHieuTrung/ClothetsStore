@@ -38,27 +38,24 @@ class CreateBrand extends Component {
         CompanyName: this.state.CompanyName
       })
     };
-    fetch(url, options)
-      .then(res => res.json())
-      .then(
-        result => {
-          if (result.brandId !== null) {
-            alert("Tạo thương hiệu thành công!!!");
-            this.PushToBrandPage();
-          } else {
-            alert("Thương hiệu đã tồn tại");
-            this.PushToBrandPage();
-          }
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        error => {
-          alert("Thuong hieu da ton tai");
-          alert("Server Interupts");
+    fetch(url, options).then(
+      result => {
+        if (result.status === 201) {
+          alert("Tạo thương hiệu thành công!!!");
+          this.PushToBrandPage();
+        } else if (result.status === 400) {
+          alert("Thương hiệu đã tồn tại");
           this.PushToBrandPage();
         }
-      );
+      },
+      // Note: it's important to handle errors here
+      // instead of a catch() block so that we don't swallow
+      // exceptions from actual bugs in components.
+      error => {
+        alert("Server Interupts");
+        this.PushToServerPage();
+      }
+    );
   }
   render() {
     return (
@@ -126,23 +123,18 @@ class CreateBrand extends Component {
                   </div>
                 </div>
                 <div className="form-group-row">
-                  <button type="reset" className="btn btn-primary">
-                    Hồi phục
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    data-dismiss="modal"
+                  >
+                    Close
                   </button>
                   <button type="submit" className="btn btn-success">
                     Tạo thương hiệu
                   </button>
                 </div>
               </form>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-secondary"
-                data-dismiss="modal"
-              >
-                Close
-              </button>
             </div>
           </div>
         </div>

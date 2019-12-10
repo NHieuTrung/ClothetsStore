@@ -1,51 +1,64 @@
 import React, { Component } from "react";
-
-class CreateColor extends Component {
+class EditBrand extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      BrandId: "",
       Name: "",
-      ColorValue: ""
+      CompanyName: ""
     };
     this.handleNameChange = this.handleNameChange.bind(this);
-    this.handleColorValueChange = this.handleColorValueChange.bind(this);
+    this.handleCompanyNameChange = this.handleCompanyNameChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   PushToServerPage = () => {
     window.location.href = "/error-server";
   };
-  PushToColorPage = () => {
-    window.location.href = "/color-page";
+  PushToBrandPage = () => {
+    window.location.href = "/brand-page";
   };
   handleNameChange(event) {
     this.setState({ Name: event.target.value });
   }
-  handleColorValueChange(event) {
-    this.setState({ ColorValue: event.target.value });
+  handleCompanyNameChange(event) {
+    this.setState({ CompanyName: event.target.value });
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.BrandId !== prevProps.BrandId) {
+      this.setState({
+        BrandId: this.props.BrandId,
+        Name: this.props.Name,
+        CompanyName: this.props.CompanyName
+      });
+    }
   }
   handleSubmit(event) {
     event.preventDefault();
-    const url = "https://localhost:44376/api/admin/colors";
+    const url =
+      "https://localhost:44376/api/admin/brands/" + this.state.BrandId;
     const options = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization:
           "Bearer " + localStorage.getItem("authenticatedTokenAdmin").toString()
       },
       body: JSON.stringify({
+        BrandId: this.state.BrandId,
         Name: this.state.Name,
-        ColorValue: this.state.ColorValue
+        CompanyName: this.state.CompanyName
       })
     };
     fetch(url, options).then(
       result => {
-        if (result.status === 201) {
-          alert("Tạo màu thành công!!!");
-          this.PushToColorPage();
+        if (result.status === 204) {
+          alert("SỬa thương hiệu thành công!!!");
+          this.PushToBrandPage();
+        } else if (result.status === 404) {
+          alert("Thương hiệu không tìm thấy???");
+          this.PushToBrandPage();
         } else if (result.status === 400) {
-          alert("Màu đã tồn tại");
-          this.PushToColorPage();
+          alert("Lỗi khi sửa thương hiệu, xin chọn thương hiệu khác");
         }
       },
       // Note: it's important to handle errors here
@@ -61,17 +74,17 @@ class CreateColor extends Component {
     return (
       <div
         className="modal fade"
-        id="modalCreateColor"
+        id="modalEditBrand"
         tabIndex="-1"
         role="dialog"
-        aria-labelledby="modalCreateColorTitle"
+        aria-labelledby="modalEditBrandTitle"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalCreateColorTitle">
-                Thêm màu
+              <h5 className="modal-title" id="modalEditBrandTitle">
+                Sửa thương hiệu
               </h5>
               <button
                 type="button"
@@ -86,16 +99,16 @@ class CreateColor extends Component {
               <form onSubmit={this.handleSubmit}>
                 <div className="form-group row">
                   <label
-                    htmlFor="colorNameInput"
+                    htmlFor="brandNameInput"
                     className="col-sm-4 col-form-label"
                   >
-                    Tên màu
+                    Tên thương hiệu
                   </label>
                   <div className="col-sm-8">
                     <input
                       type="text"
                       className="form-control"
-                      id="colorNameInput"
+                      id="brandNameInput"
                       placeholder="Tên thương hiệu"
                       value={this.state.Name}
                       onChange={this.handleNameChange}
@@ -105,19 +118,20 @@ class CreateColor extends Component {
                 </div>
                 <div className="form-group row">
                   <label
-                    htmlFor="colorValueInput"
+                    htmlFor="companyBrandInput"
                     className="col-sm-4 col-form-label"
                   >
-                    Giá trị màu
+                    Thuộc công ty
                   </label>
                   <div className="col-sm-8">
                     <input
-                      type="color"
+                      type="text"
                       className="form-control"
-                      id="colorValueInput"
-                      placeholder="Giá trị màu"
+                      id="companyBrandInput"
+                      placeholder="Thuộc công ty"
                       required
-                      onChange={this.handleColorValueChange}
+                      value={this.state.CompanyName}
+                      onChange={this.handleCompanyNameChange}
                     />
                   </div>
                 </div>
@@ -129,8 +143,8 @@ class CreateColor extends Component {
                   >
                     Close
                   </button>
-                  <button type="submit" className="btn btn-success">
-                    Tạo màu
+                  <button type="submit" className="btn btn-primary">
+                    Sửa thương hiệu
                   </button>
                 </div>
               </form>
@@ -142,4 +156,4 @@ class CreateColor extends Component {
   }
 }
 
-export default CreateColor;
+export default EditBrand;

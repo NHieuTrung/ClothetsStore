@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import Color from "./Color";
 import CreateColor from "./CreateColor";
+import EditColor from "./EditColor";
 class ListColor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      color: { ColorId: "", Name: "", ColorValue: "" },
       listColor: []
     };
   }
@@ -14,6 +16,54 @@ class ListColor extends Component {
   PushTo404Page = () => {
     window.location.href = "/not-found";
   };
+  PushToColorPage = () => {
+    window.location.href = "/color-page";
+  };
+  onClickEdit(ColorId = "") {
+    if (ColorId !== "") {
+      const color = this.state.listColor.find(function(color) {
+        return color.colorId === ColorId;
+      });
+      this.setState({ color: { ...color } });
+    }
+  }
+  onClickDelete(ColorId = "") {
+    if (ColorId !== "") {
+      var confirmDelete = window.confirm("Bạn chắc chắn muốn xóa màu này?");
+      if (confirmDelete) {
+        const url = "https://localhost:44376/api/admin/colors/" + ColorId;
+        const options = {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer " +
+              localStorage.getItem("authenticatedTokenAdmin").toString()
+          }
+        };
+        fetch(url, options).then(
+          result => {
+            if (result.status === 200) {
+              alert("Xóa màu thành công!!!");
+              this.PushToColorPage();
+            } else if (result.status === 404) {
+              alert("Màu không tìm thấy???");
+              this.PushToColorPage();
+            } else if (result.status === 400) {
+              alert("Lỗi khi sửa màu");
+            }
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          error => {
+            alert("Server Interupts");
+            this.PushToServerPage();
+          }
+        );
+      }
+    }
+  }
   UNSAFE_componentWillMount() {
     if (localStorage.getItem("authenticatedTokenAdmin") === null) {
       window.location.href = "/login";
@@ -32,20 +82,19 @@ class ListColor extends Component {
       .then(res => res.json())
       .then(
         result => {
-          if (result.status !== 404) {
+          if (result.length > 0) {
             this.setState({
               listColor: [...result]
             });
           } else {
-            console.log("Something wrong when get products");
-            this.PushTo404Page();
+            alert("Không có màu nào trong database");
           }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         error => {
-          console.log("Server interupt");
+          alert("Lỗi server");
           this.PushToServerPage();
         }
       );
@@ -112,6 +161,8 @@ class ListColor extends Component {
                       colorId={color.colorId}
                       name={color.name}
                       colorValue={color.colorValue}
+                      onClickEdit={() => this.onClickEdit(color.colorId)}
+                      onClickDelete={() => this.onClickDelete(color.colorId)}
                     />
                   ))}
                 </tbody>
@@ -127,6 +178,11 @@ class ListColor extends Component {
           </div>
         </div>
         <CreateColor />
+        <EditColor
+          ColorId={this.state.color.colorId}
+          Name={this.state.color.name}
+          ColorValue={this.state.color.colorValue}
+        />
       </div>
     );
   }

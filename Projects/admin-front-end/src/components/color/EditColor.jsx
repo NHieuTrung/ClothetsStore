@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 
-class CreateColor extends Component {
+class EditColor extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      ColorId: "",
       Name: "",
       ColorValue: ""
     };
@@ -25,53 +26,66 @@ class CreateColor extends Component {
   }
   handleSubmit(event) {
     event.preventDefault();
-    const url = "https://localhost:44376/api/admin/colors";
+    const url =
+      "https://localhost:44376/api/admin/colors/" + this.state.ColorId;
     const options = {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
         Authorization:
           "Bearer " + localStorage.getItem("authenticatedTokenAdmin").toString()
       },
       body: JSON.stringify({
+        ColorId: this.state.ColorId,
         Name: this.state.Name,
         ColorValue: this.state.ColorValue
       })
     };
     fetch(url, options).then(
       result => {
-        if (result.status === 201) {
-          alert("Tạo màu thành công!!!");
+        if (result.status === 204) {
+          alert("SỬa màu thành công!!!");
+          this.PushToColorPage();
+        } else if (result.status === 404) {
+          alert("Màu không tìm thấy???");
           this.PushToColorPage();
         } else if (result.status === 400) {
-          alert("Màu đã tồn tại");
-          this.PushToColorPage();
+          alert("Lỗi khi sửa màu này, xin chọn giá trị màu khác");
         }
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
       // exceptions from actual bugs in components.
       error => {
-        alert("Server Interupts");
+        alert("Lỗi server");
         this.PushToServerPage();
       }
     );
+  }
+  componentDidUpdate(prevProps) {
+    if (this.props.ColorId !== prevProps.ColorId) {
+      this.setState({
+        ColorId: this.props.ColorId,
+        Name: this.props.Name,
+        ColorValue: this.props.ColorValue
+      });
+    }
   }
   render() {
     return (
       <div
         className="modal fade"
-        id="modalCreateColor"
+        id="modalEditColor"
         tabIndex="-1"
         role="dialog"
-        aria-labelledby="modalCreateColorTitle"
+        aria-labelledby="modalEditColorTitle"
         aria-hidden="true"
       >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title" id="modalCreateColorTitle">
-                Thêm màu
+              <h5 className="modal-title" id="modalEditColorTitle">
+                Sửa màu
               </h5>
               <button
                 type="button"
@@ -116,6 +130,7 @@ class CreateColor extends Component {
                       className="form-control"
                       id="colorValueInput"
                       placeholder="Giá trị màu"
+                      value={this.state.ColorValue}
                       required
                       onChange={this.handleColorValueChange}
                     />
@@ -129,8 +144,8 @@ class CreateColor extends Component {
                   >
                     Close
                   </button>
-                  <button type="submit" className="btn btn-success">
-                    Tạo màu
+                  <button type="submit" className="btn btn-primary">
+                    Sửa màu
                   </button>
                 </div>
               </form>
@@ -142,4 +157,4 @@ class CreateColor extends Component {
   }
 }
 
-export default CreateColor;
+export default EditColor;

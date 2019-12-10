@@ -7,7 +7,19 @@ const Color = props => {
       <td>
         <input type="color" value={props.colorValue} disabled />
       </td>
-      <td></td>
+      <td>
+        <button
+          className="btn btn-primary"
+          data-toggle="modal"
+          data-target="#modalEditColor"
+          onClick={props.onClickEdit}
+        >
+          Sửa
+        </button>
+        <button className="btn btn-danger" onClick={props.onClickDelete}>
+          Xóa
+        </button>
+      </td>
     </tr>
   );
 };

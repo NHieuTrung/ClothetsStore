@@ -27,7 +27,8 @@ namespace ClothingStore.Areas.Admin.Controllers
         [HttpGet]
         public IEnumerable<Brand> GetBrand()
         {
-            return _context.Brand;
+            Guid activeId = new Guid("87577063-322E-4901-98D2-FF519341D992");
+            return _context.Brand.Where(m => m.StatusId == activeId);
         }
 
         // GET: api/Brands/5
@@ -62,6 +63,12 @@ namespace ClothingStore.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
+            string prevBrandName = _context.Brand.Where(m => m.BrandId == id).Select(m => m.Name).FirstOrDefault();
+            if (prevBrandName != brand.Name && _context.Brand.Where(m => m.Name == brand.Name).Count() > 0)
+            {
+                return BadRequest();
+            }
+            brand.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
 
             _context.Entry(brand).State = EntityState.Modified;
 
@@ -119,7 +126,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            _context.Brand.Remove(brand);
+            brand.StatusId = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
             await _context.SaveChangesAsync();
 
             return Ok(brand);

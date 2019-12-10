@@ -1,10 +1,12 @@
 import React, { Component } from "react";
 import Brand from "./Brand";
 import CreateBrand from "./CreateBrand";
+import EditBrand from "./EditBrand";
 class ListBrand extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      brand: { BrandId: "", Name: "", CompanyName: "" },
       listBrand: []
     };
   }
@@ -14,6 +16,56 @@ class ListBrand extends Component {
   PushTo404Page = () => {
     window.location.href = "/not-found";
   };
+  PushToBrandPage = () => {
+    window.location.href = "/brand-page";
+  };
+  onClickEdit(BrandId = "") {
+    if (BrandId !== "") {
+      const brand = this.state.listBrand.find(function(brand) {
+        return brand.brandId === BrandId;
+      });
+      this.setState({ brand: { ...brand } });
+    }
+  }
+  onClickDelete(BrandId = "") {
+    if (BrandId !== "") {
+      var confirmDelete = window.confirm(
+        "Bạn chắc chắn muốn xóa thương hiệu này?"
+      );
+      if (confirmDelete) {
+        const url = "https://localhost:44376/api/admin/brands/" + BrandId;
+        const options = {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer " +
+              localStorage.getItem("authenticatedTokenAdmin").toString()
+          }
+        };
+        fetch(url, options).then(
+          result => {
+            if (result.status === 200) {
+              alert("Xóa thương hiệu thành công!!!");
+              this.PushToBrandPage();
+            } else if (result.status === 404) {
+              alert("Thương hiệu không tìm thấy???");
+              this.PushToBrandPage();
+            } else if (result.status === 400) {
+              alert("Lỗi khi sửa thương hiệu");
+            }
+          },
+          // Note: it's important to handle errors here
+          // instead of a catch() block so that we don't swallow
+          // exceptions from actual bugs in components.
+          error => {
+            alert("Server Interupts");
+            this.PushToServerPage();
+          }
+        );
+      }
+    }
+  }
   UNSAFE_componentWillMount() {
     if (localStorage.getItem("authenticatedTokenAdmin") === null) {
       window.location.href = "/login";
@@ -32,20 +84,19 @@ class ListBrand extends Component {
       .then(res => res.json())
       .then(
         result => {
-          if (result.status !== 404) {
+          if (result.length > 0) {
             this.setState({
               listBrand: [...result]
             });
           } else {
-            console.log("Something wrong when get products");
-            this.PushTo404Page();
+            alert("Không có thương hiệu nào trong database");
           }
         },
         // Note: it's important to handle errors here
         // instead of a catch() block so that we don't swallow
         // exceptions from actual bugs in components.
         error => {
-          console.log("Server interupt");
+          alert("Lỗi server");
           this.PushToServerPage();
         }
       );
@@ -112,6 +163,8 @@ class ListBrand extends Component {
                       brandId={brand.brandId}
                       name={brand.name}
                       companyName={brand.companyName}
+                      onClickEdit={() => this.onClickEdit(brand.brandId)}
+                      onClickDelete={() => this.onClickDelete(brand.brandId)}
                     />
                   ))}
                 </tbody>
@@ -127,6 +180,11 @@ class ListBrand extends Component {
           </div>
         </div>
         <CreateBrand />
+        <EditBrand
+          BrandId={this.state.brand.brandId}
+          Name={this.state.brand.name}
+          CompanyName={this.state.brand.companyName}
+        />
       </div>
     );
   }

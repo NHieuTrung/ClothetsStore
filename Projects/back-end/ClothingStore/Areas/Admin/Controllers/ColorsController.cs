@@ -24,7 +24,8 @@ namespace ClothingStore.Areas.Admin.Controllers
         [HttpGet]
         public IEnumerable<Color> GetColor()
         {
-            return _context.Color;
+            Guid activeId = new Guid("87577063-322E-4901-98D2-FF519341D992");
+            return _context.Color.Where(m => m.StatusId == activeId);
         }
 
         // GET: api/Colors/5
@@ -59,7 +60,12 @@ namespace ClothingStore.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
-
+            string prevColorValue = _context.Color.Where(m => m.ColorId == id).Select(m => m.ColorValue).FirstOrDefault();
+            if (prevColorValue != color.ColorValue && _context.Color.Where(m => m.ColorValue == color.ColorValue).Count() > 0)
+            {
+                return BadRequest();
+            }
+            color.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
             _context.Entry(color).State = EntityState.Modified;
 
             try
@@ -93,7 +99,7 @@ namespace ClothingStore.Areas.Admin.Controllers
             {
                 return BadRequest();
             }
-
+            color.StatusId = new Guid("87577063-322E-4901-98D2-FF519341D992");
             _context.Color.Add(color);
             await _context.SaveChangesAsync();
 
@@ -115,7 +121,7 @@ namespace ClothingStore.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            _context.Color.Remove(color);
+            color.StatusId = new Guid("1C55F3C2-D7ED-4B82-8F18-480062D092A1");
             await _context.SaveChangesAsync();
 
             return Ok(color);
